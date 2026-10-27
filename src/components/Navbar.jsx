@@ -1,27 +1,56 @@
-import React from 'react'
-import {NavLink} from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const links = [
+    { to: '/', label: 'Home' },
+    { to: '/about', label: 'About' },
+    { to: '/projects', label: 'Projects' },
+    { to: '/skills', label: 'Skills' },
+    { to: '/experience', label: 'Experience' },
+    { to: '/contact', label: 'Contact' },
+  ]
+
   return (
-    <div className="flex gap-4 text-xl mt-5 p-4 justify justify-between font-sans font-semibold">
+    <header className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 font-sans text-lg font-semibold sm:px-8 lg:px-10">
+      <NavLink to="/" className="flex items-center gap-3 text-gray-900">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 10C5.48 10 7.34 7 7.34 7S9.2 10 11.69 10 16.66 7 16.66 7 19.14 10 21 10M3 17c2.48 0 4.34-3 4.34-3s1.87 3 4.35 3 4.97-3 4.97-3 2.48 3 4.34 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span>Om Raut</span>
+      </NavLink>
 
-        <div className='ml-50 gap-6 flex'>
-            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M3 10C5.48276 10 7.34483 7 7.34483 7C7.34483 7 9.2069 10 11.6897 10C14.1724 10 16.6552 7 16.6552 7C16.6552 7 19.1379 10 21 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 17C5.48276 17 7.34483 14 7.34483 14C7.34483 14 9.2069 17 11.6897 17C14.1724 17 16.6552 14 16.6552 14C16.6552 14 19.1379 17 21 17" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-            <div >Om Raut</div>
-        </div>
+      <button
+        type="button"
+        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="inline-flex size-11 items-center justify-center rounded-lg border border-gray-300 text-gray-800 md:hidden"
+      >
+        <span className="text-2xl leading-none" aria-hidden="true">{menuOpen ? '×' : '☰'}</span>
+      </button>
 
-        <div className='flex gap-10 mr-50'>
-            <div><NavLink to="/">Home</NavLink></div>
-            <div><NavLink to="/about">About</NavLink></div>
-            <div><NavLink to="/projects">Projects</NavLink></div>
-            <div><NavLink to="/skills">Skills</NavLink></div>
-            <div><NavLink to="/experience">Experience</NavLink></div>
-            <div><NavLink to="/contact">Contact</NavLink></div>
-        </div>
-    </div>
-    
-    
-
+      <nav
+        id="primary-navigation"
+        aria-label="Main navigation"
+        className={`${menuOpen ? 'flex' : 'hidden'} w-full flex-col gap-1 pb-2 md:flex md:w-auto md:flex-row md:items-center md:gap-7 md:pb-0`}
+      >
+        {links.map(({ to, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            onClick={() => setMenuOpen(false)}
+            className={({ isActive }) =>
+              `rounded-lg px-3 py-2 transition-colors hover:bg-gray-100 hover:text-indigo-700 md:px-0 md:py-1 md:hover:bg-transparent ${isActive ? 'text-indigo-700' : 'text-gray-700'}`
+            }
+          >
+            {label}
+          </NavLink>
+        ))}
+      </nav>
+    </header>
   )
 }
 

@@ -19,8 +19,8 @@ const skills = [
 
 const Skills = () => {
   return (
-    <section className="flex flex-col justify-between gap-10 px-6 py-12 sm:px-10 lg:flex-row lg:px-0">
-      <div className="lg:ml-50 lg:mt-42">
+    <section className="mx-auto flex w-full max-w-7xl flex-col justify-between gap-10 px-6 py-10 sm:px-10 sm:py-14 lg:flex-row lg:items-center lg:gap-14 lg:px-12">
+      <div className="w-full lg:w-1/2">
         <h1 className="text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">
           My Skills
         </h1>
@@ -31,10 +31,7 @@ const Skills = () => {
         </p>
       </div>
 
-      <div
-        aria-label="Technology skills"
-        className="grid grid-cols-4 gap-3 sm:gap-4 lg:mr-50 lg:mt-25"
-      >
+      <div aria-label="Technology skills" className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:w-1/2">
         {skills.map(({ name, icon }) => (
           <div
             key={name}

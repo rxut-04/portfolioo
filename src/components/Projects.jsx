@@ -61,7 +61,7 @@ const projects = [
 const Projects = () => {
   return (
     <>
-      <div className="flex w-full flex-col gap-y-12 pt-12">
+      <div className="flex w-full flex-col gap-y-8 pt-6 sm:gap-y-12 sm:pt-10">
         {projects.map((project, index) => {
           const imageFirst = index % 2 === 1
 
@@ -72,18 +72,18 @@ const Projects = () => {
               className={`grid w-full grid-cols-1 items-center gap-0 ${imageFirst ? 'lg:grid-cols-[70%_30%]' : 'lg:grid-cols-[30%_70%]'}`}
             >
               <div
-                className={`flex flex-col justify-center px-8 py-12 sm:px-12 lg:px-16 xl:px-24 ${imageFirst ? 'lg:order-2' : ''}`}
+                className={`flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-8 xl:px-12 ${imageFirst ? 'lg:order-2' : ''}`}
               >
                 <p className="mb-2 text-sm font-semibold tracking-widest text-indigo-600">
                   {project.number}
                 </p>
                 <h2
                   id={`project-${project.number}-title`}
-                  className="mb-4 text-3xl font-bold text-gray-900"
+                  className="mb-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl"
                 >
                   {project.name}
                 </h2>
-                <p className="text-lg leading-relaxed text-gray-600">
+                <p className="text-base leading-relaxed text-gray-600 sm:text-lg">
                   {project.description}
                 </p>
                 <ul
@@ -109,7 +109,7 @@ const Projects = () => {
                 </button>
               </div>
               <div
-                className={`relative flex aspect-[2/1] w-full items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 ${imageFirst ? 'lg:order-1' : ''}`}
+                className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${imageFirst ? 'lg:order-1' : ''}`}
               >
                 {project.image ? (
                   <img
