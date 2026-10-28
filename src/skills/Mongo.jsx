@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Mongo = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="mongo"
+    />
   )
 }
 

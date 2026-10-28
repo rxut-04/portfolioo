@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Github = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="github"
+    />
   )
 }
 

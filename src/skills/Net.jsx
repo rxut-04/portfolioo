@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Net = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="net"
+    />
   )
 }
 

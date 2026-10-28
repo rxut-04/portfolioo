@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Tailwind = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="tailwind"
+    />
   )
 }
 

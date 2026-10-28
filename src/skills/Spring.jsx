@@ -1,8 +1,8 @@
+import SkillPage from '../components/SkillPage'
+
 const Spring = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage skill="spring" />
   )
 }
 

@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Java = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="java"
+    />
   )
 }
 

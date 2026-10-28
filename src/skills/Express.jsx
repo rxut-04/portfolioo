@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Express = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="express"
+    />
   )
 }
 

@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const React = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="react"
+    />
   )
 }
 

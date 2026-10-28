@@ -1,8 +1,10 @@
+import SkillPage from '../components/SkillPage'
+
 const Mysql = () => {
   return (
-    <div>
-      
-    </div>
+    <SkillPage
+      skill="mysql"
+    />
   )
 }
 

@@ -17,6 +17,12 @@ import NodeSkill from './skills/Node'
 import MongoSkill from './skills/Mongo'
 import MysqlSkill from './skills/Mysql'
 import GitSkill from './skills/Git'
+import CssSkill from './skills/Css'
+import TailwindSkill from './skills/Tailwind'
+import BootstrapSkill from './skills/Bootstrap'
+import ExpressSkill from './skills/Express'
+import CsharpSkill from './skills/Csharp'
+import GithubSkill from './skills/Github'
 
 const SiteLayout = () => {
   return (
@@ -45,6 +51,13 @@ const ProjectRoute = () => {
           <Route path="skills/mongo" element={<MongoSkill />} />
           <Route path="skills/mysql" element={<MysqlSkill />} />
           <Route path="skills/git" element={<GitSkill />} />
+          <Route path="skills/html" element={null} />
+          <Route path="skills/css" element={<CssSkill />} />
+          <Route path="skills/tailwind" element={<TailwindSkill />} />
+          <Route path="skills/bootstrap" element={<BootstrapSkill />} />
+          <Route path="skills/express" element={<ExpressSkill />} />
+          <Route path="skills/csharp" element={<CsharpSkill />} />
+          <Route path="skills/github" element={<GithubSkill />} />
           <Route path="experience" element={<Experience />} />
           <Route path="projects" element={<Projects />} />
           <Route path="hero" element={<Hero />} />
