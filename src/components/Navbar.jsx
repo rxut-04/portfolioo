@@ -10,7 +10,9 @@ const Navbar = () => {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M3 10C5.48 10 7.34 7 7.34 7S9.2 10 11.69 10 16.66 7 16.66 7 19.14 10 21 10M3 17c2.48 0 4.34-3 4.34-3s1.87 3 4.35 3 4.97-3 4.97-3 2.48 3 4.34 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <div>Om Raut</div>
+        <NavLink to="/" onClick={() => setMenuOpen(false)}>
+          Om Raut
+        </NavLink>
       </div>
 
       <button
