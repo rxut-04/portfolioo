@@ -4,18 +4,12 @@ import { Link } from 'react-router-dom'
 const Featured = () => {
     return (
         <><div className="mt-12 flex flex-col items-center justify-center px-4 text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                 <a
                     href="#featured-medlink"
-                    className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 px-6 py-3 text-white shadow-xl shadow-indigo-500/25 ring-1 ring-white/30 transition duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-2xl hover:shadow-violet-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 sm:gap-4 sm:px-8 sm:py-4 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="inline-flex rounded-xl bg-sky-50 px-5 py-3 italic text-slate-950 transition-colors hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:px-7 sm:py-4"
                 >
-                    <span className="italic">Featured Projects</span>
-                    <span
-                        aria-hidden="true"
-                        className="flex size-8 items-center justify-center rounded-full bg-white/20 text-lg transition-transform duration-300 group-hover:translate-y-1 sm:size-10"
-                    >
-                        ↓
-                    </span>
+                    Featured Projects
                 </a>
             </h1>
         </div>
@@ -29,7 +23,7 @@ const Featured = () => {
                         An AI-assisted platform that helps medical doctors assess risk, seek second opinions, and make safer clinical decisions. Trusted by 500+ clinical specialists.
                     </p>
                     <br />
-                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
+                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
                         Visit
                     </button>
                 </div>
@@ -55,7 +49,7 @@ const Featured = () => {
                         Java Servlets,HTML5 & CSS3 .
                     </p>
                     <br />
-                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
+                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
                         Visit
                     </button>
                 </div>
@@ -81,7 +75,7 @@ const Featured = () => {
                 </p>
                 <Link
                     to="/projects"
-                    className="mt-8 inline-flex items-center gap-2 rounded-full bg-indigo-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:scale-95 sm:text-lg"
+                    className="mt-8 inline-flex items-center gap-2 rounded-full bg-blue-700 px-8 py-3.5 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg"
                 >
                     Click here
                     <span aria-hidden="true">→</span>
