@@ -1,4 +1,4 @@
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 import App from './App'
 import About from "./components/About"
 import Projects from "./components/Projects"
@@ -19,20 +19,10 @@ import MysqlSkill from './skills/Mysql'
 import GitSkill from './skills/Git'
 
 const SiteLayout = () => {
-  const isHomePage = useLocation().pathname === '/'
-
   return (
     <div className="flow-root relative min-h-screen">
-      {isHomePage && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[30vh] bg-gradient-to-b from-indigo-100 via-sky-50 to-white"
-        />
-      )}
-      <div className="relative">
-        <Navbar />
-        <Outlet />
-      </div>
+      <Navbar />
+      <Outlet />
     </div>
   )
 }
