@@ -14,7 +14,7 @@ const Grid = () => {
   return (
     <section
       aria-label="Full-stack development skills"
-      className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-12 px-6 py-12 sm:px-10 sm:py-16 lg:flex-row lg:items-center lg:gap-16 lg:px-12"
+      className="flex w-full flex-col items-start justify-between gap-12 px-6 py-12 sm:px-10 lg:ml-8 lg:flex-row lg:items-center lg:gap-16 lg:mr-8 lg:px-0 xl:ml-60 xl:mr-50"
     >
       <div className="max-w-xl">
         <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-indigo-600">

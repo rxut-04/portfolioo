@@ -72,7 +72,7 @@ const Projects = () => {
               className={`grid w-full grid-cols-1 items-center gap-0 ${imageFirst ? 'lg:grid-cols-[70%_30%]' : 'lg:grid-cols-[30%_70%]'}`}
             >
               <div
-                className={`flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-8 xl:px-12 ${imageFirst ? 'lg:order-2' : ''}`}
+                className={`flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-8 xl:px-12 ${imageFirst ? 'order-2 lg:order-2' : 'order-1'}`}
               >
                 <p className="mb-2 text-sm font-semibold tracking-widest text-indigo-600">
                   {project.number}
@@ -109,7 +109,7 @@ const Projects = () => {
                 </button>
               </div>
               <div
-                className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${imageFirst ? 'lg:order-1' : ''}`}
+                className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${imageFirst ? 'order-1 lg:order-1' : 'order-2'}`}
               >
                 {project.image ? (
                   <img

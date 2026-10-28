@@ -1,16 +1,13 @@
 const About = () => {
   return (
-    <section className="mx-auto flex w-full max-w-7xl flex-col items-center gap-10 px-6 py-10 sm:px-10 sm:py-14 md:flex-row md:gap-8 lg:gap-14 lg:px-12">
-      <div className="w-full md:w-1/2">
-        <h1 className="text-4xl font-extrabold italic leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-          About me
-        </h1>
-        <p className="mt-6 text-base leading-relaxed text-gray-700 sm:text-lg lg:text-xl">
+    <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12">
+      <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-50 2xl:mt-42">
+        <h1 className="text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“About me”</h1>
+        <p className="mt-5 text-lg leading-relaxed sm:text-xl lg:text-2xl">
           I’m Om, a final-year Information Technology student who has completed{' '}
           <span className="underline decoration-sky-500">CDAC training</span>{' '}
           and builds full-stack applications from the ground up. I work across
-          the stack: <span className="underline decoration-pink-500">React on
-          the front end</span>, Java,{' '}
+          the stack: <span className="underline decoration-pink-500">React on the front end</span>, Java,{' '}
           <span className="underline decoration-pink-500">Spring Boot</span>,
           and .NET on the back end, backed by solid DSA and database
           fundamentals. I like turning an idea into something real that people
@@ -33,10 +30,10 @@ const About = () => {
 
 
       </div>
-      <div className="w-full max-w-md md:w-1/2 md:max-w-none">
-        <img src="/images/green0m.jpeg" alt="Om Raut" className="aspect-square w-full rounded-2xl object-cover shadow-lg sm:rounded-3xl" />
+      <div className="mx-auto w-full max-w-[32rem] md:mt-10 md:w-[45%] md:max-w-[36rem] md:shrink-0 2xl:mr-50 2xl:mt-25 2xl:w-[36rem]">
+        <img src="/images/green0m.jpeg" alt="Om Raut" className="h-auto w-full rounded-xl object-cover" />
       </div>
-    </section>
+    </div>
   )
 }
 
