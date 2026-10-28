@@ -1,14 +1,16 @@
+import { Link } from 'react-router-dom'
+
 const Grid = () => {
   const technologies = [
-    { name: 'React', icon: 'react/react-original.svg' },
-    { name: 'Java', icon: 'java/java-original.svg' },
-    { name: 'Spring Boot', icon: 'spring/spring-original.svg' },
-    { name: '.NET', icon: 'dotnetcore/dotnetcore-original.svg' },
-    { name: 'JavaScript', icon: 'javascript/javascript-original.svg' },
-    { name: 'Node.js', icon: 'nodejs/nodejs-original.svg' },
-    { name: 'MongoDB', icon: 'mongodb/mongodb-original.svg' },
-    { name: 'MySQL', icon: 'mysql/mysql-original.svg' },
-    { name: 'Git', icon: 'git/git-original.svg' },
+    { name: 'React', icon: 'react/react-original.svg', route: 'react' },
+    { name: 'Java', icon: 'java/java-original.svg', route: 'java' },
+    { name: 'Spring Boot', icon: 'spring/spring-original.svg', route: 'spring' },
+    { name: '.NET', icon: 'dotnetcore/dotnetcore-original.svg', route: 'net' },
+    { name: 'JavaScript', icon: 'javascript/javascript-original.svg', route: 'javascript' },
+    { name: 'Node.js', icon: 'nodejs/nodejs-original.svg', route: 'node' },
+    { name: 'MongoDB', icon: 'mongodb/mongodb-original.svg', route: 'mongo' },
+    { name: 'MySQL', icon: 'mysql/mysql-original.svg', route: 'mysql' },
+    { name: 'Git', icon: 'git/git-original.svg', route: 'git' },
   ]
 
   return (
@@ -31,17 +33,19 @@ const Grid = () => {
       </div>
 
       <div className="grid w-full max-w-sm grid-cols-3 gap-3 lg:ml-auto lg:w-auto">
-        {technologies.map(({ name, icon }) => (
-          <div
+        {technologies.map(({ name, icon, route }) => (
+          <Link
             key={name}
-            className="flex aspect-square w-full items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm"
+            to={`/skills/${route}`}
+            aria-label={`View ${name} skills`}
+            className="flex aspect-square w-full items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             <img
               src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${icon}`}
               alt={`${name} logo`}
               className="size-9 object-contain"
             />
-          </div>
+          </Link>
         ))}
       </div>
     </section>
