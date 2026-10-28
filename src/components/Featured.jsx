@@ -3,15 +3,17 @@ import { Link } from 'react-router-dom'
 
 const Featured = () => {
     return (
-        <><div className="mt-12 flex flex-col items-center justify-center px-4 text-center">
+        <><div className="mt-12 flex flex-col items-center justify-center gap-5 px-4 text-center">
+            <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
             <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                 <a
                     href="#featured-medlink"
-                    className="inline-flex rounded-xl bg-sky-50 px-5 py-3 italic text-slate-950 transition-colors hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:px-7 sm:py-4"
+                    className="inline-flex rounded-xl border border-blue-200 bg-blue-100 px-5 py-3 italic text-slate-950 transition-colors hover:bg-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:px-7 sm:py-4"
                 >
                     Featured Projects
                 </a>
             </h1>
+            <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
         </div>
             <section id="featured-medlink" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row lg:gap-16">
                 {/* Text side */}
@@ -37,6 +39,8 @@ const Featured = () => {
                     />
                 </div>
             </section>
+
+            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
 
             <section className="mx-auto flex w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                 {/* Text side (right on desktop) */}
@@ -64,7 +68,7 @@ const Featured = () => {
                 </div>
             </section>
 
-
+            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
 
             <section className="mx-auto flex w-[90%] flex-col items-center justify-center py-12 text-center sm:py-16 lg:min-h-screen">
                 <h2 className="text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
