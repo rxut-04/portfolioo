@@ -5,11 +5,11 @@ const About = () => {
         <h1 className="text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“About me”</h1>
         <p className="mt-5 text-lg leading-relaxed sm:text-xl lg:text-2xl">
           I’m Om, a final-year Information Technology student who has completed{' '}
-          <span className="underline decoration-sky-500/30">CDAC training</span>{' '}
+          <span className="underline decoration-sky-500">CDAC training</span>{' '}
           and builds full-stack applications from the ground up. I work across
-          the stack: <span className="underline decoration-pink-500/30">React on the front end</span>, Java,{' '}
-          <span className="underline decoration-pink-500/30">Spring Boot</span>,
-          and .NET on the back end, backed by solid DSA and database
+          the stack: <span className="underline decoration-pink-500">React on the front end</span>, Java,{' '}
+          <span className="uppercase underline decoration-pink-500">Spring Boot</span>,
+          and <span className="uppercase underline decoration-sky-500">.NET</span> on the back end, backed by solid DSA and database
           fundamentals. I like turning an idea into something real that people
           can use, and I’m looking for an opportunity where I can build, learn
           fast, and contribute from day one.
