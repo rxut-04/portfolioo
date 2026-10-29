@@ -1,7 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+
+  const scaleRef = useRef(1)
+  const posRef = useRef({ x: 0, y: 0 })
+  const mouseStartRef = useRef({ x: 0, y: 0 })
+  const viewerAreaRef = useRef(null)
+
+  useEffect(() => {
+    scaleRef.current = scale
+  }, [scale])
+
+  useEffect(() => {
+    posRef.current = position
+  }, [position])
 
   const handleViewCvClick = () => {
     // 1. Trigger immediate download of the resume
@@ -13,7 +29,19 @@ const Hero = () => {
     document.body.removeChild(link)
 
     // 2. Open the on-screen resume viewer container
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+    scaleRef.current = 1
+    posRef.current = { x: 0, y: 0 }
     setIsViewerOpen(true)
+  }
+
+  const handleClose = () => {
+    setIsViewerOpen(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+    scaleRef.current = 1
+    posRef.current = { x: 0, y: 0 }
   }
 
   // Handle ESC key to close modal & lock background scrolling
@@ -22,7 +50,7 @@ const Hero = () => {
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        setIsViewerOpen(false)
+        handleClose()
       }
     }
 
@@ -34,6 +62,145 @@ const Hero = () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [isViewerOpen])
+
+  // Setup two-finger pinch-to-zoom and pan listeners with passive: false
+  useEffect(() => {
+    if (!isViewerOpen) return
+
+    const viewer = viewerAreaRef.current
+    if (!viewer) return
+
+    let startDist = 0
+    let startScale = 1
+    let startX = 0
+    let startY = 0
+    let lastTap = 0
+
+    const onTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault()
+        startDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        )
+        startScale = scaleRef.current
+      } else if (e.touches.length === 1) {
+        const now = Date.now()
+        if (now - lastTap < 300) {
+          // Double-tap toggles zoom
+          e.preventDefault()
+          if (scaleRef.current > 1) {
+            scaleRef.current = 1
+            setScale(1)
+            posRef.current = { x: 0, y: 0 }
+            setPosition({ x: 0, y: 0 })
+          } else {
+            scaleRef.current = 2.2
+            setScale(2.2)
+          }
+        }
+        lastTap = now
+        startX = e.touches[0].clientX - posRef.current.x
+        startY = e.touches[0].clientY - posRef.current.y
+      }
+    }
+
+    const onTouchMove = (e) => {
+      if (e.touches.length === 2) {
+        // Two-finger pinch to zoom
+        e.preventDefault()
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        )
+        if (startDist > 0) {
+          const factor = dist / startDist
+          const newScale = Math.min(Math.max(startScale * factor, 1), 4)
+          scaleRef.current = newScale
+          setScale(newScale)
+        }
+      } else if (e.touches.length === 1 && scaleRef.current > 1) {
+        // One-finger drag when zoomed in
+        e.preventDefault()
+        const newX = e.touches[0].clientX - startX
+        const newY = e.touches[0].clientY - startY
+        posRef.current = { x: newX, y: newY }
+        setPosition({ x: newX, y: newY })
+      }
+    }
+
+    const onTouchEnd = (e) => {
+      if (e.touches.length < 2) {
+        startDist = 0
+      }
+      if (e.touches.length === 0 && scaleRef.current <= 1) {
+        posRef.current = { x: 0, y: 0 }
+        setPosition({ x: 0, y: 0 })
+        scaleRef.current = 1
+        setScale(1)
+      }
+    }
+
+    const onWheel = (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault()
+        const delta = e.deltaY * -0.015
+        const newScale = Math.min(Math.max(scaleRef.current + delta, 1), 4)
+        scaleRef.current = newScale
+        setScale(newScale)
+        if (newScale <= 1) {
+          posRef.current = { x: 0, y: 0 }
+          setPosition({ x: 0, y: 0 })
+        }
+      }
+    }
+
+    viewer.addEventListener('touchstart', onTouchStart, { passive: false })
+    viewer.addEventListener('touchmove', onTouchMove, { passive: false })
+    viewer.addEventListener('touchend', onTouchEnd)
+    viewer.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      viewer.removeEventListener('touchstart', onTouchStart)
+      viewer.removeEventListener('touchmove', onTouchMove)
+      viewer.removeEventListener('touchend', onTouchEnd)
+      viewer.removeEventListener('wheel', onWheel)
+    }
+  }, [isViewerOpen])
+
+  // Mouse drag support for desktop
+  const handleMouseDown = (e) => {
+    if (scale <= 1) return
+    setIsDragging(true)
+    mouseStartRef.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    }
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || scale <= 1) return
+    const newX = e.clientX - mouseStartRef.current.x
+    const newY = e.clientY - mouseStartRef.current.y
+    setPosition({ x: newX, y: newY })
+    posRef.current = { x: newX, y: newY }
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleDoubleClick = () => {
+    if (scale > 1) {
+      setScale(1)
+      setPosition({ x: 0, y: 0 })
+      scaleRef.current = 1
+      posRef.current = { x: 0, y: 0 }
+    } else {
+      setScale(2)
+      scaleRef.current = 2
+    }
+  }
 
   return (
     <>
@@ -68,7 +235,7 @@ const Hero = () => {
           role="dialog"
           aria-modal="true"
           aria-label="Resume Preview"
-          onClick={() => setIsViewerOpen(false)}
+          onClick={handleClose}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-2 sm:p-6 backdrop-blur-sm transition-opacity"
         >
           <div
@@ -97,7 +264,7 @@ const Hero = () => {
 
               {/* Close Button */}
               <button
-                onClick={() => setIsViewerOpen(false)}
+                onClick={handleClose}
                 title="Close viewer (Esc)"
                 className="flex size-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-white cursor-pointer"
               >
@@ -107,16 +274,49 @@ const Hero = () => {
               </button>
             </div>
 
-            {/* Document Viewing Area */}
-            <div className="flex-1 overflow-auto bg-slate-950/60 p-3 sm:p-6 flex justify-center items-start">
-              <div className="h-fit w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-white/10">
+            {/* Document Viewing Area: Two-finger pinch-to-zoom & pan */}
+            <div
+              ref={viewerAreaRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onDoubleClick={handleDoubleClick}
+              className={`relative flex-1 overflow-hidden bg-slate-950/70 p-3 sm:p-6 flex justify-center items-center select-none touch-none ${
+                scale > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+              }`}
+            >
+              <div
+                style={{
+                  transform: `translate3d(${position.x}px, ${position.y}px, 0px) scale(${scale})`,
+                  transformOrigin: 'center center',
+                  transition: isDragging ? 'none' : 'transform 0.08s ease-out',
+                }}
+                className="h-fit w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-white/10"
+              >
                 <img
                   src="/images/resume-preview.png"
                   alt="Om Raut Resume"
-                  className="size-full object-contain select-none"
+                  className="size-full object-contain pointer-events-none select-none"
                   draggable={false}
                 />
               </div>
+
+              {/* Subtle Reset pill when zoomed in */}
+              {scale > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setScale(1)
+                    setPosition({ x: 0, y: 0 })
+                    scaleRef.current = 1
+                    posRef.current = { x: 0, y: 0 }
+                  }}
+                  className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-slate-700 bg-slate-900/90 px-4 py-1.5 text-xs font-semibold text-white shadow-2xl backdrop-blur transition hover:bg-slate-800 cursor-pointer"
+                >
+                  Reset ({Math.round(scale * 100)}%)
+                </button>
+              )}
             </div>
           </div>
         </div>
