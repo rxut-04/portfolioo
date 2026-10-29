@@ -20,11 +20,10 @@ const Featured = () => {
                 {/* Text side (right on desktop) */}
                 <div className="w-full lg:w-2/5">
                     <h1 className="text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
-                        “Food Delivery App”
+                        “Apex — Core Banking Engine”
                     </h1>
                     <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
-                        Complete food delivery platform with restaurant management, order tracking, and user authentication. Responsive design with comprehensive ordering system using
-                        Java Servlets,HTML5 & CSS3 .
+                        A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                     </p>
                     <br />
                     <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
@@ -36,7 +35,7 @@ const Featured = () => {
                 <div className="w-full overflow-hidden rounded-2xl lg:w-3/5">
                     <video
                         src="/banking.mp4"
-                        poster="/images/food.png"
+                        poster="/images/banking-preview.png"
                         autoPlay
                         loop
                         muted
