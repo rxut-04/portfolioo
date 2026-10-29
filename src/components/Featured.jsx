@@ -6,12 +6,9 @@ const Featured = () => {
         <><div className="mt-12 flex flex-col items-center justify-center gap-5 px-4 text-center">
             <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
             <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-                <a
-                    href="#featured-first"
-                    className="inline-flex rounded-xl border border-blue-200 bg-blue-100 px-5 py-3 italic text-slate-950 transition-colors hover:bg-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:px-7 sm:py-4"
-                >
+                <span className="inline-flex rounded-xl border border-blue-200 bg-blue-100 px-5 py-3 italic text-slate-950 sm:px-7 sm:py-4">
                     Featured Projects
-                </a>
+                </span>
             </h1>
             <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
         </div>

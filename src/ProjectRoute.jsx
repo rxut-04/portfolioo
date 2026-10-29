@@ -33,6 +33,21 @@ const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+  }, [])
+
+  useEffect(() => {
+    // On the main landing page, always start at the very top (Hero section)
+    if (pathname === '/') {
+      window.scrollTo(0, 0)
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname)
+      }
+      return
+    }
+
     if (hash) {
       const element = document.getElementById(hash.replace('#', ''))
       if (element) {
