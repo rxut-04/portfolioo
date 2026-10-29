@@ -206,7 +206,7 @@ const Hero = () => {
     <>
       <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12 xl:gap-20">
         <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-60 2xl:mt-60">
-          <h1 className="text-4xl font-bold italic leading-tight text-gray-900 sm:text-5xl">
+          <h1 className="font-manuscribe text-4xl font-extrabold italic leading-tight text-gray-900 sm:text-5xl">
             “Hi, I’m Om Raut
             <br />Full-Stack Developer”
           </h1>

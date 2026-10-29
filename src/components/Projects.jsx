@@ -62,7 +62,7 @@ const Projects = () => {
                 </p>
                 <h2
                   id={`project-${project.number}-title`}
-                  className="mb-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl"
+                  className="font-manuscribe mb-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl"
                 >
                   {project.name}
                 </h2>
@@ -131,7 +131,7 @@ const Projects = () => {
 
       {/* Bottom CTA Section with bottom margin */}
       <section className="mb-16 sm:mb-24 bg-gray-900 px-6 py-16 text-center text-white">
-        <h2 className="text-3xl font-bold sm:text-4xl">Got A Project?</h2>
+        <h2 className="font-manuscribe text-3xl font-bold sm:text-4xl">Got A Project?</h2>
         <p className="mt-3 text-xl text-gray-300">Let&apos;s Build It</p>
       </section>
     </>

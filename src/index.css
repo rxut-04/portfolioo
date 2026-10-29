@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
+/* Manuscribe Font */
 @font-face {
   font-family: 'Manuscribe';
   src: url('/fonts/Manuscribe-Regular-demo.woff2') format('woff2'),
        url('/fonts/Manuscribe-Regular-demo.otf') format('opentype');
-  font-weight: 400;
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -13,17 +14,153 @@
   font-family: 'Manuscribe';
   src: url('/fonts/Manuscribe-Italic-demo.woff2') format('woff2'),
        url('/fonts/Manuscribe-Italic-demo.otf') format('opentype');
-  font-weight: 400;
+  font-weight: 100 900;
   font-style: italic;
+  font-display: swap;
+}
+
+/* Geist Fonts */
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('/fonts/geist/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Pixel Square';
+  src: url('/fonts/geist/GeistPixel-Square.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Pixel Circle';
+  src: url('/fonts/geist/GeistPixel-Circle.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Pixel Grid';
+  src: url('/fonts/geist/GeistPixel-Grid.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Pixel Triangle';
+  src: url('/fonts/geist/GeistPixel-Triangle.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Pixel Line';
+  src: url('/fonts/geist/GeistPixel-Line.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
 }
 
 @theme {
   --font-manuscribe: 'Manuscribe', cursive, sans-serif;
+  --font-geist: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+  --font-geist-pixel: 'Geist Pixel Square', monospace;
 }
 
+/* Apply Geist font to all paragraph elements */
+p {
+  font-family: var(--font-geist);
+}
+
+/* Ensure all h1 headings are bold */
+h1 {
+  font-weight: 800;
+}
+
+/* Tailwind Utilities */
+@utility font-manuscribe {
+  font-family: var(--font-manuscribe);
+  font-weight: 800;
+  -webkit-text-stroke: 0.6px currentColor;
+}
+
+@utility font-geist {
+  font-family: var(--font-geist);
+}
+
+@utility font-geist-mono {
+  font-family: var(--font-geist-mono);
+}
+
+@utility font-pixel-square {
+  font-family: 'Geist Pixel Square', monospace;
+}
+
+@utility font-pixel-circle {
+  font-family: 'Geist Pixel Circle', monospace;
+}
+
+@utility font-pixel-grid {
+  font-family: 'Geist Pixel Grid', monospace;
+}
+
+@utility font-pixel-triangle {
+  font-family: 'Geist Pixel Triangle', monospace;
+}
+
+@utility font-pixel-line {
+  font-family: 'Geist Pixel Line', monospace;
+}
+
+/* Fallback CSS utility classes */
 .font-manuscribe {
   font-family: 'Manuscribe', cursive, sans-serif;
+  font-weight: 800;
+  -webkit-text-stroke: 0.6px currentColor;
+}
+
+.font-geist {
+  font-family: var(--font-geist);
+}
+
+.font-geist-mono {
+  font-family: var(--font-geist-mono);
+}
+
+.font-pixel-square {
+  font-family: 'Geist Pixel Square', monospace;
+}
+
+.font-pixel-circle {
+  font-family: 'Geist Pixel Circle', monospace;
+}
+
+.font-pixel-grid {
+  font-family: 'Geist Pixel Grid', monospace;
+}
+
+.font-pixel-triangle {
+  font-family: 'Geist Pixel Triangle', monospace;
+}
+
+.font-pixel-line {
+  font-family: 'Geist Pixel Line', monospace;
 }
 
 .box {

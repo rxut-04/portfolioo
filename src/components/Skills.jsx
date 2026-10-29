@@ -23,7 +23,7 @@ const Skills = () => {
   return (
     <section className="flex w-full flex-col justify-between gap-10 px-6 py-10 sm:px-10 lg:flex-row lg:items-center lg:px-0">
       <div className="w-full lg:min-w-0 lg:flex-1 lg:mt-16 2xl:ml-50 2xl:mt-42">
-        <h1 className="text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">
+        <h1 className="font-manuscribe text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">
           My Skills
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg lg:text-xl xl:text-2xl">

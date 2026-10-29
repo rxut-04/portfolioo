@@ -32,7 +32,7 @@ const Experience = () => {
   return (
     <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-start md:gap-10 md:px-12">
       <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-50 2xl:mt-42">
-        <h1 className="text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">
+        <h1 className="font-manuscribe text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">
           “My Experience”
         </h1>
         <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg lg:text-xl">
