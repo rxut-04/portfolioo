@@ -1,7 +1,31 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Manuscribe';
+  src: url('/fonts/Manuscribe-Regular-demo.woff2') format('woff2'),
+       url('/fonts/Manuscribe-Regular-demo.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-.box{
-    background-color: red;
-    /* display: flex; */
+@font-face {
+  font-family: 'Manuscribe';
+  src: url('/fonts/Manuscribe-Italic-demo.woff2') format('woff2'),
+       url('/fonts/Manuscribe-Italic-demo.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  --font-manuscribe: 'Manuscribe', cursive, sans-serif;
+}
+
+.font-manuscribe {
+  font-family: 'Manuscribe', cursive, sans-serif;
+}
+
+.box {
+  background-color: red;
 }
