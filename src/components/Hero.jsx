@@ -4,7 +4,7 @@ const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
   const [zoom, setZoom] = useState(100)
 
-  const handleRegisterClick = () => {
+  const handleViewCvClick = () => {
     // 1. Trigger immediate download of the resume
     const link = document.createElement('a')
     link.href = '/OM_RESUME.pdf'
@@ -56,10 +56,10 @@ const Hero = () => {
             ship real work.
           </p>
           <button
-            onClick={handleRegisterClick}
+            onClick={handleViewCvClick}
             className="mt-6 rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
           >
-            Register Here
+            View CV
           </button>
         </div>
 
