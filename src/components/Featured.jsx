@@ -35,7 +35,7 @@ const Featured = () => {
                 </div>
 
                 {/* Video side (left on desktop) */}
-                <div className="w-full overflow-hidden rounded-2xl lg:w-3/5">
+                <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
                     <video
                         src="/banking.mp4"
                         poster="/images/banking-preview.png"
@@ -44,7 +44,7 @@ const Featured = () => {
                         muted
                         playsInline
                         controls
-                        className="aspect-video w-full object-cover shadow-2xl ring-1 ring-gray-200 transition duration-300 hover:scale-[1.02]"
+                        className="aspect-video w-full object-cover"
                     >
                         Your browser does not support the video tag.
                     </video>
@@ -72,7 +72,7 @@ const Featured = () => {
                 </div>
 
                 {/* Video side (landscape) */}
-                <div className="w-full overflow-hidden rounded-2xl lg:w-3/5">
+                <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
                     <video
                         src="/medlink.mp4"
                         poster="/images/medlink-preview.png"
@@ -81,7 +81,7 @@ const Featured = () => {
                         muted
                         playsInline
                         controls
-                        className="aspect-video w-full object-cover shadow-2xl ring-1 ring-gray-200 transition duration-300 hover:scale-[1.02]"
+                        className="aspect-video w-full object-cover"
                     >
                         Your browser does not support the video tag.
                     </video>
@@ -110,7 +110,7 @@ const Featured = () => {
                 </div>
 
                 {/* Video side (left on desktop) */}
-                <div className="w-full overflow-hidden rounded-2xl lg:w-3/5">
+                <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
                     <video
                         src="/rfid.mp4"
                         poster="/images/food.png"
@@ -119,7 +119,7 @@ const Featured = () => {
                         muted
                         playsInline
                         controls
-                        className="aspect-video w-full object-cover shadow-2xl ring-1 ring-gray-200 transition duration-300 hover:scale-[1.02]"
+                        className="aspect-video w-full object-cover"
                     >
                         Your browser does not support the video tag.
                     </video>
