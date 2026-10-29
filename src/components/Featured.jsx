@@ -26,9 +26,12 @@ const Featured = () => {
                         A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                     </p>
                     <br />
-                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
+                    <Link
+                        to="/projects/banking"
+                        className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
+                    >
                         Visit
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Video side (left on desktop) */}
@@ -60,9 +63,12 @@ const Featured = () => {
                         An AI-assisted platform that helps medical doctors assess risk, seek second opinions, and make safer clinical decisions. Trusted by 500+ clinical specialists.
                     </p>
                     <br />
-                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
+                    <Link
+                        to="/projects/medlink"
+                        className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
+                    >
                         Visit
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Video side (landscape) */}
@@ -95,9 +101,12 @@ const Featured = () => {
                         Java Servlets,HTML5 & CSS3 .
                     </p>
                     <br />
-                    <button className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg">
+                    <Link
+                        to="/projects/rfid"
+                        className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
+                    >
                         Visit
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Video side (left on desktop) */}

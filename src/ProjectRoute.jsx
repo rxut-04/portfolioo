@@ -24,6 +24,9 @@ import BootstrapSkill from './skills/Bootstrap'
 import ExpressSkill from './skills/Express'
 import CsharpSkill from './skills/Csharp'
 import GithubSkill from './skills/Github'
+import BankingProject from './Projects/Banking'
+import MedlinkProject from './Projects/Medlink'
+import RfidProject from './Projects/Rfid'
 
 const SiteLayout = () => {
   return (
@@ -61,6 +64,9 @@ const ProjectRoute = () => {
           <Route path="skills/github" element={<GithubSkill />} />
           <Route path="experience" element={<Experience />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/banking" element={<BankingProject />} />
+          <Route path="projects/medlink" element={<MedlinkProject />} />
+          <Route path="projects/rfid" element={<RfidProject />} />
           <Route path="hero" element={<Hero />} />
           <Route path="grid" element={<Grid />} />
         </Route>
