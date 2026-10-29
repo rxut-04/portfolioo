@@ -4,7 +4,6 @@ const Java = () => {
   const areas = ['Core Java', 'Java Servlets', 'JSP']
   const projects = [
     { number: '03', name: 'Food Delivery App' },
-    { number: '07', name: 'Startup Community Hub' },
   ]
 
   return (

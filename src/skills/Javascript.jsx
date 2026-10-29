@@ -3,11 +3,8 @@ import { Link } from 'react-router-dom'
 const Javascript = () => {
   const areas = ['Interactive interfaces', 'Application logic', 'Working with React']
   const projects = [
-    { number: '01', name: 'MedLink — Safer Clinical Decisions' },
-    { number: '02', name: 'Code Debug Visualize' },
-    { number: '04', name: 'AI Resume Builder' },
-    { number: '05', name: 'Personal Finance Tracker' },
-    { number: '08', name: 'Library Audit — RFID System' },
+    { number: '01', name: 'Apex — Core Banking Engine' },
+    { number: '02', name: 'MedLink — Safer Clinical Decisions' },
   ]
 
   return (

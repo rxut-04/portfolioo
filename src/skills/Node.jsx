@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom'
 const Node = () => {
   const areas = ['Server-side JavaScript', 'Backend services', 'Application logic']
   const projects = [
-    { number: '02', name: 'Code Debug Visualize' },
-    { number: '05', name: 'Personal Finance Tracker' },
-    { number: '08', name: 'Library Audit — RFID System' },
+    { number: '01', name: 'Apex — Core Banking Engine' },
   ]
 
   return (

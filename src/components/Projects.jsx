@@ -1,60 +1,30 @@
 const projects = [
   {
     number: '01',
+    name: 'Apex — Core Banking Engine',
+    description:
+      'A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.',
+    technologies: ['React', 'Node.js', 'Core Banking', 'Tailwind CSS'],
+    image: '/images/banking-preview.png',
+    video: '/banking.mp4',
+  },
+  {
+    number: '02',
     name: 'MedLink — Safer Clinical Decisions',
     description:
       'An AI-assisted platform that helps medical doctors assess risk, seek second opinions, and make safer clinical decisions. Trusted by 500+ clinical specialists.',
     technologies: ['React', 'Next.js', 'AI/ML', 'Tailwind CSS'],
     image: '/images/medlink-preview.png',
-  },
-  {
-    number: '02',
-    name: 'Code Debug Visualize',
-    description:  
-      'Interactive code playground with visual debugging. Real-time execution, step-by-step debugging, and visual representation of data structures.',
-    technologies: ['React', 'D3.js', 'WebSocket', 'Node.js'],
+    video: '/medlink.mp4',
   },
   {
     number: '03',
     name: 'Food Delivery App',
     description:
-      'Complete food delivery platform with restaurant management, order tracking, and user authentication. Responsive design with comprehensive ordering system.',
+      'Complete food delivery platform with restaurant management, order tracking, and user authentication. Responsive design with comprehensive ordering system using Java Servlets, HTML5 & CSS3.',
     technologies: ['JSP', 'Servlets', 'HTML5', 'CSS3'],
-  },
-  {
-    number: '04',
-    name: 'AI Resume Builder',
-    description:
-      'AI-powered resume builder with smart suggestions, multiple templates, and one-click export. Built for job seekers who want to stand out.',
-    technologies: ['React', 'Firebase', 'Bootstrap', 'Redux'],
-  },
-  {
-    number: '05',
-    name: 'Personal Finance Tracker',
-    description:
-      'Comprehensive personal finance management with expense tracking, budget planning, and financial analytics. Intuitive dashboards and detailed insights.',
-    technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
-  },
-  {
-    number: '06',
-    name: 'SaaS Business Platform',
-    description:
-      'Modern SaaS platform with subscription management, user analytics, and automated billing. Comprehensive dashboard for business metrics.',
-    technologies: ['Next.js', 'Stripe', 'PostgreSQL', 'Tailwind CSS'],
-  },
-  {
-    number: '07',
-    name: 'Startup Community Hub',
-    description:
-      'Community platform connecting startups, founders, and investors. Features profiles, networking tools, and event management.',
-    technologies: ['Servlets', 'JSP', 'HTML5', 'CSS3'],
-  },
-  {
-    number: '08',
-    name: 'Library Audit — RFID System',
-    description:
-      'RFID-powered library auditing system. Tap, track, and audit physical books in real time — with a live dashboard, scan & sync, and login portal for administrators.',
-    technologies: ['React', 'RFID', 'Node.js', 'Dashboard'],
+    image: '/images/food.png',
+    video: '/rfid.mp4',
   },
 ]
 
@@ -111,7 +81,20 @@ const Projects = () => {
               <div
                 className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${imageFirst ? 'order-1 lg:order-1' : 'order-2'}`}
               >
-                {project.image ? (
+                {project.video ? (
+                  <video
+                    src={project.video}
+                    poster={project.image}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls
+                    className="size-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : project.image ? (
                   <img
                     src={project.image}
                     alt={`${project.name} project preview`}

@@ -4,7 +4,6 @@ const Css = () => {
   const areas = ['Responsive layouts', 'Visual styling', 'Transitions and states']
   const projects = [
     { number: '03', name: 'Food Delivery App' },
-    { number: '07', name: 'Startup Community Hub' },
   ]
 
   return (

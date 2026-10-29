@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 const Tailwind = () => {
   const areas = ['Responsive breakpoints', 'Flex and grid layouts', 'Reusable visual patterns']
   const projects = [
-    { number: '01', name: 'MedLink — Safer Clinical Decisions' },
-    { number: '06', name: 'SaaS Business Platform' },
+    { number: '01', name: 'Apex — Core Banking Engine' },
+    { number: '02', name: 'MedLink — Safer Clinical Decisions' },
   ]
 
   return (

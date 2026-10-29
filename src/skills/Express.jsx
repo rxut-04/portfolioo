@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 
 const Express = () => {
   const areas = ['Server routes', 'API development', 'Node.js applications']
-  const projects = [{ number: '05', name: 'Personal Finance Tracker' }]
 
   return (
     <div className="w-full px-6 py-10 sm:px-10 md:px-12 lg:py-16">
@@ -56,18 +55,9 @@ const Express = () => {
         </div>
         <div className="min-w-0">
           <h2 className="text-2xl font-bold text-gray-900">Projects using it</h2>
-          <ul className="mt-3 space-y-3">
-            {projects.map((project) => (
-              <li key={project.number}>
-                <Link
-                  to={`/projects#project-${project.number}-title`}
-                  className="break-words font-medium text-blue-700 underline decoration-blue-300 underline-offset-4 hover:text-blue-900"
-                >
-                  {project.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <p className="mt-3 text-base leading-relaxed text-gray-600 sm:text-lg">
+            No project using Express is listed in the project showcase yet.
+          </p>
         </div>
       </section>
 
