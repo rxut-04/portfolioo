@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const projects = [
   {
     number: '01',
@@ -7,6 +9,7 @@ const projects = [
     technologies: ['React', 'Node.js', 'Core Banking', 'Tailwind CSS'],
     image: '/images/banking-preview.png',
     video: '/banking.mp4',
+    link: '/projects/banking',
   },
   {
     number: '02',
@@ -16,6 +19,7 @@ const projects = [
     technologies: ['React', 'Next.js', 'AI/ML', 'Tailwind CSS'],
     image: '/images/medlink-preview.png',
     video: '/medlink.mp4',
+    link: '/projects/medlink',
   },
   {
     number: '03',
@@ -25,26 +29,35 @@ const projects = [
     technologies: ['JSP', 'Servlets', 'HTML5', 'CSS3'],
     image: '/images/food.png',
     video: '/rfid.mp4',
+    link: '/projects/rfid',
   },
 ]
 
 const Projects = () => {
   return (
     <>
-      <div className="flex w-full flex-col gap-y-8 pt-6 sm:gap-y-12 sm:pt-10">
+      <div className="flex w-full flex-col gap-y-12 pt-6 pb-14 sm:gap-y-16 sm:pt-10 sm:pb-20">
         {projects.map((project, index) => {
-          const imageFirst = index % 2 === 1
+          // MedLink (index 1) has video on right, content on left
+          const isVideoOnRight = index === 1
 
           return (
             <section
               key={project.number}
               aria-labelledby={`project-${project.number}-title`}
-              className={`grid w-full grid-cols-1 items-center gap-0 ${imageFirst ? 'lg:grid-cols-[70%_30%]' : 'lg:grid-cols-[30%_70%]'}`}
+              className={`grid w-full grid-cols-1 items-center gap-6 sm:gap-8 lg:gap-0 ${
+                isVideoOnRight
+                  ? 'lg:grid-cols-[42%_58%]'
+                  : 'lg:grid-cols-[58%_42%]'
+              }`}
             >
+              {/* Content Side */}
               <div
-                className={`flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-8 xl:px-12 ${imageFirst ? 'order-2 lg:order-2' : 'order-1'}`}
+                className={`flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 lg:px-8 xl:px-12 ${
+                  isVideoOnRight ? 'order-2 lg:order-1' : 'order-2 lg:order-2'
+                }`}
               >
-                <p className="mb-2 text-sm font-semibold tracking-widest text-indigo-600">
+                <p className="mb-2 text-sm font-semibold tracking-widest text-blue-700">
                   {project.number}
                 </p>
                 <h2
@@ -63,23 +76,25 @@ const Projects = () => {
                   {project.technologies.map((technology) => (
                     <li
                       key={technology}
-                      className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700"
+                      className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700"
                     >
                       {technology}
                     </li>
                   ))}
                 </ul>
-                <button
-                  type="button"
-                  disabled
-                  title="Live site URL has not been added yet"
-                  className="mt-6 inline-flex items-center justify-center rounded-full border border-indigo-400 bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-500/25 transition duration-200 hover:-translate-y-0.5 hover:from-indigo-700 hover:to-violet-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+                <Link
+                  to={project.link}
+                  className="mt-6 inline-flex w-fit items-center justify-center rounded-full bg-blue-700 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95"
                 >
-                  Visit Live Site
-                </button>
+                  Visit Project
+                </Link>
               </div>
+
+              {/* Video Side */}
               <div
-                className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-white to-indigo-50 shadow-inner ring-1 ring-inset ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${imageFirst ? 'order-1 lg:order-1' : 'order-2'}`}
+                className={`relative mx-4 flex aspect-[2/1] w-[calc(100%-2rem)] items-center justify-center overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-slate-200 sm:mx-8 sm:w-[calc(100%-4rem)] lg:mx-0 lg:w-full lg:rounded-3xl ${
+                  isVideoOnRight ? 'order-1 lg:order-2' : 'order-1 lg:order-1'
+                }`}
               >
                 {project.video ? (
                   <video
@@ -114,7 +129,8 @@ const Projects = () => {
         })}
       </div>
 
-      <section className="bg-gray-900 px-6 py-16 text-center text-white">
+      {/* Bottom CTA Section with bottom margin */}
+      <section className="mb-16 sm:mb-24 bg-gray-900 px-6 py-16 text-center text-white">
         <h2 className="text-3xl font-bold sm:text-4xl">Got A Project?</h2>
         <p className="mt-3 text-xl text-gray-300">Let&apos;s Build It</p>
       </section>
