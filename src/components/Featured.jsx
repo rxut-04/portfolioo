@@ -30,13 +30,20 @@ const Featured = () => {
                     </button>
                 </div>
 
-                {/* Image side (landscape) */}
+                {/* Video side (landscape) */}
                 <div className="w-full overflow-hidden rounded-2xl lg:w-3/5">
-                    <img
-                        src="/images/medlink-preview.png"
-                        alt="MedLink project preview"
+                    <video
+                        src="/medlink.mp4"
+                        poster="/images/medlink-preview.png"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        controls
                         className="aspect-video w-full object-cover shadow-2xl ring-1 ring-gray-200 transition duration-300 hover:scale-[1.02]"
-                    />
+                    >
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </section>
 
