@@ -1,4 +1,5 @@
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import App from './App'
 import About from "./components/About"
 import Projects from "./components/Projects"
@@ -28,6 +29,23 @@ import BankingProject from './Projects/Banking'
 import MedlinkProject from './Projects/Medlink'
 import RfidProject from './Projects/Rfid'
 
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation()
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.getElementById(hash.replace('#', ''))
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        return
+      }
+    }
+    window.scrollTo(0, 0)
+  }, [pathname, hash])
+
+  return null
+}
+
 const SiteLayout = () => {
   return (
     <div className="flow-root relative min-h-screen">
@@ -40,6 +58,7 @@ const SiteLayout = () => {
 const ProjectRoute = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<SiteLayout />}>
           <Route index element={<App />} />
