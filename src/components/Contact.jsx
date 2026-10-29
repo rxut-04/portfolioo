@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12">
       <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-50 2xl:mt-42">
-        <h1 className="font-manuscribe text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“Contact me”</h1>
+        <h1 className="font-manuscribe text-3xl font-black italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“Contact me”</h1>
         <p className="mt-5 text-lg leading-relaxed sm:text-xl lg:text-2xl">
           Have a project in mind, a question about my work, or just want to say
           hello? My inbox is always open — I’ll get back to you as soon as I can.

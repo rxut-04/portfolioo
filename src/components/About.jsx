@@ -2,7 +2,7 @@ const About = () => {
   return (
     <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12">
       <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-50 2xl:mt-42">
-        <h1 className="font-manuscribe text-3xl font-extrabold italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“About me”</h1>
+        <h1 className="font-manuscribe text-3xl font-black italic leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-5xl xl:text-6xl">“About me”</h1>
         <p className="mt-5 text-lg leading-relaxed sm:text-xl lg:text-2xl">
           I’m Om, a final-year Information Technology student who has completed{' '}
           <span className="underline decoration-sky-500">CDAC training</span>{' '}

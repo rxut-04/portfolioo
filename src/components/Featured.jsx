@@ -5,7 +5,7 @@ const Featured = () => {
     return (
         <><div className="mt-12 flex flex-col items-center justify-center gap-5 px-4 text-center">
             <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
-            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                 <span className="font-manuscribe inline-flex rounded-xl border border-blue-200 bg-blue-100 px-5 py-3 italic text-slate-950 sm:px-7 sm:py-4">
                     Featured Projects
                 </span>
@@ -16,7 +16,7 @@ const Featured = () => {
             <section id="featured-first" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                 {/* Text side (right on desktop) */}
                 <div className="w-full lg:w-2/5">
-                    <h1 className=" font-manuscribe text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                    <h1 className=" font-manuscribe text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
                         “Apex — Core Banking Engine”
                     </h1>
                     <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
@@ -53,7 +53,7 @@ const Featured = () => {
             <section id="featured-medlink" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row lg:gap-16">
                 {/* Text side */}
                 <div className="w-full lg:w-2/5">
-                    <h1 className="font-manuscribe text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                    <h1 className="font-manuscribe text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
                         “MedLink — Safer Clinical Decisions”
                     </h1>
                     <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
@@ -90,7 +90,7 @@ const Featured = () => {
             <section className="mx-auto flex w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                 {/* Text side (right on desktop) */}
                 <div className="w-full lg:w-2/5">
-                    <h1 className="font-manuscribe text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                    <h1 className="font-manuscribe text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
                         “Library Auditing System”
                     </h1>
                     <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
