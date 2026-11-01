@@ -3,15 +3,35 @@ import { Link } from 'react-router-dom'
 
 const Featured = () => {
     return (
-        <><div className="mt-12 flex flex-col items-center justify-center gap-5 px-4 text-center">
-            <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
-            <h1 className="font-harmond text-3xl font-black tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-                <span className="font-harmond inline-flex rounded-xl border border-blue-200 bg-blue-100 px-5 py-3 italic text-slate-950 sm:px-7 sm:py-4">
-                    Featured Projects
-                </span>
-            </h1>
-            <div aria-hidden="true" className="h-px w-[90%] max-w-5xl bg-slate-300" />
-        </div>
+        <>
+            <div className="mt-12 flex flex-col gap-5">
+                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300" />
+
+                <div className="w-full overflow-hidden py-2">
+                    <div className="marquee-track flex w-max">
+                        {[0, 1].map((group) => (
+                            <div
+                                key={group}
+                                aria-hidden={group === 1}
+                                className="flex shrink-0 items-center"
+                            >
+                                {Array.from({ length: 6 }).map((_, i) => (
+                                    <div key={i} className="flex items-center">
+                                        <span className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                                            Featured Projects
+                                        </span>
+                                        <span className="px-6 text-3xl font-normal text-gray-900 sm:text-4xl lg:text-5xl">
+                                            -
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300" />
+            </div>
 
             <section id="featured-first" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                 {/* Text side (right on desktop) */}
@@ -49,7 +69,7 @@ const Featured = () => {
             </section>
 
             <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
-        
+
             <section id="featured-medlink" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row lg:gap-16">
                 {/* Text side */}
                 <div className="w-full lg:w-2/5">
