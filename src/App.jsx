@@ -8,6 +8,7 @@ export default function App() {
       <Hero />
       <Featured />
         <Footer/>
+        <om/>
     </>
   )
 }
