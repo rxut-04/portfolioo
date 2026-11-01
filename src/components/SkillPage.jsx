@@ -15,7 +15,7 @@ const SkillPage = ({
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
             Skill spotlight
           </p>
-          <h1 className="mt-3 break-words text-4xl font-extrabold italic leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+          <h1 className="font-harmond mt-3 break-words text-4xl font-extrabold italic leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
             {name}
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg lg:text-xl">

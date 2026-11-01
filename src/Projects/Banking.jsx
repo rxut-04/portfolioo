@@ -83,7 +83,7 @@ const Banking = () => {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
                 Fintech & Systems Engineering • Project 01
               </p>
-              <h1 className="mt-2 text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl">
+              <h1 className="font-harmond mt-2 text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl">
                 Apex — Core Banking Engine
               </h1>
               <p className="mt-4 text-base leading-relaxed text-gray-600 sm:text-lg">

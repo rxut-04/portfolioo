@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+/* Harmond Fonts */
+@font-face {
+  font-family: 'Harmond';
+  src: url('/fonts/harmond/Harmond-SemBdItaCond.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Harmond';
+  src: url('/fonts/harmond/Harmond-SemiBoldCondensed.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Harmond-SemBdItaCond';
+  src: url('/fonts/harmond/Harmond-SemBdItaCond.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Harmond-SemBdItaCond';
+  src: url('/fonts/harmond/Harmond-SemBdItaCond.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Manuscribe Font */
 @font-face {
   font-family: 'Manuscribe';
@@ -77,6 +110,7 @@
 }
 
 @theme {
+  --font-harmond: 'Harmond-SemBdItaCond', 'Harmond', serif;
   --font-manuscribe: 'Manuscribe', cursive, sans-serif;
   --font-geist: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-geist-mono: 'Geist Mono', monospace;
@@ -88,12 +122,20 @@ p {
   font-family: var(--font-geist);
 }
 
-/* Ensure all h1 headings are extra bold across the site */
+/* Ensure all h1 headings use Harmond font across the site */
 h1 {
-  font-weight: 900 !important;
+  font-family: var(--font-harmond);
 }
 
 /* Tailwind Utilities */
+@utility font-harmond {
+  font-family: var(--font-harmond);
+}
+
+@utility font-harmond-sembd-itacond {
+  font-family: 'Harmond-SemBdItaCond', 'Harmond', serif;
+}
+
 @utility font-manuscribe {
   font-family: var(--font-manuscribe);
   font-weight: 900;
@@ -130,6 +172,14 @@ h1 {
 }
 
 /* Fallback CSS utility classes */
+.font-harmond {
+  font-family: 'Harmond-SemBdItaCond', 'Harmond', serif !important;
+}
+
+.font-harmond-sembd-itacond {
+  font-family: 'Harmond-SemBdItaCond', 'Harmond', serif !important;
+}
+
 .font-manuscribe {
   font-family: 'Manuscribe', cursive, sans-serif !important;
   font-weight: 900 !important;
