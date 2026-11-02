@@ -200,7 +200,7 @@ const Hero = () => {
       setScale(2)
       scaleRef.current = 2
     }
-  }
+  } 
 
   return (
     <>

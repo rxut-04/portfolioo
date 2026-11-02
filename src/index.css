@@ -1,5 +1,167 @@
 @import "tailwindcss";
 
+/* Neue Haas Unica Pro Fonts */
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-UltLightIt.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-LightIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-MediumIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Bold.ttf') format('truetype');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-BoldItalic.ttf') format('truetype');
+  font-weight: 600 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Heavy.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-HeavyIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue';
+  src: url('/fonts/neue/NeueHaasUnicaPro-BlackIt.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Also register as 'Neue Haas Unica Pro' */
+@font-face {
+  font-family: 'Neue Haas Unica Pro';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica Pro';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica Pro';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica Pro';
+  src: url('/fonts/neue/NeueHaasUnicaPro-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Harmond Fonts */
 @font-face {
   font-family: 'Harmond';
@@ -110,6 +272,7 @@
 }
 
 @theme {
+  --font-neue: 'Neue', 'Neue Haas Unica Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-harmond: 'Harmond-SemBdItaCond', 'Harmond', serif;
   --font-manuscribe: 'Manuscribe', cursive, sans-serif;
   --font-geist: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -117,9 +280,9 @@
   --font-geist-pixel: 'Geist Pixel Square', monospace;
 }
 
-/* Apply Geist font to all paragraph elements */
+/* Apply Neue font to all paragraph elements */
 p {
-  font-family: var(--font-geist);
+  font-family: var(--font-neue);
 }
 
 /* Ensure all h1 headings use Harmond font across the site */
@@ -128,6 +291,14 @@ h1 {
 }
 
 /* Tailwind Utilities */
+@utility font-neue {
+  font-family: var(--font-neue);
+}
+
+@utility font-neue-haas {
+  font-family: var(--font-neue);
+}
+
 @utility font-harmond {
   font-family: var(--font-harmond);
 }
@@ -172,6 +343,14 @@ h1 {
 }
 
 /* Fallback CSS utility classes */
+.font-neue {
+  font-family: 'Neue', 'Neue Haas Unica Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.font-neue-haas {
+  font-family: 'Neue', 'Neue Haas Unica Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
 .font-harmond {
   font-family: 'Harmond-SemBdItaCond', 'Harmond', serif !important;
 }
@@ -218,9 +397,6 @@ h1 {
 .box {
   background-color: red;
 }
-
-
-
 
 /* Animation for Featured Project in Featured.jsx file Present in Components Folder */
 @keyframes marquee-scroll {
