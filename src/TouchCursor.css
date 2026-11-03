@@ -8,19 +8,16 @@
 }
 
 .touch-box {
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px; /* centers the box on the cursor point */
+  width: 14px; /* Reduced by 30% from 20px */
+  height: 14px;
+  margin: -7px 0 0 -7px; /* Centers the box on the cursor point */
   background: #000;
   border: 1px solid rgba(255, 255, 255, 0.9);
-  pointer-events: none;
-  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.15s ease;
-  will-change: transform;
+  transition: transform 0.15s ease;
 }
 
 .touch-box.grow {
   transform: scale(2.2);
-  background: rgba(0, 0, 0, 0.85);
 }
 
 /* The arrow tip sits exactly on the cursor point */
@@ -28,53 +25,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
-/* Floating Mode Toggle Button for Mobile */
-.cursor-mode-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 16px;
-  z-index: 99998;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 9999px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  touch-action: auto !important;
-  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.cursor-mode-toggle:active {
-  transform: scale(0.96);
-}
-
-.cursor-mode-toggle.active {
-  background: rgba(15, 23, 42, 0.92);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.cursor-mode-toggle.inactive {
-  background: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
-}
-
-/* Only on touch devices when trackpad cursor mode is active: disable standard gesture interference */
-html.touch-cursor-active,
-body.touch-cursor-active {
-  touch-action: none !important;
-  overscroll-behavior: none !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
+/* Only on touch devices: two-finger scroll is handled */
+@media (pointer: coarse) {
+  html,
+  body {
+    touch-action: none;
+    overscroll-behavior: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }
