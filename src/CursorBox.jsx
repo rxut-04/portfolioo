@@ -6,35 +6,62 @@ export default function CursorBox() {
   const boxRef = useRef(null);
 
   useEffect(() => {
-    const mouse = { x: -100, y: -100 };
+    const target = { x: -100, y: -100 };
     const current = { x: -100, y: -100 };
     let started = false;
     let frameId;
 
-    const onMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+    const setPosition = (clientX, clientY) => {
+      target.x = clientX;
+      target.y = clientY;
 
-      // On first move, jump to the cursor so it doesn't glide in from off-screen
       if (!started) {
-        current.x = e.clientX;
-        current.y = e.clientY;
+        current.x = clientX;
+        current.y = clientY;
         started = true;
-        boxRef.current?.classList.add("visible");
+        if (boxRef.current) {
+          boxRef.current.classList.add("visible");
+        }
       }
     };
 
+    const onMouseMove = (e) => {
+      setPosition(e.clientX, e.clientY);
+    };
+
+    const onTouchStart = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        setPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        setPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onOver = (e) => {
+      if (!boxRef.current) return;
+      const hit = e.target?.closest?.("a, button, [data-cursor='grow'], input, select, textarea, [role='button'], label");
+      boxRef.current.classList.toggle("grow", Boolean(hit));
+    };
+
     const onLeave = () => {
-      boxRef.current?.classList.remove("visible");
+      if (boxRef.current) {
+        boxRef.current.classList.remove("visible");
+      }
     };
 
     const onEnter = () => {
-      if (started) boxRef.current?.classList.add("visible");
+      if (started && boxRef.current) {
+        boxRef.current.classList.add("visible");
+      }
     };
 
     const animate = () => {
-      current.x += (mouse.x - current.x) * 0.15;
-      current.y += (mouse.y - current.y) * 0.15;
+      current.x += (target.x - current.x) * 0.18;
+      current.y += (target.y - current.y) * 0.18;
 
       if (wrapRef.current) {
         wrapRef.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`;
@@ -45,13 +72,19 @@ export default function CursorBox() {
 
     frameId = requestAnimationFrame(animate);
 
-    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mouseover", onOver, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeave);
     document.documentElement.addEventListener("mouseenter", onEnter);
 
     return () => {
       cancelAnimationFrame(frameId);
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseover", onOver);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       document.documentElement.removeEventListener("mouseleave", onLeave);
       document.documentElement.removeEventListener("mouseenter", onEnter);
     };

@@ -8,24 +8,21 @@
 }
 
 .cursor-box {
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px; /* half of the size, centers the box on the cursor */
+  width: 14px; /* Reduced by 30% from 20px */
+  height: 14px;
+  margin: -7px 0 0 -7px; /* Centers the 14px box on the cursor / touch point */
   background: #000;
-  border: 1px solid rgba(255, 255, 255, 0.9); /* keeps it visible on black sections */
+  border: 1px solid rgba(255, 255, 255, 0.9); /* Keeps it visible on black sections */
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
-  will-change: opacity;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+  will-change: transform, opacity;
 }
 
 .cursor-box.visible {
   opacity: 1;
 }
 
-/* Hide on touch devices (phones/tablets) */
-@media (hover: none), (pointer: coarse) {
-  .cursor-wrap {
-    display: none !important;
-  }
+.cursor-box.grow {
+  transform: scale(2.2);
 }

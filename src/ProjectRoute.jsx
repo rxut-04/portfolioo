@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import CursorBox from './CursorBox'
-import TouchCursor from './TouchCursor'
 import App from './App'
 import About from "./components/About"
 import Projects from "./components/Projects"
@@ -67,7 +66,6 @@ const SiteLayout = () => {
   return (
     <div className="flow-root relative min-h-screen">
       <CursorBox />
-      <TouchCursor />
       <Navbar />
       <Outlet />
     </div>
