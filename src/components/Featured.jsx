@@ -94,22 +94,22 @@ const Featured = () => {
                             </Link>
                         </div>
 
-                        {/* Mobile Marquee Ribbons: Both rows after "Visit" button with reduced gap and margins */}
-                        <div className="mt-4 mb-1 -mx-4 flex flex-col gap-1 overflow-hidden sm:-mx-6 lg:hidden" aria-hidden="true">
+                        {/* Mobile Marquee Ribbons: Both rows after "Visit" button with tight minimal gap */}
+                        <div className="mt-4 mb-1 -mx-4 flex flex-col gap-0 overflow-hidden sm:-mx-6 lg:hidden" aria-hidden="true">
                             {/* Row 1: Apex Banking */}
-                            <div className="overflow-hidden py-0.5">
+                            <div className="overflow-hidden">
                                 <div className="bg-marquee-track flex w-max select-none">
                                     {[0, 1].map((group) => (
                                         <div key={group} className="flex shrink-0 items-center">
                                             {Array.from({ length: 6 }).map((_, i) => (
                                                 <div key={i} className="flex items-center">
                                                     <span
-                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic tracking-tight text-slate-900 sm:text-3xl"
+                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 sm:text-3xl"
                                                     >
                                                         Apex Banking
                                                     </span>
                                                     <span
-                                                        className="px-3 text-xl font-normal text-slate-400 sm:text-2xl"
+                                                        className="px-3 text-xl font-normal leading-none text-slate-300 sm:text-2xl"
                                                     >
                                                         {SEPARATOR}
                                                     </span>
@@ -121,19 +121,19 @@ const Featured = () => {
                             </div>
 
                             {/* Row 2: Core Engine (Reverse) */}
-                            <div className="overflow-hidden py-0.5">
+                            <div className="overflow-hidden">
                                 <div className="bg-marquee-track-reverse flex w-max select-none">
                                     {[0, 1].map((group) => (
                                         <div key={group} className="flex shrink-0 items-center">
                                             {Array.from({ length: 6 }).map((_, i) => (
                                                 <div key={i} className="flex items-center">
                                                     <span
-                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic tracking-tight text-slate-900 sm:text-3xl"
+                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 sm:text-3xl"
                                                     >
                                                         Core Engine
                                                     </span>
                                                     <span
-                                                        className="px-3 text-xl font-normal text-slate-400 sm:text-2xl"
+                                                        className="px-3 text-xl font-normal leading-none text-slate-300 sm:text-2xl"
                                                     >
                                                         {SEPARATOR}
                                                     </span>
