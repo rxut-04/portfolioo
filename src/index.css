@@ -415,3 +415,13 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* Custom Cursor: hide default cursor on non-touch devices */
+/* @media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button,
+  [role="button"] {
+    cursor: none;
+  }
+} */

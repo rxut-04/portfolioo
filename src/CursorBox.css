@@ -1,0 +1,31 @@
+.cursor-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+}
+
+.cursor-box {
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px; /* half of the size, centers the box on the cursor */
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.9); /* keeps it visible on black sections */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  will-change: opacity;
+}
+
+.cursor-box.visible {
+  opacity: 1;
+}
+
+/* Hide on touch devices (phones/tablets) */
+@media (hover: none), (pointer: coarse) {
+  .cursor-wrap {
+    display: none !important;
+  }
+}
