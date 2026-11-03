@@ -89,32 +89,6 @@ const Featured = () => {
                             A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                         </p>
 
-                        {/* Mobile Marquee Row 1: After <p> and before "Visit" button */}
-                        <div className="my-5 -mx-4 overflow-hidden py-1 sm:-mx-6 lg:hidden" aria-hidden="true">
-                            <div className="bg-marquee-track flex w-max select-none">
-                                {[0, 1].map((group) => (
-                                    <div key={group} className="flex shrink-0 items-center">
-                                        {Array.from({ length: 6 }).map((_, i) => (
-                                            <div key={i} className="flex items-center">
-                                                <span
-                                                    className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-transparent sm:text-4xl"
-                                                    style={MOBILE_OUTLINE}
-                                                >
-                                                    Apex Banking
-                                                </span>
-                                                <span
-                                                    className="px-4 text-2xl font-normal text-transparent sm:text-3xl"
-                                                    style={MOBILE_OUTLINE}
-                                                >
-                                                    {SEPARATOR}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
                         <div>
                             <Link
                                 to="/projects/banking"
@@ -124,29 +98,58 @@ const Featured = () => {
                             </Link>
                         </div>
 
-                        {/* Mobile Marquee Row 2: After "Visit" button */}
-                        <div className="mt-5 mb-2 -mx-4 overflow-hidden py-1 sm:-mx-6 lg:hidden" aria-hidden="true">
-                            <div className="bg-marquee-track-reverse flex w-max select-none">
-                                {[0, 1].map((group) => (
-                                    <div key={group} className="flex shrink-0 items-center">
-                                        {Array.from({ length: 6 }).map((_, i) => (
-                                            <div key={i} className="flex items-center">
-                                                <span
-                                                    className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-transparent sm:text-4xl"
-                                                    style={MOBILE_OUTLINE}
-                                                >
-                                                    Core Engine
-                                                </span>
-                                                <span
-                                                    className="px-4 text-2xl font-normal text-transparent sm:text-3xl"
-                                                    style={MOBILE_OUTLINE}
-                                                >
-                                                    {SEPARATOR}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
+                        {/* Mobile Marquee Ribbons: Both rows after "Visit" button with reduced gap and margins */}
+                        <div className="mt-4 mb-1 -mx-4 flex flex-col gap-1 overflow-hidden sm:-mx-6 lg:hidden" aria-hidden="true">
+                            {/* Row 1: Apex Banking */}
+                            <div className="overflow-hidden py-0.5">
+                                <div className="bg-marquee-track flex w-max select-none">
+                                    {[0, 1].map((group) => (
+                                        <div key={group} className="flex shrink-0 items-center">
+                                            {Array.from({ length: 6 }).map((_, i) => (
+                                                <div key={i} className="flex items-center">
+                                                    <span
+                                                        className="font-harmond whitespace-nowrap text-2xl font-black italic tracking-tight text-transparent sm:text-3xl"
+                                                        style={MOBILE_OUTLINE}
+                                                    >
+                                                        Apex Banking
+                                                    </span>
+                                                    <span
+                                                        className="px-3 text-xl font-normal text-transparent sm:text-2xl"
+                                                        style={MOBILE_OUTLINE}
+                                                    >
+                                                        {SEPARATOR}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Row 2: Core Engine (Reverse) */}
+                            <div className="overflow-hidden py-0.5">
+                                <div className="bg-marquee-track-reverse flex w-max select-none">
+                                    {[0, 1].map((group) => (
+                                        <div key={group} className="flex shrink-0 items-center">
+                                            {Array.from({ length: 6 }).map((_, i) => (
+                                                <div key={i} className="flex items-center">
+                                                    <span
+                                                        className="font-harmond whitespace-nowrap text-2xl font-black italic tracking-tight text-transparent sm:text-3xl"
+                                                        style={MOBILE_OUTLINE}
+                                                    >
+                                                        Core Engine
+                                                    </span>
+                                                    <span
+                                                        className="px-3 text-xl font-normal text-transparent sm:text-2xl"
+                                                        style={MOBILE_OUTLINE}
+                                                    >
+                                                        {SEPARATOR}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
