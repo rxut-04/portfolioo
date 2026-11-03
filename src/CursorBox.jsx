@@ -41,8 +41,8 @@ export default function CursorBox() {
     };
 
     const animate = () => {
-      current.x += (mouse.x - current.x) * 0.15;
-      current.y += (mouse.y - current.y) * 0.15;
+      current.x += (mouse.x - current.x) * 0.105;
+      current.y += (mouse.y - current.y) * 0.105;
       if (wrapRef.current) {
         wrapRef.current.style.transform = `translate(${current.x}px, ${current.y}px)`;
       }
