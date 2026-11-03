@@ -1,5 +1,13 @@
-
 import { Link } from 'react-router-dom'
+
+// ===== Apex background rows: edit text / direction / speed / repeat here =====
+const apexRows = [
+    { text: 'Apex Banking', animation: 'bg-marquee-track', repeat: 4 },
+    { text: 'Core Engine', animation: 'bg-marquee-track-reverse', repeat: 4 },
+]
+
+const SEPARATOR = '✦'
+const OUTLINE = { WebkitTextStroke: '2px #cbd5e1' }
 
 const Featured = () => {
     return (
@@ -33,40 +41,77 @@ const Featured = () => {
                 <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300" />
             </div>
 
-            <section id="featured-first" className="mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
-                {/* Text side (right on desktop) */}
-                <div className="w-full lg:w-2/5">
-                    <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
-                        “Apex — Core Banking Engine”
-                    </h1>
-                    <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
-                        A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
-                    </p>
-                    <br />
-                    <Link
-                        to="/projects/banking"
-                        className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
-                    >
-                        Visit
-                    </Link>
+            {/* ===== APEX: full-width wrapper with moving background text ===== */}
+            <div className="relative isolate overflow-hidden">
+
+                {/* Background layer: rows generated with map */}
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 z-0 flex select-none flex-col justify-center gap-20 sm:gap-40 lg:gap-60"                >
+                    {apexRows.map((row) => (
+                        <div key={row.text} className="w-full overflow-hidden">
+                            <div className={`${row.animation} flex w-max`}>
+                                {[0, 1].map((group) => (
+                                    <div key={group} className="flex shrink-0 items-center">
+                                        {Array.from({ length: row.repeat }).map((_, i) => (
+                                            <div key={i} className="flex items-center">
+                                                <span
+                                                    className="font-harmond whitespace-nowrap text-[5rem] font-black italic tracking-tight text-transparent sm:text-[9rem] lg:text-[13rem]"
+                                                    style={OUTLINE}
+                                                >
+                                                    {row.text}
+                                                </span>
+                                                <span
+                                                    className="px-6 text-[5rem] font-normal text-transparent sm:text-[9rem] lg:text-[13rem]"
+                                                    style={OUTLINE}
+                                                >
+                                                    {SEPARATOR}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                {/* Video side (left on desktop) */}
-                <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
-                    <video
-                        src="/banking.mp4"
-                        poster="/images/banking-preview.png"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        controls
-                        className="aspect-video w-full object-cover"
-                    >
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </section>
+                {/* Foreground: Apex section above the background */}
+                <section id="featured-first" className="relative z-10 mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
+                    {/* Text side (right on desktop) */}
+                    <div className="w-full lg:w-2/5">
+                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                            “Apex — Core Banking Engine”
+                        </h1>
+                        <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
+                            A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
+                        </p>
+                        <br />
+                        <Link
+                            to="/projects/banking"
+                            className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
+                        >
+                            Visit
+                        </Link>
+                    </div>
+
+                    {/* Video side (left on desktop) */}
+                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
+                        <video
+                            src="/banking.mp4"
+                            poster="/images/banking-preview.png"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            controls
+                            className="aspect-video w-full object-cover"
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </section>
+            </div>
 
             <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
 
@@ -160,11 +205,7 @@ const Featured = () => {
                     <span aria-hidden="true">→</span>
                 </Link>
             </section>
-
-
         </>
-
-
     )
 }
 
