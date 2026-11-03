@@ -7,8 +7,6 @@ const apexRows = [
 ]
 
 const SEPARATOR = '✦'
-const OUTLINE = { WebkitTextStroke: '2px #cbd5e1' }
-const MOBILE_OUTLINE = { WebkitTextStroke: '1px #cbd5e1' }
 
 const Featured = () => {
     return (
@@ -58,14 +56,12 @@ const Featured = () => {
                                         {Array.from({ length: row.repeat }).map((_, i) => (
                                             <div key={i} className="flex items-center">
                                                 <span
-                                                    className="font-harmond whitespace-nowrap text-[5rem] font-black italic tracking-tight text-transparent sm:text-[9rem] lg:text-[13rem]"
-                                                    style={OUTLINE}
+                                                    className="font-palast whitespace-nowrap text-[5rem] font-semibold italic tracking-tight text-slate-200 sm:text-[9rem] lg:text-[13rem]"
                                                 >
                                                     {row.text}
                                                 </span>
                                                 <span
-                                                    className="px-6 text-[5rem] font-normal text-transparent sm:text-[9rem] lg:text-[13rem]"
-                                                    style={OUTLINE}
+                                                    className="px-6 text-[5rem] font-normal text-slate-200 sm:text-[9rem] lg:text-[13rem]"
                                                 >
                                                     {SEPARATOR}
                                                 </span>
@@ -89,7 +85,7 @@ const Featured = () => {
                             A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                         </p>
 
-                        <div>
+                        <div className="mt-6 sm:mt-8">
                             <Link
                                 to="/projects/banking"
                                 className="antialiased inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:px-8 sm:py-3.5 sm:text-lg"
@@ -108,14 +104,12 @@ const Featured = () => {
                                             {Array.from({ length: 6 }).map((_, i) => (
                                                 <div key={i} className="flex items-center">
                                                     <span
-                                                        className="font-harmond whitespace-nowrap text-2xl font-black italic tracking-tight text-transparent sm:text-3xl"
-                                                        style={MOBILE_OUTLINE}
+                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic tracking-tight text-slate-900 sm:text-3xl"
                                                     >
                                                         Apex Banking
                                                     </span>
                                                     <span
-                                                        className="px-3 text-xl font-normal text-transparent sm:text-2xl"
-                                                        style={MOBILE_OUTLINE}
+                                                        className="px-3 text-xl font-normal text-slate-400 sm:text-2xl"
                                                     >
                                                         {SEPARATOR}
                                                     </span>
@@ -134,14 +128,12 @@ const Featured = () => {
                                             {Array.from({ length: 6 }).map((_, i) => (
                                                 <div key={i} className="flex items-center">
                                                     <span
-                                                        className="font-harmond whitespace-nowrap text-2xl font-black italic tracking-tight text-transparent sm:text-3xl"
-                                                        style={MOBILE_OUTLINE}
+                                                        className="font-palast whitespace-nowrap text-2xl font-semibold italic tracking-tight text-slate-900 sm:text-3xl"
                                                     >
                                                         Core Engine
                                                     </span>
                                                     <span
-                                                        className="px-3 text-xl font-normal text-transparent sm:text-2xl"
-                                                        style={MOBILE_OUTLINE}
+                                                        className="px-3 text-xl font-normal text-slate-400 sm:text-2xl"
                                                     >
                                                         {SEPARATOR}
                                                     </span>
