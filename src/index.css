@@ -424,4 +424,29 @@ h1 {
   [role="button"] {
     cursor: none;
   }
-} */
+} */@keyframes bg-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes bg-marquee-reverse {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+.bg-marquee-track {
+  animation: bg-marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.bg-marquee-track-reverse {
+  animation: bg-marquee-reverse 28s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-marquee-track,
+  .bg-marquee-track-reverse {
+    animation: none;
+  }
+}

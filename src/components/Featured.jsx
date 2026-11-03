@@ -8,6 +8,7 @@ const apexRows = [
 
 const SEPARATOR = '✦'
 const OUTLINE = { WebkitTextStroke: '2px #cbd5e1' }
+const MOBILE_OUTLINE = { WebkitTextStroke: '1px #cbd5e1' }
 
 const Featured = () => {
     return (
@@ -44,10 +45,11 @@ const Featured = () => {
             {/* ===== APEX: full-width wrapper with moving background text ===== */}
             <div className="relative isolate overflow-hidden">
 
-                {/* Background layer: rows generated with map */}
+                {/* Background layer: rows generated with map (desktop only) */}
                 <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 z-0 flex select-none flex-col justify-center gap-20 sm:gap-40 lg:gap-60"                >
+                    className="pointer-events-none absolute inset-0 z-0 hidden select-none flex-col justify-center gap-20 sm:gap-40 lg:flex lg:gap-60"
+                >
                     {apexRows.map((row) => (
                         <div key={row.text} className="w-full overflow-hidden">
                             <div className={`${row.animation} flex w-max`}>
@@ -86,13 +88,67 @@ const Featured = () => {
                         <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
                             A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                         </p>
-                        <br />
-                        <Link
-                            to="/projects/banking"
-                            className="antialiased mt-6 inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:mt-8 sm:px-8 sm:py-3.5 sm:text-lg"
-                        >
-                            Visit
-                        </Link>
+
+                        {/* Mobile Marquee Row 1: After <p> and before "Visit" button */}
+                        <div className="my-5 -mx-4 overflow-hidden py-1 sm:-mx-6 lg:hidden" aria-hidden="true">
+                            <div className="bg-marquee-track flex w-max select-none">
+                                {[0, 1].map((group) => (
+                                    <div key={group} className="flex shrink-0 items-center">
+                                        {Array.from({ length: 6 }).map((_, i) => (
+                                            <div key={i} className="flex items-center">
+                                                <span
+                                                    className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-transparent sm:text-4xl"
+                                                    style={MOBILE_OUTLINE}
+                                                >
+                                                    Apex Banking
+                                                </span>
+                                                <span
+                                                    className="px-4 text-2xl font-normal text-transparent sm:text-3xl"
+                                                    style={MOBILE_OUTLINE}
+                                                >
+                                                    {SEPARATOR}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <Link
+                                to="/projects/banking"
+                                className="antialiased inline-flex items-center rounded-full bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:px-8 sm:py-3.5 sm:text-lg"
+                            >
+                                Visit
+                            </Link>
+                        </div>
+
+                        {/* Mobile Marquee Row 2: After "Visit" button */}
+                        <div className="mt-5 mb-2 -mx-4 overflow-hidden py-1 sm:-mx-6 lg:hidden" aria-hidden="true">
+                            <div className="bg-marquee-track-reverse flex w-max select-none">
+                                {[0, 1].map((group) => (
+                                    <div key={group} className="flex shrink-0 items-center">
+                                        {Array.from({ length: 6 }).map((_, i) => (
+                                            <div key={i} className="flex items-center">
+                                                <span
+                                                    className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-transparent sm:text-4xl"
+                                                    style={MOBILE_OUTLINE}
+                                                >
+                                                    Core Engine
+                                                </span>
+                                                <span
+                                                    className="px-4 text-2xl font-normal text-transparent sm:text-3xl"
+                                                    style={MOBILE_OUTLINE}
+                                                >
+                                                    {SEPARATOR}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Video side (left on desktop) */}
