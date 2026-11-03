@@ -18,11 +18,11 @@ const rfidRows = [
 
 const SEPARATOR = '✦'
 
-// Reusable desktop background marquee with normal bottom margin / gap between rows
+// Reusable desktop background marquee with generous gap between rows for web view
 const DesktopMarquee = ({ rows }) => (
     <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 hidden select-none flex-col justify-center gap-6 lg:flex lg:gap-8"
+        className="pointer-events-none absolute inset-0 z-0 hidden select-none flex-col justify-center gap-28 lg:flex lg:gap-48"
     >
         {rows.map((row) => (
             <div key={row.text} className="w-full overflow-hidden">
