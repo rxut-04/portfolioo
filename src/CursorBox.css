@@ -13,6 +13,7 @@
   background: #000;
   border: 1px solid #fff; /* Keeps it visible on black sections */
   opacity: 0;
+  pointer-events: none;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -24,9 +25,9 @@
   transform: scale(2.2);
 }
 
-/* Hide on touch devices (phones/tablets) */
-@media (hover: none) {
+/* Hide on touch devices (phones/tablets) - Web/Desktop only */
+@media (hover: none), (pointer: coarse) {
   .cursor-wrap {
-    display: none;
+    display: none !important;
   }
 }
