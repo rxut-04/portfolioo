@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -216,12 +217,20 @@ const Hero = () => {
             fundamentals. Looking for a developer role where I can learn fast and
             ship real work.
           </p>
-          <button
-            onClick={handleViewCvClick}
-            className="mt-6 rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
-          >
-            View CV
-          </button>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <button
+              onClick={handleViewCvClick}
+              className="rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
+            >
+              View CV
+            </button>
+            <Link
+              to="/different"
+              className="inline-flex items-center rounded-xl border border-gray-300 bg-gray-100/80 px-6 py-3.5 text-base font-semibold text-gray-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-200 hover:text-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white sm:text-lg cursor-pointer"
+            >
+              what makes me different
+            </Link>
+          </div>
         </div>
 
         <div className="mx-auto w-full max-w-[32rem] md:mt-10 md:w-[45%] md:max-w-[36rem] md:shrink-0 2xl:mr-50 2xl:mt-22 2xl:w-[36rem]">

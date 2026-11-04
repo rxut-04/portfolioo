@@ -30,6 +30,7 @@ import GithubSkill from './skills/Github'
 import BankingProject from './Projects/Banking'
 import MedlinkProject from './Projects/Medlink'
 import RfidProject from './Projects/Rfid'
+import Different from './components/Different'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -105,6 +106,8 @@ const ProjectRoute = () => {
           <Route path="projects/banking" element={<BankingProject />} />
           <Route path="projects/medlink" element={<MedlinkProject />} />
           <Route path="projects/rfid" element={<RfidProject />} />
+          <Route path="different" element={<Different />} />
+          <Route path="what-makes-me-different" element={<Different />} />
           <Route path="hero" element={<Hero />} />
           <Route path="grid" element={<Grid />} />
         </Route>
