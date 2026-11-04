@@ -25,6 +25,12 @@
   transform: scale(2.2);
 }
 
+/* In dark mode, invert cursor box to solid crisp white with subtle dark border */
+html.dark .cursor-box {
+  background: #fff;
+  border: 1px solid #000;
+}
+
 /* Hide on touch devices (phones/tablets) - Web/Desktop only */
 @media (hover: none), (pointer: coarse) {
   .cursor-wrap {

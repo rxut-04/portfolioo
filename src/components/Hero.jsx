@@ -206,11 +206,11 @@ const Hero = () => {
     <>
       <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12 xl:gap-20">
         <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-60 2xl:mt-60">
-          <h1 className="font-harmond text-4xl font-black italic leading-tight text-gray-900 sm:text-5xl">
+          <h1 className="font-harmond text-4xl font-black italic leading-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl">
             “Hi, I’m Om Raut
             <br />Full-Stack Developer”
           </h1>
-          <p className="mt-5 text-base leading-relaxed sm:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-gray-600 transition-colors duration-300 dark:text-zinc-400 sm:text-lg">
             Final-year IT student and CDAC graduate. I build web applications with
             React, Java, and Spring Boot, backed by solid DSA and database
             fundamentals. Looking for a developer role where I can learn fast and

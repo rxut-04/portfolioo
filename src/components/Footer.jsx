@@ -14,7 +14,7 @@ const Footer = () => {
   ]
 
   return (
-    <footer className="mt-12 w-full bg-gray-900 px-6 py-16 text-center text-white">
+    <footer className="mt-12 w-full bg-gray-900 px-6 py-16 text-center text-white transition-colors duration-300 dark:bg-[#070709] dark:border-t dark:border-zinc-800/80">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8">
         <p className="text-base text-gray-300 sm:text-lg">
           © {year} Om Raut. All rights reserved.

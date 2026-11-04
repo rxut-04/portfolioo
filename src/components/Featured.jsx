@@ -32,12 +32,12 @@ const DesktopMarquee = ({ rows }) => (
                             {Array.from({ length: row.repeat }).map((_, i) => (
                                 <div key={i} className="flex items-center">
                                     <span
-                                        className="font-palast whitespace-nowrap text-[5rem] font-semibold italic tracking-tight text-slate-200 sm:text-[9rem] lg:text-[13rem]"
+                                        className="font-palast whitespace-nowrap text-[5rem] font-semibold italic tracking-tight text-slate-200 transition-colors duration-300 dark:text-zinc-800/80 sm:text-[9rem] lg:text-[13rem]"
                                     >
                                         {row.text}
                                     </span>
                                     <span
-                                        className="px-6 text-[5rem] font-normal text-slate-200 sm:text-[9rem] lg:text-[13rem]"
+                                        className="px-6 text-[5rem] font-normal text-slate-200 transition-colors duration-300 dark:text-zinc-800/80 sm:text-[9rem] lg:text-[13rem]"
                                     >
                                         {SEPARATOR}
                                     </span>
@@ -62,12 +62,12 @@ const MobileMarquee = ({ row1, row2 }) => (
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="flex items-center">
                                 <span
-                                    className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 sm:text-3xl"
+                                    className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 transition-colors duration-300 dark:text-zinc-600 sm:text-3xl"
                                 >
                                     {row1}
                                 </span>
                                 <span
-                                    className="px-3 text-xl font-normal leading-none text-slate-300 sm:text-2xl"
+                                    className="px-3 text-xl font-normal leading-none text-slate-300 transition-colors duration-300 dark:text-zinc-600 sm:text-2xl"
                                 >
                                     {SEPARATOR}
                                 </span>
@@ -86,12 +86,12 @@ const MobileMarquee = ({ row1, row2 }) => (
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="flex items-center">
                                 <span
-                                    className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 sm:text-3xl"
+                                    className="font-palast whitespace-nowrap text-2xl font-semibold italic leading-none tracking-tight text-slate-300 transition-colors duration-300 dark:text-zinc-600 sm:text-3xl"
                                 >
                                     {row2}
                                 </span>
                                 <span
-                                    className="px-3 text-xl font-normal leading-none text-slate-300 sm:text-2xl"
+                                    className="px-3 text-xl font-normal leading-none text-slate-300 transition-colors duration-300 dark:text-zinc-600 sm:text-2xl"
                                 >
                                     {SEPARATOR}
                                 </span>
@@ -108,7 +108,7 @@ const Featured = () => {
     return (
         <>
             <div className="mt-12 flex flex-col gap-5">
-                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300" />
+                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300 transition-colors duration-300 dark:bg-zinc-800" />
 
                 <div className="w-full overflow-hidden py-2">
                     <div className="marquee-track flex w-max">
@@ -120,10 +120,10 @@ const Featured = () => {
                             >
                                 {Array.from({ length: 6 }).map((_, i) => (
                                     <div key={i} className="flex items-center">
-                                        <span className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                                        <span className="font-harmond whitespace-nowrap text-3xl font-black italic tracking-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-4xl lg:text-5xl">
                                             Featured Projects
                                         </span>
-                                        <span className="px-6 text-3xl font-normal text-gray-900 sm:text-4xl lg:text-5xl">
+                                        <span className="px-6 text-3xl font-normal text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-4xl lg:text-5xl">
                                             -
                                         </span>
                                     </div>
@@ -133,7 +133,7 @@ const Featured = () => {
                     </div>
                 </div>
 
-                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300" />
+                <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-slate-300 transition-colors duration-300 dark:bg-zinc-800" />
             </div>
 
             {/* ===== APEX: full-width wrapper with moving background text ===== */}
@@ -144,10 +144,10 @@ const Featured = () => {
                 <section id="featured-first" className="relative z-10 mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                     {/* Text side (right on desktop) */}
                     <div className="w-full lg:w-2/5">
-                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl xl:text-7xl">
                             “Apex — Core Banking Engine”
                         </h1>
-                        <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
+                        <p className="mt-6 text-base leading-relaxed text-gray-600 transition-colors duration-300 dark:text-zinc-400 sm:text-lg xl:text-xl">
                             A high-performance core banking platform with real-time transaction processing, automated fund transfers, deposit & withdrawal management, and live audit ledger verification.
                         </p>
 
@@ -164,7 +164,7 @@ const Featured = () => {
                     </div>
 
                     {/* Video side (left on desktop) */}
-                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
+                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-all duration-500 hover:scale-[1.02] dark:border-zinc-800 dark:ring-zinc-800 lg:w-3/5">
                         <video
                             src="/banking.mp4"
                             poster="/images/banking-preview.png"
@@ -181,7 +181,7 @@ const Featured = () => {
                 </section>
             </div>
 
-            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
+            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300 transition-colors duration-300 dark:bg-zinc-800" />
 
             {/* ===== MEDLINK: full-width wrapper with moving background text ===== */}
             <div className="relative isolate overflow-hidden">
@@ -190,10 +190,10 @@ const Featured = () => {
                 <section id="featured-medlink" className="relative z-10 mx-auto flex scroll-mt-8 w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row lg:gap-16">
                     {/* Text side */}
                     <div className="w-full lg:w-2/5">
-                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl xl:text-7xl">
                             “MedLink — Safer Clinical Decisions”
                         </h1>
-                        <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
+                        <p className="mt-6 text-base leading-relaxed text-gray-600 transition-colors duration-300 dark:text-zinc-400 sm:text-lg xl:text-xl">
                             An AI-assisted platform that helps medical doctors assess risk, seek second opinions, and make safer clinical decisions. Trusted by 500+ clinical specialists.
                         </p>
 
@@ -210,7 +210,7 @@ const Featured = () => {
                     </div>
 
                     {/* Video side (landscape) */}
-                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
+                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-all duration-500 hover:scale-[1.02] dark:border-zinc-800 dark:ring-zinc-800 lg:w-3/5">
                         <video
                             src="/medlink.mp4"
                             poster="/images/medlink-preview.png"
@@ -227,7 +227,7 @@ const Featured = () => {
                 </section>
             </div>
 
-            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
+            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300 transition-colors duration-300 dark:bg-zinc-800" />
 
             {/* ===== LIBRARY AUDITING (RFID): full-width wrapper with moving background text ===== */}
             <div className="relative isolate overflow-hidden">
@@ -236,10 +236,10 @@ const Featured = () => {
                 <section className="relative z-10 mx-auto flex w-[90%] flex-col items-center justify-between gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-screen lg:flex-row-reverse lg:gap-16">
                     {/* Text side (right on desktop) */}
                     <div className="w-full lg:w-2/5">
-                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                        <h1 className="font-harmond text-3xl font-black italic tracking-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl xl:text-7xl">
                             “Library Auditing System”
                         </h1>
-                        <p className="mt-6 text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
+                        <p className="mt-6 text-base leading-relaxed text-gray-600 transition-colors duration-300 dark:text-zinc-400 sm:text-lg xl:text-xl">
                             Complete food delivery platform with restaurant management, order tracking, and user authentication. Responsive design with comprehensive ordering system using
                             Java Servlets,HTML5 & CSS3 .
                         </p>
@@ -257,7 +257,7 @@ const Featured = () => {
                     </div>
 
                     {/* Video side (left on desktop) */}
-                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-transform duration-500 hover:scale-[1.02] lg:w-3/5">
+                    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-2xl ring-1 ring-slate-200 transition-all duration-500 hover:scale-[1.02] dark:border-zinc-800 dark:ring-zinc-800 lg:w-3/5">
                         <video
                             src="/rfid.mp4"
                             poster="/images/food.png"
@@ -274,13 +274,13 @@ const Featured = () => {
                 </section>
             </div>
 
-            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300" />
+            <div aria-hidden="true" className="mx-auto h-px w-[90%] bg-slate-300 transition-colors duration-300 dark:bg-zinc-800" />
 
             <section className="mx-auto flex w-[90%] flex-col items-center justify-center py-12 text-center sm:py-16 lg:min-h-screen">
-                <h2 className="text-3xl font-extrabold italic tracking-tight text-gray-900 sm:text-5xl xl:text-7xl">
+                <h2 className="text-3xl font-extrabold italic tracking-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl xl:text-7xl">
                     “Want to see more projects?”
                 </h2>
-                <p className="mt-6 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg xl:text-xl">
+                <p className="mt-6 max-w-3xl text-base leading-relaxed text-gray-600 transition-colors duration-300 dark:text-zinc-400 sm:text-lg xl:text-xl">
                     This is just a glimpse of what I've built. Explore my full collection of web, mobile, and hardware projects.
                 </p>
                 <Link

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import CursorBox from './CursorBox'
 import App from './App'
 import About from "./components/About"
@@ -64,7 +65,7 @@ const ScrollToTop = () => {
 
 const SiteLayout = () => {
   return (
-    <div className="flow-root relative min-h-screen">
+    <div className="flow-root relative min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-[#09090b] dark:text-zinc-100">
       <CursorBox />
       <Navbar />
       <Outlet />
@@ -74,9 +75,10 @@ const SiteLayout = () => {
 
 const ProjectRoute = () => {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
         <Route element={<SiteLayout />}>
           <Route index element={<App />} />
           <Route path="contact" element={<Contact />} />
@@ -109,6 +111,7 @@ const ProjectRoute = () => {
         <Route path="navbar" element={<Navbar />} />
       </Routes>
     </BrowserRouter>
+  </ThemeProvider>
   )
 }
 

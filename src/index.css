@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Neue Haas Unica Pro Fonts */
 @font-face {
   font-family: 'Neue';
@@ -271,9 +273,75 @@
   font-display: swap;
 }
 
+/* Palast Fonts */
+@font-face {
+  font-family: 'Palast';
+  src: url('/fonts/palast/PalastDisplay-MediumItalic.otf') format('opentype');
+  font-weight: 500 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast';
+  src: url('/fonts/palast/PalastDisplay-BoldItalic.otf') format('opentype');
+  font-weight: 700 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast';
+  src: url('/fonts/palast/PalastDisplay-RegularItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast';
+  src: url('/fonts/palast/PalastDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast Display';
+  src: url('/fonts/palast/PalastDisplay-MediumItalic.otf') format('opentype');
+  font-weight: 500 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast Display';
+  src: url('/fonts/palast/PalastDisplay-BoldItalic.otf') format('opentype');
+  font-weight: 700 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast Poster';
+  src: url('/fonts/palast/PalastPoster-MediumItalic.otf') format('opentype');
+  font-weight: 500 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palast Poster';
+  src: url('/fonts/palast/PalastPoster-BoldItalic.otf') format('opentype');
+  font-weight: 700 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 @theme {
   --font-neue: 'Neue', 'Neue Haas Unica Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-harmond: 'Harmond-SemBdItaCond', 'Harmond', serif;
+  --font-palast: 'Palast', 'Palast Display', 'Palast Poster', serif;
   --font-manuscribe: 'Manuscribe', cursive, sans-serif;
   --font-geist: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-geist-mono: 'Geist Mono', monospace;
@@ -290,6 +358,35 @@ h1 {
   font-family: var(--font-harmond);
 }
 
+/* Smooth global transitions for theme switching */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+html.dark {
+  background-color: #09090b;
+  color: #f4f4f5;
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #09090b;
+  color: #f4f4f5;
+}
+
+/* Headings & paragraphs dark theme defaults */
+html.dark h1,
+html.dark h2,
+html.dark h3 {
+  color: #f4f4f5;
+}
+
+html.dark p {
+  color: #a1a1aa;
+}
+
 /* Tailwind Utilities */
 @utility font-neue {
   font-family: var(--font-neue);
@@ -301,6 +398,10 @@ h1 {
 
 @utility font-harmond {
   font-family: var(--font-harmond);
+}
+
+@utility font-palast {
+  font-family: var(--font-palast);
 }
 
 @utility font-harmond-sembd-itacond {
@@ -357,6 +458,10 @@ h1 {
 
 .font-harmond-sembd-itacond {
   font-family: 'Harmond-SemBdItaCond', 'Harmond', serif !important;
+}
+
+.font-palast {
+  font-family: 'Palast', 'Palast Display', 'Palast Poster', serif !important;
 }
 
 .font-manuscribe {
