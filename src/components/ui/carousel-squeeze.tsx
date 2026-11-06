@@ -464,7 +464,7 @@ function Picture({ slide, isActive }: { slide: SqueezeSlide; isActive: boolean }
 
     if (slide.video) {
         return (
-            <VideoPlayer
+            <VideoSlide
                 src={slide.video}
                 poster={slide.poster}
                 isActive={isActive}
@@ -494,7 +494,7 @@ function Picture({ slide, isActive }: { slide: SqueezeSlide; isActive: boolean }
     );
 }
 
-function VideoPlayer({
+function VideoSlide({
     src,
     poster,
     isActive,
@@ -506,207 +506,35 @@ function VideoPlayer({
     box: CSSProperties;
 }) {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isMuted, setIsMuted] = useState(true);
-    const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [showControls, setShowControls] = useState(false);
-    const hideTimer = useRef<number | null>(null);
 
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
-
         if (isActive) {
-            video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+            video.play().catch(() => {});
         } else {
             video.pause();
-            setIsPlaying(false);
         }
     }, [isActive]);
 
-    const togglePlay = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const video = videoRef.current;
-        if (!video) return;
-        if (video.paused) {
-            video.play();
-            setIsPlaying(true);
-        } else {
-            video.pause();
-            setIsPlaying(false);
-        }
-    };
-
-    const toggleMute = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const video = videoRef.current;
-        if (!video) return;
-        video.muted = !video.muted;
-        setIsMuted(video.muted);
-    };
-
-    const toggleFullscreen = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const video = videoRef.current;
-        if (!video) return;
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-        } else {
-            if (video.requestFullscreen) {
-                video.requestFullscreen().catch(() => {});
-            } else if ((video as any).webkitRequestFullscreen) {
-                (video as any).webkitRequestFullscreen();
-            }
-        }
-    };
-
-    const handleTimeUpdate = () => {
-        const video = videoRef.current;
-        if (!video || !video.duration) return;
-        setCurrentTime(video.currentTime);
-        setProgress((video.currentTime / video.duration) * 100);
-    };
-
-    const handleLoadedMetadata = () => {
-        const video = videoRef.current;
-        if (!video) return;
-        setDuration(video.duration);
-        setIsMuted(video.muted);
-    };
-
-    const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        const video = videoRef.current;
-        if (!video || !video.duration) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const pct = Math.max(0, Math.min(1, clickX / rect.width));
-        video.currentTime = pct * video.duration;
-        setProgress(pct * 100);
-    };
-
-    const formatTime = (sec: number) => {
-        if (isNaN(sec)) return "0:00";
-        const m = Math.floor(sec / 60);
-        const s = Math.floor(sec % 60);
-        return `${m}:${s < 10 ? "0" : ""}${s}`;
-    };
-
-    const handleMouseMove = () => {
-        setShowControls(true);
-        if (hideTimer.current) window.clearTimeout(hideTimer.current);
-        hideTimer.current = window.setTimeout(() => setShowControls(false), 2600);
-    };
-
     return (
-        <div
-            className="relative size-full overflow-hidden"
-            onMouseMove={isActive ? handleMouseMove : undefined}
-            onMouseLeave={isActive ? () => setShowControls(false) : undefined}
-        >
-            <video
-                ref={videoRef}
-                src={src}
-                poster={poster}
-                muted={isMuted}
-                playsInline
-                loop
-                preload="metadata"
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
-                onClick={isActive ? togglePlay : undefined}
-                className={cn(
-                    "absolute inset-y-0 left-1/2 h-full max-w-none -translate-x-1/2 object-cover",
-                    isActive ? "cursor-pointer" : "pointer-events-none"
-                )}
-                style={box}
-            />
-
-            {/* Video controls on the active open slide */}
-            {isActive && (
-                <div
-                    className={cn(
-                        "absolute inset-x-0 bottom-0 z-20 flex flex-col gap-1.5 p-3 sm:p-4 pt-10 transition-opacity duration-200",
-                        showControls || !isPlaying ? "opacity-100" : "opacity-0 hover:opacity-100",
-                        "bg-gradient-to-t from-black/90 via-black/50 to-transparent"
-                    )}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {/* Scrubbing timeline */}
-                    <div
-                        onClick={handleSeek}
-                        className="group/seek relative h-1.5 w-full cursor-pointer rounded-full bg-white/30 hover:h-2 transition-all"
-                    >
-                        <div
-                            className="h-full rounded-full bg-blue-500 relative transition-[width] duration-75"
-                            style={{ width: `${progress}%` }}
-                        >
-                            <div className="absolute right-0 top-1/2 size-3 -translate-y-1/2 translate-x-1/2 rounded-full bg-white opacity-0 group-hover/seek:opacity-100 shadow-sm" />
-                        </div>
-                    </div>
-
-                    {/* Button bar */}
-                    <div className="flex items-center justify-between text-white text-xs font-mono pt-0.5">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <button
-                                type="button"
-                                onClick={togglePlay}
-                                aria-label={isPlaying ? "Pause video" : "Play video"}
-                                className="grid size-7 sm:size-8 place-items-center rounded-md bg-white/20 hover:bg-white/30 backdrop-blur-sm transition text-white"
-                            >
-                                {isPlaying ? (
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                                        <rect x="6" y="4" width="4" height="16" rx="1" />
-                                        <rect x="14" y="4" width="4" height="16" rx="1" />
-                                    </svg>
-                                ) : (
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                )}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={toggleMute}
-                                aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-                                className="grid size-7 sm:size-8 place-items-center rounded-md bg-white/20 hover:bg-white/30 backdrop-blur-sm transition text-white"
-                            >
-                                {isMuted ? (
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                                        <line x1="23" y1="9" x2="17" y2="15" />
-                                        <line x1="17" y1="9" x2="23" y2="15" />
-                                    </svg>
-                                ) : (
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-                                    </svg>
-                                )}
-                            </button>
-
-                            <span className="text-[11px] sm:text-xs text-zinc-300 font-medium pl-1">
-                                {formatTime(currentTime)} / {formatTime(duration)}
-                            </span>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={toggleFullscreen}
-                            aria-label="Fullscreen"
-                            className="grid size-7 sm:size-8 place-items-center rounded-md bg-white/20 hover:bg-white/30 backdrop-blur-sm transition text-white"
-                        >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+        <video
+            ref={videoRef}
+            src={src}
+            poster={poster}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={isActive}
+            className={cn(
+                "absolute inset-y-0 left-1/2 h-full max-w-none -translate-x-1/2 object-cover",
+                isActive ? "pointer-events-auto" : "pointer-events-none"
             )}
-        </div>
+            style={box}
+        >
+            Your browser does not support the video tag.
+        </video>
     );
 }
 
