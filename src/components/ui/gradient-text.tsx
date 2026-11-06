@@ -93,19 +93,19 @@ function GradientText({
       <span className="pointer-events-none absolute inset-0 mix-blend-lighten dark:mix-blend-darken">
         <span
           style={{ backgroundColor: c1 }}
-          className="pointer-events-none absolute -top-1/2 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-1_12s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
+          className="pointer-events-none absolute -top-1/2 h-[30vw] w-[30vw] animate-[gradient-border_16s_ease-in-out_infinite,gradient-1_24s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
         />
         <span
           style={{ backgroundColor: c2 }}
-          className="pointer-events-none absolute right-0 top-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-2_12s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
+          className="pointer-events-none absolute right-0 top-0 h-[30vw] w-[30vw] animate-[gradient-border_16s_ease-in-out_infinite,gradient-2_26s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
         />
         <span
           style={{ backgroundColor: c3 }}
-          className="pointer-events-none absolute bottom-0 left-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-3_12s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
+          className="pointer-events-none absolute bottom-0 left-0 h-[30vw] w-[30vw] animate-[gradient-border_16s_ease-in-out_infinite,gradient-3_28s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
         />
         <span
           style={{ backgroundColor: c4 }}
-          className="pointer-events-none absolute -bottom-1/2 right-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-4_12s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
+          className="pointer-events-none absolute -bottom-1/2 right-0 h-[30vw] w-[30vw] animate-[gradient-border_16s_ease-in-out_infinite,gradient-4_30s_ease-in-out_infinite_alternate] mix-blend-overlay blur-[1rem]"
         />
       </span>
     </MotionComponent>
