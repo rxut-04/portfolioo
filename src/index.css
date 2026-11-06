@@ -75,6 +75,15 @@
   }
 }
 
+@keyframes gradient-text-fade {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(90deg);
+  }
+}
+
 /* Neue Haas Unica Pro Fonts */
 @font-face {
   font-family: 'Neue';

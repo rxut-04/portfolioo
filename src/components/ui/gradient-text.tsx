@@ -26,7 +26,7 @@ function GradientText({
       )}
       {...props}
     >
-      <span className="font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-2)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-5)),hsl(var(--color-1)))] bg-[length:300%_100%] animate-[gradient-text-shift_14s_ease-in-out_infinite]">
+      <span className="font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(135deg,hsl(var(--color-1)),hsl(var(--color-3)),hsl(var(--color-2)),hsl(var(--color-4)),hsl(var(--color-5)))] animate-[gradient-text-fade_20s_ease-in-out_infinite]">
         {children}
       </span>
     </MotionComponent>
