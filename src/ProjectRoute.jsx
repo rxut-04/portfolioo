@@ -31,6 +31,7 @@ import BankingProject from './Projects/Banking'
 import MedlinkProject from './Projects/Medlink'
 import RfidProject from './Projects/Rfid'
 import Different from './components/Different'
+import UnderstandingSystem from './components/UnderstandingSystem'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -108,6 +109,8 @@ const ProjectRoute = () => {
           <Route path="projects/rfid" element={<RfidProject />} />
           <Route path="different" element={<Different />} />
           <Route path="what-makes-me-different" element={<Different />} />
+          <Route path="understanding-the-system" element={<UnderstandingSystem />} />
+          <Route path="different/part-2" element={<UnderstandingSystem />} />
           <Route path="hero" element={<Hero />} />
           <Route path="grid" element={<Grid />} />
         </Route>
