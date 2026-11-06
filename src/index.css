@@ -77,10 +77,21 @@
 
 @keyframes gradient-text-fade {
   0%, 100% {
-    filter: hue-rotate(0deg);
+    background-position: 0% 50%;
+    opacity: 0.92;
   }
   50% {
-    filter: hue-rotate(90deg);
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+}
+
+@keyframes gradient-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
 
