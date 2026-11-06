@@ -4,7 +4,7 @@ import {
   ScrollReadParagraph,
   computeWordOffsets,
 } from './ui/scroll-read-text'
-import { SqueezeCarousel } from './ui/carousel-squeeze'
+import { SqueezeCarousel, Arrow } from './ui/carousel-squeeze'
 
 const mark = (text) => (
   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1 font-mono text-[11px] sm:text-xs font-semibold tracking-wide text-white backdrop-blur-md border border-white/15 shadow-sm">
@@ -230,35 +230,45 @@ export default function Different() {
         </div>
 
         {/* ===== INTERACTIVE SYSTEM & PROJECT SHOWCASE SLIDESHOW (IN BETWEEN) ===== */}
-        <section id="carousel-section" className="pt-6 sm:pt-10 pb-4">
-          <div className="mb-4 sm:mb-6">
-            <div className="flex items-center gap-2">
-              <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400" />
-              <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                Live Architectures // Systems in Motion
-              </span>
-            </div>
-            <h3 className="font-harmond text-2xl sm:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1.5">
-              Production blueprints in action.
-            </h3>
-            <p className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
-              Swipe or tap through real systems: core financial ledgers, hospital orchestration flows, and edge IoT controllers.
-            </p>
-          </div>
+        <section id="carousel-section" className="pt-8 sm:pt-14 pb-4">
+          <SqueezeCarousel
+            slides={PROJECT_SLIDES}
+            height="clamp(240px, 38cqi, 380px)"
+            radius={10}
+            gap={14}
+            slatWidth={10}
+            slatGap={8}
+            className="w-full"
+            header={({ prev, next, open, count }) => (
+              <div className="mb-5 sm:mb-7 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+                    <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                      Live Architectures // Systems in Motion
+                    </span>
+                  </div>
+                  <h1 className="font-harmond text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1.5">
+                    Production blueprints in action.
+                  </h1>
+                  <p className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-xl">
+                    Swipe or tap through real systems: core financial ledgers, hospital orchestration flows, and edge IoT controllers.
+                  </p>
+                </div>
 
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900/30">
-            <SqueezeCarousel
-              slides={PROJECT_SLIDES}
-              label="Engineering Systems"
-              height="clamp(220px, 34cqi, 340px)"
-              radius={10}
-              gap={14}
-              slatWidth={10}
-              slatGap={8}
-              controls={true}
-              className="w-full"
-            />
-          </div>
+                {/* Controllers placed on the right-hand side of the H1 */}
+                <div className="flex items-center gap-3 shrink-0 self-start sm:self-end pb-1">
+                  <span className="font-mono text-xs font-semibold text-zinc-500 dark:text-zinc-400 tabular-nums">
+                    {String(open + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <Arrow back label="Previous slide" onClick={prev} />
+                    <Arrow label="Next slide" onClick={next} />
+                  </div>
+                </div>
+              </div>
+            )}
+          />
         </section>
 
         {/* ===== PART 2 SECTION & BUTTON ===== */}

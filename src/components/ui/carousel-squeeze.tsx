@@ -117,6 +117,13 @@ export type SqueezeCarouselProps = {
     accentForeground?: string;
     label?: string;
     panelClassName?: string;
+    /** Custom header renderer passing control triggers and state */
+    header?: (props: {
+        prev: () => void;
+        next: () => void;
+        open: number;
+        count: number;
+    }) => ReactNode;
 } & Omit<ComponentProps<"div">, "onSelect">;
 
 export function SqueezeCarousel({
@@ -137,6 +144,7 @@ export function SqueezeCarousel({
     accentForeground = "var(--sq-accent-foreground, var(--color-background, #ffffff))",
     label = "Featured",
     panelClassName,
+    header,
     className,
     style,
     ...props
@@ -299,17 +307,26 @@ export function SqueezeCarousel({
         >
             <style>{GEIST}</style>
 
-            {controls && count > 1 && (
+            {header ? (
+                header({
+                    prev: () => step(-1),
+                    next: () => step(1),
+                    open,
+                    count,
+                })
+            ) : controls && count > 1 ? (
                 <div className="mb-3 sm:mb-4 flex items-center justify-between">
-                    <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                        {label} • {open + 1} / {count}
-                    </span>
+                    {label && (
+                        <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                            {label} • {open + 1} / {count}
+                        </span>
+                    )}
                     <div className="flex items-center gap-2">
                         <Arrow back label="Previous slide" onClick={() => step(-1)} />
                         <Arrow label="Next slide" onClick={() => step(1)} />
                     </div>
                 </div>
-            )}
+            ) : null}
 
             <div className="w-full overflow-hidden" style={{ height: "var(--sq-h)" }}>
                 <div
@@ -693,7 +710,7 @@ function VideoPlayer({
     );
 }
 
-function Arrow({
+export function Arrow({
     back = false,
     label,
     onClick,
