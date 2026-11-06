@@ -50,6 +50,15 @@ const PROJECT_SLIDES = [
     overlay: mark('Archive Ledger'),
     video: '/videos/archive-final.mp4',
   },
+  {
+    id: 'feasto',
+    title: 'Feasto Smart Delivery Platform',
+    description:
+      'Real-time food delivery dispatch system with intelligent order routing, live kitchen telemetry, and automated courier tracking.',
+    action: 'Watch Feasto',
+    overlay: mark('Food Delivery Flow'),
+    video: '/videos/FEASTO-FINAL.mp4',
+  },
 ]
 
 const PARAGRAPHS = [
