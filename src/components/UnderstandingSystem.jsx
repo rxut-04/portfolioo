@@ -65,7 +65,7 @@ export default function UnderstandingSystem() {
       {/* ===== ESSAY BODY: STRICT SEQUENTIAL SCROLL-READING FLOW ===== */}
       <ScrollReadArticle
         totalWords={totalWords}
-        offset={["start 30%", "end 50%"]}
+        offset={["start 60%", "end 85%"]}
         className="space-y-8 sm:space-y-11 text-base sm:text-lg md:text-xl leading-relaxed text-zinc-700 dark:text-zinc-300"
       >
         

@@ -1,4 +1,11 @@
-import React, { useRef, useMemo, useState, useEffect, createContext, useContext } from "react";
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+} from "react";
 import { motion, useScroll, useTransform, MotionValue } from "motion/react";
 import { GradientText, GradientVariant } from "./gradient-text";
 
@@ -14,9 +21,11 @@ export interface ScrollReadArticleContextValue {
   reducedMotion: boolean;
   totalArticleWords: number;
   highlightColor: string;
+  isAtEnd: boolean;
 }
 
-const ScrollReadArticleContext = createContext<ScrollReadArticleContextValue | null>(null);
+const ScrollReadArticleContext =
+  createContext<ScrollReadArticleContextValue | null>(null);
 
 export interface ScrollReadArticleProps {
   children: React.ReactNode;
@@ -27,8 +36,7 @@ export interface ScrollReadArticleProps {
 }
 
 /**
- * Utility to calculate cumulative word offsets across a collection of paragraph strings.
- * Guarantees 100% sequential progression with zero parallel loading across paragraphs.
+ * Utility to calculate cumulative word offsets across an array of paragraphs.
  */
 export function computeWordOffsets(texts: string[]) {
   let cum = 0;
@@ -44,17 +52,21 @@ export function computeWordOffsets(texts: string[]) {
 /**
  * Article-level scroll coordinator.
  * Measures scroll progress over the entire article container so that all paragraphs
- * read strictly sequentially from top to bottom — never in parallel.
+ * read strictly sequentially from top to bottom.
+ *
+ * Automatically detects when the user reaches near the bottom of the page/container,
+ * and smoothly reveals all remaining text without requiring extra scroll effort.
  */
 export function ScrollReadArticle({
   children,
   className = "",
   totalWords = 100,
-  offset = ["start 28%", "end 45%"],
+  offset = ["start 70%", "end 85%"],
   highlightColor = "#3b82f6",
 }: ScrollReadArticleProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isAtEnd, setIsAtEnd] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -63,6 +75,42 @@ export function ScrollReadArticle({
     const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Monitor scroll position to detect when page or article is at the end
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const checkAtEnd = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+
+      // 1. User reached within 220px of the bottom of the document
+      const nearPageBottom = scrollY + windowHeight >= docHeight - 220;
+
+      // 2. Or the article container has scrolled near its bottom
+      let nearArticleBottom = false;
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        nearArticleBottom = rect.bottom <= windowHeight * 0.88;
+      }
+
+      if (nearPageBottom || nearArticleBottom) {
+        setIsAtEnd(true);
+      } else {
+        setIsAtEnd(false);
+      }
+    };
+
+    window.addEventListener("scroll", checkAtEnd, { passive: true });
+    window.addEventListener("resize", checkAtEnd, { passive: true });
+    checkAtEnd();
+
+    return () => {
+      window.removeEventListener("scroll", checkAtEnd);
+      window.removeEventListener("resize", checkAtEnd);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -77,6 +125,7 @@ export function ScrollReadArticle({
         reducedMotion,
         totalArticleWords: totalWords,
         highlightColor,
+        isAtEnd,
       }}
     >
       <div ref={containerRef} className={className}>
@@ -91,113 +140,84 @@ export interface ScrollReadParagraphProps {
   className?: string;
   as?: React.ElementType;
   gradientPhrases?: GradientPhraseConfig[];
-  /** Global starting word index of this paragraph within the whole article */
   globalStartWord?: number;
-  /** Total words in the entire article (defaults to context total) */
   totalArticleWords?: number;
   highlightColor?: string;
 }
 
-interface ParsedToken {
-  word: string;
+interface TextItem {
+  id: string;
+  text: string;
   isGradient: boolean;
   variant: GradientVariant;
-  phrasePosition: "single" | "first" | "middle" | "last";
-  id: string;
+  globalIndex: number;
+  wordCount: number;
 }
 
-const FALLBACK_VARIANTS: GradientVariant[] = [
-  "cyan",
-  "rose",
-  "violet",
-  "amber",
-  "emerald",
-  "fuchsia",
-];
-
 const Word = React.memo(function Word({
-  word,
-  isGradient,
-  variant,
-  phrasePosition,
-  globalIndex,
+  item,
   totalWords,
   progress,
   reducedMotion,
   highlightColor,
+  isAtEnd,
 }: {
-  word: string;
-  isGradient: boolean;
-  variant: GradientVariant;
-  phrasePosition: "single" | "first" | "middle" | "last";
-  globalIndex: number;
+  item: TextItem;
   totalWords: number;
   progress: MotionValue<number>;
   reducedMotion: boolean;
   highlightColor: string;
+  isAtEnd: boolean;
 }) {
   const step = 1 / Math.max(1, totalWords);
-  const start = globalIndex * step;
-  const end = (globalIndex + 1) * step;
+  const start = item.globalIndex * step;
+  const end = (item.globalIndex + item.wordCount) * step;
 
-  // Opacity: starts at 0.2 (20%) and transitions to 1.0 (100%) smoothly
-  const opacity = useTransform(
+  // Opacity: starts at 0.2 (20%) and transitions to 1.0 (100%)
+  const dynamicOpacity = useTransform(
     progress,
-    [Math.max(0, start - 0.002), end],
+    [Math.max(0, start - 0.003), end],
     [0.2, 1.0]
   );
 
-  // Subtle highlight when the word is active (within its scroll window)
-  const color = useTransform(
+  // Subtle highlight when active
+  const dynamicColor = useTransform(
     progress,
     [
-      Math.max(0, start - 0.001),
+      Math.max(0, start - 0.002),
       (start + end) / 2,
-      Math.min(1, end + 0.001),
+      Math.min(1, end + 0.002),
     ],
     ["inherit", highlightColor, "inherit"]
   );
 
-  let badgeShape = "rounded-md px-1.5 mx-0.5";
-  let spacingClass = "mr-[0.28em]";
-  const addSpaceAfter = phrasePosition === "first" || phrasePosition === "middle";
-
-  if (isGradient) {
-    if (phrasePosition === "first") {
-      badgeShape = "rounded-l-md rounded-r-none pl-1.5 pr-0.5 ml-0.5 mr-0 border-r-0";
-      spacingClass = "mr-0";
-    } else if (phrasePosition === "middle") {
-      badgeShape = "rounded-none px-0.5 mx-0 border-x-0";
-      spacingClass = "mr-0";
-    } else if (phrasePosition === "last") {
-      badgeShape = "rounded-r-md rounded-l-none pr-1.5 pl-0.5 mr-0.5 ml-0 border-l-0";
-      spacingClass = "mr-[0.28em]";
-    }
-  }
-
-  const renderedContent = isGradient ? (
-    <GradientText variant={variant} className={badgeShape}>
-      {word}
-      {addSpaceAfter ? "\u00A0" : ""}
-    </GradientText>
-  ) : (
-    word
-  );
-
   if (reducedMotion) {
     return (
-      <span className={`inline-block ${spacingClass} opacity-100`}>
-        {renderedContent}
+      <span className="inline-block mr-[0.28em] opacity-100">
+        {item.isGradient ? (
+          <GradientText variant={item.variant}>{item.text}</GradientText>
+        ) : (
+          item.text
+        )}
       </span>
     );
   }
 
   return (
     <motion.span
-      style={{ opacity, color, willChange: "opacity" }}
-      className={`inline-block ${spacingClass} select-text`}
+      style={{
+        opacity: isAtEnd ? 1.0 : dynamicOpacity,
+        color: isAtEnd ? "inherit" : dynamicColor,
+        willChange: "opacity",
+        transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      className="inline-block mr-[0.28em] select-text"
     >
-      {renderedContent}
+      {item.isGradient ? (
+        <GradientText variant={item.variant}>{item.text}</GradientText>
+      ) : (
+        item.text
+      )}
     </motion.span>
   );
 });
@@ -214,134 +234,149 @@ export function ScrollReadParagraph({
   const articleContext = useContext(ScrollReadArticleContext);
   const fallbackRef = useRef<HTMLElement>(null);
 
-  // If outside ScrollReadArticle, fallback to local scroll progress
   const { scrollYProgress: fallbackProgress } = useScroll({
     target: fallbackRef,
-    offset: ["start 30%", "end 50%"] as any,
+    offset: ["start 60%", "end 85%"] as any,
   });
 
   const progress = articleContext ? articleContext.progress : fallbackProgress;
   const reducedMotion = articleContext ? articleContext.reducedMotion : false;
+  const isAtEnd = articleContext ? articleContext.isAtEnd : false;
   const highlightColor =
     propHighlightColor || articleContext?.highlightColor || "#3b82f6";
 
-  const words = useMemo(() => {
+  // Parse text into exact phrase segments and normal words
+  const items = useMemo<TextItem[]>(() => {
     if (!text) return [];
-    return text.trim().split(/\s+/);
-  }, [text]);
 
-  const totalWords =
-    propTotalWords || articleContext?.totalArticleWords || words.length;
-
-  const tokens = useMemo<ParsedToken[]>(() => {
-    if (words.length === 0) return [];
-
-    const cleanWords = words.map((w) =>
-      w.toLowerCase().replace(/["“”'’.,!?:;]/g, "")
-    );
-
-    // Normalize gradient phrases with their variants, longest phrases first
-    const normalizedPhrases = gradientPhrases
-      .map((item, idx) => {
-        const phraseStr = typeof item === "string" ? item : item.phrase;
-        const variant =
-          typeof item === "string"
-            ? FALLBACK_VARIANTS[idx % FALLBACK_VARIANTS.length]
-            : item.variant || FALLBACK_VARIANTS[idx % FALLBACK_VARIANTS.length];
-
-        const pTokens = phraseStr
-          .toLowerCase()
-          .replace(/["“”'’]/g, "")
-          .split(/\s+/)
-          .filter(Boolean);
-
-        return { pTokens, variant };
+    // Sort phrases by character length descending to prevent substring collisions
+    const sortedPhrases = gradientPhrases
+      .map((item) => {
+        const phrase = typeof item === "string" ? item : item.phrase;
+        const variant: GradientVariant =
+          typeof item === "string" ? "rainbow" : item.variant || "rainbow";
+        return { phrase, variant };
       })
-      .sort((a, b) => b.pTokens.length - a.pTokens.length);
+      .sort((a, b) => b.phrase.length - a.phrase.length);
 
+    // Find all exact occurrences of gradient phrases in this paragraph
     const matches: {
-      isGradient: boolean;
+      start: number;
+      end: number;
+      text: string;
       variant: GradientVariant;
-      phrasePosition: "single" | "first" | "middle" | "last";
-    }[] = cleanWords.map(() => ({
-      isGradient: false,
-      variant: "cyan",
-      phrasePosition: "single",
-    }));
+    }[] = [];
 
-    for (const { pTokens, variant } of normalizedPhrases) {
-      const pLen = pTokens.length;
-      for (let i = 0; i <= cleanWords.length - pLen; i++) {
-        let alreadyMatched = false;
-        for (let j = 0; j < pLen; j++) {
-          if (matches[i + j].isGradient) {
-            alreadyMatched = true;
-            break;
-          }
-        }
-        if (alreadyMatched) continue;
+    for (const { phrase, variant } of sortedPhrases) {
+      const cleanP = phrase.replace(/[.,!?:;]/g, "").trim();
+      if (!cleanP) continue;
 
-        let allMatch = true;
-        for (let j = 0; j < pLen; j++) {
-          if (cleanWords[i + j] !== pTokens[j]) {
-            allMatch = false;
-            break;
-          }
-        }
-
-        if (allMatch) {
-          for (let j = 0; j < pLen; j++) {
-            let pos: "single" | "first" | "middle" | "last" = "single";
-            if (pLen > 1) {
-              if (j === 0) pos = "first";
-              else if (j === pLen - 1) pos = "last";
-              else pos = "middle";
-            }
-            matches[i + j] = {
-              isGradient: true,
-              variant,
-              phrasePosition: pos,
-            };
-          }
-          i += pLen - 1;
+      // Regex matching exact phrase boundary
+      const escaped = cleanP.replace(/[-\\/\\\\^$*+?.()|[\\]{}]/g, "\\$&");
+      const regex = new RegExp(`\\b${escaped}[.,!?:;]?`, "gi");
+      let m;
+      while ((m = regex.exec(text)) !== null) {
+        const start = m.index;
+        const end = start + m[0].length;
+        const overlaps = matches.some(
+          (prev) => !(end <= prev.start || start >= prev.end)
+        );
+        if (!overlaps) {
+          matches.push({ start, end, text: m[0], variant });
         }
       }
     }
 
-    return words.map((word, idx) => ({
-      word,
-      isGradient: matches[idx].isGradient,
-      variant: matches[idx].variant,
-      phrasePosition: matches[idx].phrasePosition,
-      id: `${cleanWords[idx]}-${idx}`,
-    }));
-  }, [words, gradientPhrases]);
+    matches.sort((a, b) => a.start - b.start);
+
+    // Segment text into chunks
+    interface Chunk {
+      text: string;
+      isGradient: boolean;
+      variant: GradientVariant;
+    }
+    const chunks: Chunk[] = [];
+    let lastIdx = 0;
+    for (const m of matches) {
+      if (m.start > lastIdx) {
+        chunks.push({
+          text: text.slice(lastIdx, m.start),
+          isGradient: false,
+          variant: "rainbow",
+        });
+      }
+      chunks.push({
+        text: text.slice(m.start, m.end),
+        isGradient: true,
+        variant: m.variant,
+      });
+      lastIdx = m.end;
+    }
+    if (lastIdx < text.length) {
+      chunks.push({
+        text: text.slice(lastIdx),
+        isGradient: false,
+        variant: "rainbow",
+      });
+    }
+
+    // Build sequential TextItem tokens
+    const result: TextItem[] = [];
+    let runningWordOffset = globalStartWord;
+
+    for (let cIdx = 0; cIdx < chunks.length; cIdx++) {
+      const chunk = chunks[cIdx];
+      if (chunk.isGradient) {
+        const wCount = chunk.text.trim().split(/\s+/).length;
+        result.push({
+          id: `grad-${cIdx}-${runningWordOffset}`,
+          text: chunk.text.trim(),
+          isGradient: true,
+          variant: chunk.variant,
+          globalIndex: runningWordOffset,
+          wordCount: wCount,
+        });
+        runningWordOffset += wCount;
+      } else {
+        const words = chunk.text.trim().split(/\s+/).filter(Boolean);
+        for (let wIdx = 0; wIdx < words.length; wIdx++) {
+          result.push({
+            id: `word-${cIdx}-${wIdx}-${runningWordOffset}`,
+            text: words[wIdx],
+            isGradient: false,
+            variant: "rainbow",
+            globalIndex: runningWordOffset,
+            wordCount: 1,
+          });
+          runningWordOffset += 1;
+        }
+      }
+    }
+
+    return result;
+  }, [text, gradientPhrases, globalStartWord]);
+
+  const totalWords = propTotalWords || articleContext?.totalArticleWords || 100;
 
   return (
     <Component
       ref={fallbackRef}
       className={`break-words select-text ${className}`}
     >
-      {tokens.map((token, index) => (
+      {items.map((item) => (
         <Word
-          key={token.id}
-          word={token.word}
-          isGradient={token.isGradient}
-          variant={token.variant}
-          phrasePosition={token.phrasePosition}
-          globalIndex={globalStartWord + index}
+          key={item.id}
+          item={item}
           totalWords={totalWords}
           progress={progress}
           reducedMotion={reducedMotion}
           highlightColor={highlightColor}
+          isAtEnd={isAtEnd}
         />
       ))}
     </Component>
   );
 }
 
-/**
- * Backward compatibility alias: ScrollReadText can be used anywhere.
- */
 export const ScrollReadText = ScrollReadParagraph;
 export default ScrollReadText;
