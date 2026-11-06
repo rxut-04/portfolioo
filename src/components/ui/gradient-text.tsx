@@ -21,17 +21,13 @@ function GradientText({
   return (
     <MotionComponent
       className={cn(
-        "relative inline-flex items-center align-baseline overflow-hidden rounded-md px-1.5 py-0.5 mx-0.5 bg-zinc-950 text-white dark:bg-zinc-900 dark:text-zinc-100 border border-zinc-800 shadow-sm select-text",
+        "relative inline-flex items-center align-baseline rounded-md px-1.5 py-0.5 mx-0.5 bg-zinc-950 dark:bg-zinc-900 border border-zinc-800 shadow-sm select-text",
         className,
       )}
       {...props}
     >
-      <span className="relative z-10">{children}</span>
-      <span className="pointer-events-none absolute inset-0 mix-blend-screen opacity-70">
-        <span className="pointer-events-none absolute -top-1/2 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-1_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-1))] mix-blend-overlay blur-[1rem]"></span>
-        <span className="pointer-events-none absolute right-0 top-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-2_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-2))] mix-blend-overlay blur-[1rem]"></span>
-        <span className="pointer-events-none absolute bottom-0 left-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-3_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-3))] mix-blend-overlay blur-[1rem]"></span>
-        <span className="pointer-events-none absolute -bottom-1/2 right-0 h-[30vw] w-[30vw] animate-[gradient-border_6s_ease-in-out_infinite,gradient-4_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-4))] mix-blend-overlay blur-[1rem]"></span>
+      <span className="font-bold tracking-tight bg-clip-text text-transparent bg-[linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-2)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-5)),hsl(var(--color-1)))] bg-[length:300%_100%] animate-[gradient-text-shift_6s_linear_infinite]">
+        {children}
       </span>
     </MotionComponent>
   );
