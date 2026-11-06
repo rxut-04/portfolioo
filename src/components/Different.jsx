@@ -4,6 +4,72 @@ import {
   ScrollReadParagraph,
   computeWordOffsets,
 } from './ui/scroll-read-text'
+import { SqueezeCarousel } from './ui/carousel-squeeze'
+
+const mark = (text) => (
+  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1 font-mono text-[11px] sm:text-xs font-semibold tracking-wide text-white backdrop-blur-md border border-white/15 shadow-sm">
+    <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+    {text}
+  </span>
+)
+
+const PROJECT_SLIDES = [
+  {
+    id: 'banking',
+    title: 'High-Performance Core Banking Engine',
+    description:
+      'Autonomous transaction engine and ledger system engineered for modern banking operations, high-integrity fund routing, and real-time ledger auditing.',
+    action: 'Explore Banking Architecture',
+    href: '/projects/banking',
+    overlay: mark('Ledger Engine'),
+    video: '/banking.mp4',
+    poster: '/images/banking-preview.png',
+  },
+  {
+    id: 'medlink',
+    title: 'MedLink Healthcare Orchestration',
+    description:
+      'Real-time doctor appointment coordination, hospital workflow automation, medical records management, and live consultation scheduling.',
+    action: 'View MedLink System',
+    href: '/projects/medlink',
+    overlay: mark('Healthcare Flow'),
+    video: '/medlink.mp4',
+    poster: '/images/medlink-preview.png',
+  },
+  {
+    id: 'rfid',
+    title: 'RFID IoT Hardware & Access Controller',
+    description:
+      'Embedded microcontroller integration, instant card tap verification, attendance analytics, and edge sync with the central cloud database.',
+    action: 'Inspect Hardware Specs',
+    href: '/projects/rfid',
+    overlay: mark('IoT Hardware'),
+    video: '/rfid.mp4',
+  },
+  {
+    id: 'food',
+    title: 'Real-Time Food Logistics & State Machine',
+    description:
+      'Full-stack mobile-first ordering architecture, automated geo-routing dispatch, kitchen ticketing, and synchronized delivery state machine.',
+    action: 'View Project Details',
+    href: '/projects',
+    overlay: mark('Logistics State'),
+    image: '/images/food.png',
+    imageAlt: 'Food delivery and ordering system interface',
+  },
+  {
+    id: 'architecture',
+    title: 'Full-Stack Systems & Technical Specifications',
+    description:
+      'Technical architecture diagrams, database schema designs, asynchronous queuing, and fault-tolerant production architecture.',
+    action: 'Read Technical Blueprint',
+    href: '/OM_RESUME.pdf',
+    target: '_blank',
+    overlay: mark('Engineering Blueprint'),
+    image: '/images/resume-preview.png',
+    imageAlt: 'Systems architecture and technical resume diagram',
+  },
+]
 
 const PARAGRAPHS = [
   // 0
@@ -181,6 +247,38 @@ export default function Different() {
             gradientPhrases={[{ phrase: 'AGI will be ready soon', variant: 'fuchsia' }]}
           />
         </div>
+
+        {/* ===== INTERACTIVE SYSTEM & PROJECT SHOWCASE SLIDESHOW (IN BETWEEN) ===== */}
+        <section id="carousel-section" className="pt-6 sm:pt-10 pb-4">
+          <div className="mb-4 sm:mb-6">
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+              <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Live Architectures // Systems in Motion
+              </span>
+            </div>
+            <h3 className="font-harmond text-2xl sm:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1.5">
+              Production blueprints in action.
+            </h3>
+            <p className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
+              Swipe or tap through real systems: core financial ledgers, hospital orchestration flows, and edge IoT controllers.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900/30">
+            <SqueezeCarousel
+              slides={PROJECT_SLIDES}
+              label="Engineering Systems"
+              height="clamp(220px, 34cqi, 340px)"
+              radius={10}
+              gap={14}
+              slatWidth={10}
+              slatGap={8}
+              controls={true}
+              className="w-full"
+            />
+          </div>
+        </section>
 
         {/* ===== PART 2 SECTION & BUTTON ===== */}
         <div className="pt-2 sm:pt-4">
