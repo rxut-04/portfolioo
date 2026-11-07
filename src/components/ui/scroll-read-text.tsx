@@ -61,7 +61,7 @@ export function ScrollReadArticle({
   children,
   className = "",
   totalWords = 100,
-  offset = ["start 80%", "end 80%"],
+  offset = ["start 85%", "end 85%"],
   highlightColor = "#3b82f6",
 }: ScrollReadArticleProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -208,8 +208,6 @@ const Word = React.memo(function Word({
       style={{
         opacity: isAtEnd ? 1.0 : dynamicOpacity,
         color: isAtEnd ? "inherit" : dynamicColor,
-        willChange: "opacity",
-        transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
       className="inline-block mr-[0.28em] select-text"
     >
