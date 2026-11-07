@@ -62,13 +62,13 @@ export function GradientText({
   return (
     <span
       className={cn(
-        "relative inline-block text-black dark:text-white",
+        "relative inline-flex items-center align-baseline rounded-md px-1.5 py-0.5 mx-0.5 bg-zinc-900/90 dark:bg-zinc-800/60 border border-zinc-800/60 dark:border-zinc-700/50 shadow-2xs text-white",
         className
       )}
       {...props}
     >
       <motion.span
-        className="inline-block bg-clip-text pb-1"
+        className="inline-block bg-clip-text font-semibold"
         style={{
           WebkitTextFillColor: "transparent",
           backgroundImage: gradient,
