@@ -14,6 +14,7 @@ import {
 } from "react";
 
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */
 /*                                   slides                                   */
@@ -603,17 +604,31 @@ function Action({ slide, shown }: { slide: SqueezeSlide; shown: boolean }) {
     );
 
     if (slide.href) {
+        const isExternal = slide.href.startsWith("http") || slide.target === "_blank";
+        if (isExternal) {
+            return (
+                <a
+                    href={slide.href}
+                    target={slide.target}
+                    rel={slide.target === "_blank" ? "noreferrer" : undefined}
+                    tabIndex={shown ? 0 : -1}
+                    onClick={slide.onAction}
+                    className={dress}
+                >
+                    {inside}
+                </a>
+            );
+        }
+
         return (
-            <a
-                href={slide.href}
-                target={slide.target}
-                rel={slide.target === "_blank" ? "noreferrer" : undefined}
+            <Link
+                to={slide.href}
                 tabIndex={shown ? 0 : -1}
                 onClick={slide.onAction}
                 className={dress}
             >
                 {inside}
-            </a>
+            </Link>
         );
     }
 

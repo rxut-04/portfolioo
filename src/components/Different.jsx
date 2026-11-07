@@ -20,6 +20,7 @@ const PROJECT_SLIDES = [
     description:
       'Interactive architectural modeling of distributed components, data routing boundaries, and system states.',
     action: 'Watch Architecture',
+    href: '/architecture',
     overlay: mark('Architecture Blueprint'),
     video: '/videos/EXCALIBER-FINAL.mp4',
   },
@@ -29,6 +30,7 @@ const PROJECT_SLIDES = [
     description:
       'Context-driven autonomous assistant with real-time reasoning loops, stateful tool orchestration, and memory persistence.',
     action: 'Watch Agent',
+    href: '/architecture',
     overlay: mark('Personal GPT'),
     video: '/videos/Personal-GPT.mp4',
   },
@@ -38,6 +40,7 @@ const PROJECT_SLIDES = [
     description:
       'Real-time execution of zero-downtime production deployment, verified telemetry, and end-to-end task completion.',
     action: 'Watch Execution',
+    href: '/architecture',
     overlay: mark('Production Flow'),
     video: '/videos/Success_clip1.mp4',
   },
@@ -47,6 +50,7 @@ const PROJECT_SLIDES = [
     description:
       'High-integrity archiving pipeline with persistent audit logging, deterministic state indexing, and rapid query retrieval.',
     action: 'Watch Archive',
+    href: '/architecture',
     overlay: mark('Archive Ledger'),
     video: '/videos/archive-final.mp4',
   },
@@ -56,6 +60,7 @@ const PROJECT_SLIDES = [
     description:
       'Real-time food delivery dispatch system with intelligent order routing, live kitchen telemetry, and automated courier tracking.',
     action: 'Watch Feasto',
+    href: '/architecture',
     overlay: mark('Food Delivery Flow'),
     video: '/videos/FEASTO-FINAL.mp4',
   },
