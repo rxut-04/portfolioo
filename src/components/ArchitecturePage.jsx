@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const CASE_STUDIES = [
   {
@@ -85,11 +85,19 @@ const CASE_STUDIES = [
 ]
 
 export default function ArchitecturePage() {
+  const navigate = useNavigate()
   const [activeStudy, setActiveStudy] = useState(1)
   const containerRef = useRef(null)
   const btnRefs = useRef([])
   const cardRefs = useRef([])
   const [arrows, setArrows] = useState([])
+
+  const handleStudySelect = (id) => {
+    setActiveStudy(id)
+    if (id === 1) {
+      navigate('/projects/excalibur')
+    }
+  }
 
   // Calculate connector arrow paths between center buttons and content cards
   useEffect(() => {
@@ -303,7 +311,7 @@ export default function ArchitecturePage() {
                       key={study.id}
                       ref={(el) => (btnRefs.current[idx] = el)}
                       type="button"
-                      onClick={() => setActiveStudy(study.id)}
+                      onClick={() => handleStudySelect(study.id)}
                       className={`group relative inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
                         isSelected
                           ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/25 scale-105'
@@ -315,7 +323,7 @@ export default function ArchitecturePage() {
                           isSelected ? 'bg-white animate-pulse' : 'bg-zinc-400 dark:bg-zinc-600'
                         }`}
                       />
-                      <span>case study</span>
+                      <span>case study {study.id}</span>
                     </button>
                   )
                 })}
@@ -331,7 +339,7 @@ export default function ArchitecturePage() {
                       key={study.id}
                       ref={(el) => (btnRefs.current[idx] = el)}
                       type="button"
-                      onClick={() => setActiveStudy(study.id)}
+                      onClick={() => handleStudySelect(study.id)}
                       className={`group relative inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
                         isSelected
                           ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/25 scale-105'
@@ -343,7 +351,7 @@ export default function ArchitecturePage() {
                           isSelected ? 'bg-white animate-pulse' : 'bg-zinc-400 dark:bg-zinc-600'
                         }`}
                       />
-                      <span>case study</span>
+                      <span>case study {study.id}</span>
                     </button>
                   )
                 })}
@@ -359,7 +367,7 @@ export default function ArchitecturePage() {
                   activeStudy === 4 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
                 }`}
               >
-                <CaseStudyCard study={CASE_STUDIES[3]} isActive={activeStudy === 4} onSelect={() => setActiveStudy(4)} />
+                <CaseStudyCard study={CASE_STUDIES[3]} isActive={activeStudy === 4} onSelect={() => handleStudySelect(4)} />
               </div>
 
               {/* Card 5: Bottom-Right (Col 2 & 3, Wide Rectangle matching diagram) */}
@@ -369,118 +377,19 @@ export default function ArchitecturePage() {
                   activeStudy === 5 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
                 }`}
               >
-                <CaseStudyCard study={CASE_STUDIES[4]} isActive={activeStudy === 5} onSelect={() => setActiveStudy(5)} isWide />
+                <CaseStudyCard study={CASE_STUDIES[4]} isActive={activeStudy === 5} onSelect={() => handleStudySelect(5)} isWide />
               </div>
             </div>
 
           </div>
         </div>
       </section>
-
-      {/* ===== ACTIVE CASE STUDY DEEP DIVE SECTION (MEDLINK-STYLE DETAIL) ===== */}
-      <section className="mx-auto max-w-7xl mt-12 sm:mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-10 sm:pt-14">
-        {(() => {
-          const study = CASE_STUDIES[activeStudy - 1]
-          return (
-            <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
-              {/* Left Column: Embedded Video & Specs (like Medlink) */}
-              <div className="w-full lg:sticky lg:top-24 lg:w-1/2 space-y-5">
-                <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-950 shadow-xl">
-                  <video
-                    key={study.video}
-                    src={study.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls
-                    className="aspect-video w-full object-cover"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-
-                <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                    Live System Blueprint // {study.tag}
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    {study.subtitle} — verified execution telemetry and architecture breakdown.
-                  </p>
-                </div>
-
-                {/* Tech pills */}
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {study.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 shadow-2xs"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Column: Problem, Solution & Metrics (like Medlink) */}
-              <div className="w-full lg:w-1/2 space-y-8">
-                <div>
-                  <span className="font-mono text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                    {study.category} • {study.tag}
-                  </span>
-                  <h2 className="font-harmond text-3xl sm:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1.5">
-                    {study.title}
-                  </h2>
-                  <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                    {study.desc}
-                  </p>
-                </div>
-
-                {/* Problem & Solution Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/40 p-5">
-                    <h3 className="font-mono text-xs uppercase tracking-wider text-rose-500 font-bold">
-                      The Problem
-                    </h3>
-                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                      {study.problem}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/40 p-5">
-                    <h3 className="font-mono text-xs uppercase tracking-wider text-emerald-500 font-bold">
-                      The Architecture Solution
-                    </h3>
-                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                      {study.solution}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Key Metric Card */}
-                <div className="rounded-2xl border border-blue-200/60 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/20 p-5 flex items-center justify-between">
-                  <div>
-                    <span className="font-mono text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-semibold">
-                      Key Telemetry Metric
-                    </span>
-                    <p className="text-sm text-zinc-700 dark:text-zinc-300 font-medium mt-0.5">
-                      {study.metrics.label}
-                    </p>
-                  </div>
-                  <span className="font-mono text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-400">
-                    {study.metrics.val}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )
-        })()}
-      </section>
     </main>
   )
 }
 
 function CaseStudyCard({ study, isActive, onSelect, isWide = false }) {
+  const isCaseStudy1 = study.id === 1
   return (
     <div
       onClick={onSelect}
@@ -513,9 +422,15 @@ function CaseStudyCard({ study, isActive, onSelect, isWide = false }) {
         <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
           Metric: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{study.metrics.val}</span>
         </span>
-        <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
-          Explore <span aria-hidden="true">→</span>
-        </span>
+        {isCaseStudy1 ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-xs group-hover:bg-blue-700 transition">
+            Open Case Study <span aria-hidden="true">→</span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+            Explore <span aria-hidden="true">→</span>
+          </span>
+        )}
       </div>
     </div>
   )

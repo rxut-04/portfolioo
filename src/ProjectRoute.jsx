@@ -30,6 +30,7 @@ import GithubSkill from './skills/Github'
 import BankingProject from './Projects/Banking'
 import MedlinkProject from './Projects/Medlink'
 import RfidProject from './Projects/Rfid'
+import ExcaliburProject from './Projects/Excalibur'
 import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
 import ArchitecturePage from './components/ArchitecturePage'
@@ -108,6 +109,9 @@ const ProjectRoute = () => {
           <Route path="projects/banking" element={<BankingProject />} />
           <Route path="projects/medlink" element={<MedlinkProject />} />
           <Route path="projects/rfid" element={<RfidProject />} />
+          <Route path="projects/excalibur" element={<ExcaliburProject />} />
+          <Route path="case-study/excalibur" element={<ExcaliburProject />} />
+          <Route path="case-study/1" element={<ExcaliburProject />} />
           <Route path="different" element={<Different />} />
           <Route path="what-makes-me-different" element={<Different />} />
           <Route path="understanding-the-system" element={<UnderstandingSystem />} />
