@@ -31,6 +31,10 @@ import BankingProject from './Projects/Banking'
 import MedlinkProject from './Projects/Medlink'
 import RfidProject from './Projects/Rfid'
 import ExcaliburProject from './Projects/Excalibur'
+import PersonalGptProject from './Projects/PersonalGpt'
+import ProductionExecutionProject from './Projects/ProductionExecution'
+import ArchiveLedgerProject from './Projects/ArchiveLedger'
+import FeastoProject from './Projects/Feasto'
 import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
 import ArchitecturePage from './components/ArchitecturePage'
@@ -109,9 +113,32 @@ const ProjectRoute = () => {
           <Route path="projects/banking" element={<BankingProject />} />
           <Route path="projects/medlink" element={<MedlinkProject />} />
           <Route path="projects/rfid" element={<RfidProject />} />
+          {/* Case Study 1: Excalibur */}
           <Route path="projects/excalibur" element={<ExcaliburProject />} />
           <Route path="case-study/excalibur" element={<ExcaliburProject />} />
           <Route path="case-study/1" element={<ExcaliburProject />} />
+
+          {/* Case Study 2: Personal GPT */}
+          <Route path="projects/personal-gpt" element={<PersonalGptProject />} />
+          <Route path="case-study/personal-gpt" element={<PersonalGptProject />} />
+          <Route path="case-study/2" element={<PersonalGptProject />} />
+
+          {/* Case Study 3: Production Deployment & Execution */}
+          <Route path="projects/production-execution" element={<ProductionExecutionProject />} />
+          <Route path="case-study/production-execution" element={<ProductionExecutionProject />} />
+          <Route path="case-study/success-clip" element={<ProductionExecutionProject />} />
+          <Route path="case-study/3" element={<ProductionExecutionProject />} />
+
+          {/* Case Study 4: Immutable Archive & Ledger */}
+          <Route path="projects/archive-ledger" element={<ArchiveLedgerProject />} />
+          <Route path="case-study/archive-ledger" element={<ArchiveLedgerProject />} />
+          <Route path="case-study/archive" element={<ArchiveLedgerProject />} />
+          <Route path="case-study/4" element={<ArchiveLedgerProject />} />
+
+          {/* Case Study 5: Feasto Smart Delivery */}
+          <Route path="projects/feasto" element={<FeastoProject />} />
+          <Route path="case-study/feasto" element={<FeastoProject />} />
+          <Route path="case-study/5" element={<FeastoProject />} />
           <Route path="different" element={<Different />} />
           <Route path="what-makes-me-different" element={<Different />} />
           <Route path="understanding-the-system" element={<UnderstandingSystem />} />

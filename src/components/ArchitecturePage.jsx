@@ -92,10 +92,18 @@ export default function ArchitecturePage() {
   const cardRefs = useRef([])
   const [arrows, setArrows] = useState([])
 
+  const STUDY_ROUTES = {
+    1: '/projects/excalibur',
+    2: '/projects/personal-gpt',
+    3: '/projects/production-execution',
+    4: '/projects/archive-ledger',
+    5: '/projects/feasto',
+  }
+
   const handleStudySelect = (id) => {
     setActiveStudy(id)
-    if (id === 1) {
-      navigate('/projects/excalibur')
+    if (STUDY_ROUTES[id]) {
+      navigate(STUDY_ROUTES[id])
     }
   }
 
@@ -389,7 +397,6 @@ export default function ArchitecturePage() {
 }
 
 function CaseStudyCard({ study, isActive, onSelect, isWide = false }) {
-  const isCaseStudy1 = study.id === 1
   return (
     <div
       onClick={onSelect}
@@ -422,15 +429,9 @@ function CaseStudyCard({ study, isActive, onSelect, isWide = false }) {
         <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
           Metric: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{study.metrics.val}</span>
         </span>
-        {isCaseStudy1 ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-xs group-hover:bg-blue-700 transition">
-            Open Case Study <span aria-hidden="true">→</span>
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
-            Explore <span aria-hidden="true">→</span>
-          </span>
-        )}
+        <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-xs group-hover:bg-blue-700 transition">
+          Open Case Study <span aria-hidden="true">→</span>
+        </span>
       </div>
     </div>
   )

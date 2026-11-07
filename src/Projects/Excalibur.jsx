@@ -174,6 +174,12 @@ const Excalibur = () => {
             ← Back to Blueprint Map
           </Link>
           <Link
+            to="/projects/personal-gpt"
+            className="inline-flex rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-3 text-sm font-semibold text-zinc-700 dark:text-zinc-200 shadow-sm transition hover:bg-zinc-50 dark:hover:bg-zinc-800"
+          >
+            Next: Personal GPT →
+          </Link>
+          <Link
             to="/different"
             className="inline-flex rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-3 text-sm font-semibold text-zinc-700 dark:text-zinc-200 shadow-sm transition hover:bg-zinc-50 dark:hover:bg-zinc-800"
           >
