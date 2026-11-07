@@ -61,7 +61,7 @@ export function ScrollReadArticle({
   children,
   className = "",
   totalWords = 100,
-  offset = ["start 65%", "end 65%"],
+  offset = ["start 80%", "end 80%"],
   highlightColor = "#3b82f6",
 }: ScrollReadArticleProps) {
   const containerRef = useRef<HTMLDivElement>(null);
