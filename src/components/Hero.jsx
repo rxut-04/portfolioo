@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { FallingLeaves } from 'falling-leaves/react'
 
 const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -206,6 +207,12 @@ const Hero = () => {
   return (
     <>
       <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12 xl:gap-20">
+        <FallingLeaves
+          fullScreen
+          count={75}
+          shapes={["maple", "oak", "ginkgo"]}
+          zIndex={20}
+        />
         <div className="w-full md:mt-16 md:min-w-0 md:flex-1 2xl:ml-60 2xl:mt-60">
           <h1 className="font-harmond text-4xl font-black italic leading-tight text-gray-900 transition-colors duration-300 dark:text-zinc-100 sm:text-5xl">
             “Hi, I’m Om Raut
