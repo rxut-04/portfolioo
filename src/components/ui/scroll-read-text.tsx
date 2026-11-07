@@ -7,13 +7,13 @@ import React, {
   useContext,
 } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "motion/react";
-import { GradientText, GradientVariant } from "./gradient-text";
+import { GradientText } from "./text-gradient";
 
 export type GradientPhraseConfig =
   | string
   | {
       phrase: string;
-      variant?: GradientVariant;
+      variant?: string;
     };
 
 export interface ScrollReadArticleContextValue {
@@ -149,7 +149,7 @@ interface TextItem {
   id: string;
   text: string;
   isGradient: boolean;
-  variant: GradientVariant;
+  variant?: string;
   globalIndex: number;
   wordCount: number;
 }
@@ -195,7 +195,7 @@ const Word = React.memo(function Word({
     return (
       <span className="inline-block mr-[0.28em] opacity-100">
         {item.isGradient ? (
-          <GradientText variant={item.variant}>{item.text}</GradientText>
+          <GradientText>{item.text}</GradientText>
         ) : (
           item.text
         )}
@@ -212,7 +212,7 @@ const Word = React.memo(function Word({
       className="inline-block mr-[0.28em] select-text"
     >
       {item.isGradient ? (
-        <GradientText variant={item.variant}>{item.text}</GradientText>
+        <GradientText>{item.text}</GradientText>
       ) : (
         item.text
       )}
@@ -251,7 +251,7 @@ export function ScrollReadParagraph({
     const sortedPhrases = gradientPhrases
       .map((item) => {
         const phrase = typeof item === "string" ? item : item.phrase;
-        const variant: GradientVariant =
+        const variant: string =
           typeof item === "string" ? "rainbow" : item.variant || "rainbow";
         return { phrase, variant };
       })
@@ -262,7 +262,7 @@ export function ScrollReadParagraph({
       start: number;
       end: number;
       text: string;
-      variant: GradientVariant;
+      variant: string;
     }[] = [];
 
     for (const { phrase, variant } of sortedPhrases) {
@@ -291,7 +291,7 @@ export function ScrollReadParagraph({
     interface Chunk {
       text: string;
       isGradient: boolean;
-      variant: GradientVariant;
+      variant: string;
     }
     const chunks: Chunk[] = [];
     let lastIdx = 0;
