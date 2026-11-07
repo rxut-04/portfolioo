@@ -195,7 +195,9 @@ const Word = React.memo(function Word({
     return (
       <span className="inline-block mr-[0.28em] opacity-100">
         {item.isGradient ? (
-          <GradientText>{item.text}</GradientText>
+          <GradientText variant={item.variant as any} loop={false}>
+            {item.text}
+          </GradientText>
         ) : (
           item.text
         )}
@@ -212,7 +214,9 @@ const Word = React.memo(function Word({
       className="inline-block mr-[0.28em] select-text"
     >
       {item.isGradient ? (
-        <GradientText>{item.text}</GradientText>
+        <GradientText variant={item.variant as any} loop={false}>
+          {item.text}
+        </GradientText>
       ) : (
         item.text
       )}
