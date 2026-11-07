@@ -209,7 +209,7 @@ const Hero = () => {
       <div className="flex w-full flex-col justify-between gap-8 px-6 py-8 sm:px-10 md:flex-row md:items-center md:gap-10 md:px-12 xl:gap-20">
         <FallingLeaves
           fullScreen
-          count={75}
+          count={45}
           shapes={["maple", "oak", "ginkgo"]}
           zIndex={20}
         />
