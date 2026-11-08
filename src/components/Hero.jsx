@@ -229,18 +229,18 @@ const Hero = () => {
             ship real work.
           </p>
           {/* Flex button layout: 2 buttons in row 1, 1 button in row 2 */}
-          <div className="mt-8 flex flex-col gap-3.5">
+          <div className="mt-7 flex flex-col gap-3">
             {/* Row 1: Two buttons */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={handleViewCvClick}
-                className="inline-flex items-center justify-center rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
+                className="inline-flex items-center justify-center rounded-lg bg-blue-700 px-4.5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-700/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-lg focus:outline-none focus-visible:ring-3 focus-visible:ring-sky-300 active:scale-95 cursor-pointer"
               >
                 View CV
               </button>
               <Link
                 to="/sphere"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-zinc-400 active:scale-95 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 sm:text-lg cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-zinc-900 bg-zinc-900 px-4.5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-md focus:outline-none focus-visible:ring-3 focus-visible:ring-zinc-400 active:scale-95 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
               >
                 <span>Explore Projects</span>
                 <span aria-hidden="true">→</span>

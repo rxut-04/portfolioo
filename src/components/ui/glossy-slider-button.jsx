@@ -11,22 +11,22 @@ export default function GlossySliderButton({
       <style>{`
         .book-btn {
           position: relative;
-          min-width: 280px;
+          min-width: 220px;
           width: fit-content;
           max-width: 100%;
-          height: 72px;
+          height: 48px;
           background: #101010;
-          border: 3px solid #333333;
+          border: 2px solid #333333;
           border-radius: 999px;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
-          padding-left: 6px;
-          padding-right: 28px;
+          padding-left: 4px;
+          padding-right: 20px;
           box-shadow:
-            inset 0 4px 8px rgba(0, 0, 0, 0.80),
+            inset 0 3px 6px rgba(0, 0, 0, 0.80),
             inset 0 1px 1px rgba(255, 255, 255, 0.15),
-            0 15px 30px rgba(0, 0, 0, 0.25);
+            0 10px 20px rgba(0, 0, 0, 0.25);
           overflow: hidden;
           -webkit-tap-highlight-color: transparent;
           font-family: 'Inter', sans-serif;
@@ -35,10 +35,10 @@ export default function GlossySliderButton({
 
         .book-btn .slider {
           position: absolute;
-          left: 6px;
-          top: 6px;
-          bottom: 6px;
-          width: 88px;
+          left: 4px;
+          top: 4px;
+          bottom: 4px;
+          width: 62px;
           background: linear-gradient(180deg, #A4FF3B, #72D80B);
           border-radius: 999px;
           transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
@@ -47,18 +47,18 @@ export default function GlossySliderButton({
           justify-content: center;
           z-index: 2;
           box-shadow:
-            inset 0 3px 5px rgba(255, 255, 255, 0.60),
-            inset 0 -3px 5px rgba(0, 0, 0, 0.25),
-            0 4px 12px rgba(0, 0, 0, 0.30);
+            inset 0 2px 3px rgba(255, 255, 255, 0.60),
+            inset 0 -2px 3px rgba(0, 0, 0, 0.25),
+            0 3px 8px rgba(0, 0, 0, 0.30);
         }
         .book-btn:hover .slider {
-          width: calc(100% - 12px);
+          width: calc(100% - 8px);
         }
 
         .book-btn .icon-arrow {
           position: absolute;
-          width: 32px;
-          height: 32px;
+          width: 22px;
+          height: 22px;
           color: #111;
           opacity: 1;
           transform: translateX(0);
@@ -66,16 +66,16 @@ export default function GlossySliderButton({
         }
         .book-btn:hover .icon-arrow {
           opacity: 0;
-          transform: translateX(40px);
+          transform: translateX(28px);
         }
 
         .book-btn .icon-phone {
           position: absolute;
-          width: 26px;
-          height: 26px;
+          width: 20px;
+          height: 20px;
           color: #111;
           opacity: 0;
-          transform: translateX(-40px) scale(0.7);
+          transform: translateX(-28px) scale(0.7);
           transition: opacity 0.45s ease 0.10s, transform 0.60s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .book-btn:hover .icon-phone {
@@ -84,18 +84,18 @@ export default function GlossySliderButton({
         }
 
         .book-btn .text {
-          padding-left: 98px;
+          padding-left: 72px;
           color: #ffffff;
-          font-size: 17px;
+          font-size: 13.5px;
           font-weight: 500;
-          letter-spacing: -0.3px;
+          letter-spacing: -0.2px;
           white-space: nowrap;
           transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           z-index: 1;
         }
         .book-btn:hover .text {
           opacity: 0;
-          transform: translateX(-15px);
+          transform: translateX(-12px);
         }
 
         @media (prefers-reduced-motion: reduce) {
