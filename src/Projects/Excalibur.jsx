@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ExcaliburInteractiveStudio from './components/ExcaliburInteractiveStudio'
 
 const Excalibur = () => {
   const technologies = [
@@ -38,39 +39,10 @@ const Excalibur = () => {
   return (
     <div className="w-full min-h-screen bg-white text-zinc-900 transition-colors duration-300 dark:bg-[#09090b] dark:text-zinc-100">
       
-      {/* ===== STICKY VIDEO CONTAINER AT THE TOP (40% VIEWPORT HEIGHT, 60% CONTENT) ===== */}
+      {/* ===== INTERACTIVE STUDIO CONTAINER AT THE TOP (TABS: SIMULATION / TOPOLOGY / TELEMETRY) ===== */}
       <div className="sticky top-0 z-30 bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 shadow-md py-2.5 sm:py-3 px-4 sm:px-8 md:px-12 transition-colors duration-200">
         <div className="mx-auto max-w-4xl flex flex-col justify-center">
-          <div className="relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-950 shadow-xl ring-1 ring-zinc-200/50 dark:ring-zinc-800/50 flex items-center justify-center">
-            <video
-              src="/videos/EXCALIBER-FINAL.mp4"
-              poster="/images/banking-preview.png"
-              autoPlay
-              loop
-              muted
-              playsInline
-              controls
-              className="w-full aspect-video object-cover max-h-[30vh] sm:max-h-[32vh]"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-
-          <div className="mt-2 rounded-lg border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-900/60 px-3 py-1.5 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 shrink-0">
-                Live Demo • Project 01
-              </span>
-              <span className="text-zinc-300 dark:text-zinc-700 hidden xs:inline">•</span>
-              <p className="truncate text-xs text-zinc-600 dark:text-zinc-400 font-medium hidden xs:block">
-                Excalibur System Architecture — deterministic state graphs in real time
-              </p>
-            </div>
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">Live</span>
-            </div>
-          </div>
+          <ExcaliburInteractiveStudio />
         </div>
       </div>
 
