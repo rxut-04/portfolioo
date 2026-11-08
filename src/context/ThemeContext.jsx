@@ -8,9 +8,15 @@ const ThemeContext = createContext({
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
+      // Reset any stale 'light' preference so the site loads in dark theme first
+      const initialized = localStorage.getItem('theme_default_dark_v1')
+      if (!initialized) {
+        localStorage.setItem('theme', 'dark')
+        localStorage.setItem('theme_default_dark_v1', 'true')
+        return 'dark'
+      }
       const saved = localStorage.getItem('theme')
-      if (saved === 'dark' || saved === 'light') return saved
-      // Default to dark theme first across all pages
+      if (saved === 'light') return 'light'
       return 'dark'
     }
     return 'dark'

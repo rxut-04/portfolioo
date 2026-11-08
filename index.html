@@ -8,6 +8,12 @@
     <script>
       (function() {
         try {
+          // Reset any stale 'light' preference so the site loads in dark theme first
+          var initialized = localStorage.getItem('theme_default_dark_v1');
+          if (!initialized) {
+            localStorage.setItem('theme', 'dark');
+            localStorage.setItem('theme_default_dark_v1', 'true');
+          }
           var saved = localStorage.getItem('theme');
           if (saved === 'light') {
             document.documentElement.classList.remove('dark');
