@@ -168,10 +168,10 @@ const ProductionExecution = () => {
         {/* Navigation buttons */}
         <div className="mt-12 flex flex-wrap gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-8">
           <Link
-            to="/architecture"
+            to="/different"
             className="inline-flex rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
           >
-            ← Back to Blueprint Map
+            ← Back to Case Studies
           </Link>
           <Link
             to="/projects/archive-ledger"

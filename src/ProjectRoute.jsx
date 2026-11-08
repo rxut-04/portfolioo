@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
 import CursorBox from './CursorBox'
 import App from './App'
@@ -37,7 +37,6 @@ import ArchiveLedgerProject from './Projects/ArchiveLedger'
 import FeastoProject from './Projects/Feasto'
 import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
-import ArchitecturePage from './components/ArchitecturePage'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -143,8 +142,8 @@ const ProjectRoute = () => {
           <Route path="what-makes-me-different" element={<Different />} />
           <Route path="understanding-the-system" element={<UnderstandingSystem />} />
           <Route path="different/part-2" element={<UnderstandingSystem />} />
-          <Route path="architecture" element={<ArchitecturePage />} />
-          <Route path="case-studies" element={<ArchitecturePage />} />
+          <Route path="architecture" element={<Navigate to="/different" replace />} />
+          <Route path="case-studies" element={<Navigate to="/different" replace />} />
           <Route path="hero" element={<Hero />} />
           <Route path="grid" element={<Grid />} />
         </Route>

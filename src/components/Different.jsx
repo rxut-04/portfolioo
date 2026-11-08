@@ -1,68 +1,46 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   ScrollReadArticle,
   ScrollReadParagraph,
   computeWordOffsets,
 } from './ui/scroll-read-text'
-import { SqueezeCarousel, Arrow } from './ui/carousel-squeeze'
+import { ShinyButton } from './ui/shiny-button'
 
-const mark = (text) => (
-  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1 font-mono text-[11px] sm:text-xs font-semibold tracking-wide text-white backdrop-blur-md border border-white/15 shadow-sm">
-    <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-    {text}
-  </span>
-)
-
-const PROJECT_SLIDES = [
+const CASE_STUDIES = [
   {
     id: 'excalibur',
-    title: 'System Architecture & Blueprint Flow',
-    description:
-      'Interactive architectural modeling of distributed components, data routing boundaries, and system states.',
-    action: 'Watch Architecture',
-    href: '/architecture',
-    overlay: mark('Architecture Blueprint'),
-    video: '/videos/EXCALIBER-FINAL.mp4',
+    label: 'Case Study 1: Excalibur',
+    route: '/projects/excalibur',
+    accent: '#38bdf8',
+    softAccent: '#7dd3fc',
   },
   {
     id: 'personal-gpt',
-    title: 'Autonomous Personal GPT System',
-    description:
-      'Context-driven autonomous assistant with real-time reasoning loops, stateful tool orchestration, and memory persistence.',
-    action: 'Watch Agent',
-    href: '/architecture',
-    overlay: mark('Personal GPT'),
-    video: '/videos/Personal-GPT.mp4',
+    label: 'Case Study 2: Personal GPT',
+    route: '/projects/personal-gpt',
+    accent: '#a855f7',
+    softAccent: '#c084fc',
   },
   {
-    id: 'success-clip',
-    title: 'Production Deployment & Execution',
-    description:
-      'Real-time execution of zero-downtime production deployment, verified telemetry, and end-to-end task completion.',
-    action: 'Watch Execution',
-    href: '/architecture',
-    overlay: mark('Production Flow'),
-    video: '/videos/Success_clip1.mp4',
+    id: 'production',
+    label: 'Case Study 3: Production Execution',
+    route: '/projects/production-execution',
+    accent: '#10b981',
+    softAccent: '#34d399',
   },
   {
     id: 'archive',
-    title: 'Immutable Archive & Ledger Records',
-    description:
-      'High-integrity archiving pipeline with persistent audit logging, deterministic state indexing, and rapid query retrieval.',
-    action: 'Watch Archive',
-    href: '/architecture',
-    overlay: mark('Archive Ledger'),
-    video: '/videos/archive-final.mp4',
+    label: 'Case Study 4: Archive Ledger',
+    route: '/projects/archive-ledger',
+    accent: '#f59e0b',
+    softAccent: '#fbbf24',
   },
   {
     id: 'feasto',
-    title: 'Feasto Smart Delivery Platform',
-    description:
-      'Real-time food delivery dispatch system with intelligent order routing, live kitchen telemetry, and automated courier tracking.',
-    action: 'Watch Feasto',
-    href: '/architecture',
-    overlay: mark('Food Delivery Flow'),
-    video: '/videos/FEASTO-FINAL.mp4',
+    label: 'Case Study 5: Feasto Delivery',
+    route: '/projects/feasto',
+    accent: '#f43f5e',
+    softAccent: '#fb7185',
   },
 ]
 
@@ -94,6 +72,8 @@ const PARAGRAPHS = [
 const { totalWords, offsets } = computeWordOffsets(PARAGRAPHS)
 
 export default function Different() {
+  const navigate = useNavigate()
+
   return (
     <article className="relative mx-auto w-[92%] sm:w-[90%] max-w-4xl py-8 sm:py-14 md:py-20 transition-colors duration-300">
       
@@ -244,46 +224,42 @@ export default function Different() {
         </div>
       </ScrollReadArticle>
 
-      {/* ===== INTERACTIVE SYSTEM & PROJECT SHOWCASE SLIDESHOW (IN BETWEEN) ===== */}
-      <section id="carousel-section" className="pt-8 sm:pt-14 pb-4">
-        <SqueezeCarousel
-          slides={PROJECT_SLIDES}
-          height="clamp(240px, 38cqi, 380px)"
-          radius={10}
-          gap={14}
-          slatWidth={10}
-          slatGap={8}
-          className="w-full"
-          header={({ prev, next, open, count }) => (
-            <div className="mb-5 sm:mb-7 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-                  <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                    Live Architectures // Systems in Motion
-                  </span>
-                </div>
-                <h1 className="font-harmond text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1.5">
-                  Production blueprints in action.
-                </h1>
-                <p className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-xl">
-                  Swipe or tap through real systems: core financial ledgers, hospital orchestration flows, and edge IoT controllers.
-                </p>
-              </div>
-
-              {/* Controllers placed on the right-hand side of the H1 */}
-              <div className="flex items-center gap-3 shrink-0 self-start sm:self-end pb-1">
-                <span className="font-mono text-xs font-semibold text-zinc-500 dark:text-zinc-400 tabular-nums">
-                  {String(open + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <Arrow back label="Previous slide" onClick={prev} />
-                  <Arrow label="Next slide" onClick={next} />
-                </div>
-              </div>
+      {/* ===== CASE STUDIES SHINY BUTTONS SECTION ===== */}
+      <section id="case-studies-section" className="pt-10 sm:pt-16 pb-6">
+        <div className="rounded-2xl sm:rounded-3xl border border-zinc-200/90 bg-zinc-50/70 p-6 sm:p-10 dark:border-zinc-800 dark:bg-zinc-900/40 shadow-sm">
+          <div className="mb-8">
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+              <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                System Blueprints // Live Case Studies
+              </span>
             </div>
-          )}
-        />
+            <h2 className="font-harmond text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-950 dark:text-zinc-50 mt-2">
+              Case Studies & System Implementations
+            </h2>
+            <p className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 max-w-xl">
+              Tap any case study below to inspect its architecture, distributed runtime flow, and production execution.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-start gap-4 sm:gap-5">
+            {CASE_STUDIES.map((study) => (
+              <ShinyButton
+                key={study.id}
+                label={study.label}
+                onClick={() => navigate(study.route)}
+                fillColor="#09090b"
+                labelColor="#ffffff"
+                accentColor={study.accent}
+                accentSoftColor={study.softAccent}
+                sweepDuration={7}
+                easeDuration={1.2}
+                cornerRadius={24}
+                className="w-full sm:w-auto text-sm sm:text-base font-semibold tracking-wide py-3.5 px-6 sm:px-7 cursor-pointer hover:shadow-lg transition-transform"
+              />
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ===== PART 2 SECTION & BUTTON ===== */}
