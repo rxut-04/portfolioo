@@ -42,14 +42,6 @@ export default function CardSpherePage() {
         </Link>
       </div>
 
-      {/* Floating HUD: Top Right Instructions */}
-      <div className="pointer-events-none absolute top-4 right-4 sm:top-6 sm:right-6 z-50 hidden sm:flex items-center gap-2 rounded-full border border-zinc-200/90 dark:border-zinc-800/90 bg-white/80 dark:bg-zinc-950/80 px-4 py-2 font-mono text-[11px] text-zinc-600 dark:text-zinc-300 backdrop-blur-md shadow-lg">
-        <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span>DRAG • FLICK • ARROWS</span>
-        <span className="text-zinc-300 dark:text-zinc-700">|</span>
-        <span>DOUBLE-CLICK FLIPS THEME</span>
-      </div>
-
       {/* Floating HUD: Bottom Center Settled Hero Indicator */}
       <div className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full border border-zinc-200/90 dark:border-zinc-800/90 bg-white/80 dark:bg-zinc-950/80 px-4 py-1.5 font-mono text-xs font-medium text-zinc-700 dark:text-zinc-300 backdrop-blur-md shadow-lg">
         <span className="text-zinc-400 dark:text-zinc-500">HERO:</span>

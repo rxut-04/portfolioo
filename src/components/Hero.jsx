@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FallingLeaves } from 'falling-leaves/react'
+import GlossySliderButton from './ui/glossy-slider-button'
 
 const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -248,14 +249,10 @@ const Hero = () => {
 
             {/* Row 2: One button */}
             <div className="flex items-center">
-              <Link
+              <GlossySliderButton
+                label="What makes me different"
                 to="/different"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-gray-100/80 px-6 py-3.5 text-base font-semibold text-gray-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-200 hover:text-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white sm:text-lg cursor-pointer w-full sm:w-auto text-center"
-              >
-                <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
-                <span>What makes me different</span>
-                <span aria-hidden="true">→</span>
-              </Link>
+              />
             </div>
           </div>
         </div>
