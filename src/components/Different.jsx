@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   ScrollReadArticle,
@@ -5,6 +6,15 @@ import {
   computeWordOffsets,
 } from './ui/scroll-read-text'
 import { ShinyButton } from './ui/shiny-button'
+
+const NAV_SECTIONS = [
+  { id: 'chapter-1', label: '01. Architect Mindset' },
+  { id: 'chapter-2', label: '02. Verification & Flow' },
+  { id: 'chapter-3', label: '03. Thinking Differently' },
+  { id: 'chapter-4', label: '04. Long-Term Reality' },
+  { id: 'chapter-5', label: '05. The Age of AGI' },
+  { id: 'case-studies-section', label: '06. Case Studies' },
+]
 
 const CASE_STUDIES = [
   {
@@ -73,159 +83,302 @@ const { totalWords, offsets } = computeWordOffsets(PARAGRAPHS)
 
 export default function Different() {
   const navigate = useNavigate()
+  const [activeSection, setActiveSection] = useState('chapter-1')
+
+  // Smooth scroll using cinematic easeInOutQuart over 1000ms
+  const scrollToSection = (e, targetId) => {
+    e.preventDefault()
+    const targetElement = document.getElementById(targetId)
+    if (!targetElement) return
+
+    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - 100
+    const startPosition = window.scrollY
+    const distance = targetPosition - startPosition
+    const duration = 1000
+    let startTime = null
+
+    function easeInOutQuart(t) {
+      return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp
+      const progress = timestamp - startTime
+      const percentage = Math.min(progress / duration, 1)
+      const easing = easeInOutQuart(percentage)
+
+      window.scrollTo(0, startPosition + distance * easing)
+
+      if (progress < duration) {
+        window.requestAnimationFrame(step)
+      } else {
+        window.scrollTo(0, targetPosition)
+      }
+    }
+
+    window.requestAnimationFrame(step)
+  }
+
+  // Scrollspy tracking active section based on 1/3 viewport height
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + window.innerHeight / 3
+      for (let i = NAV_SECTIONS.length - 1; i >= 0; i--) {
+        const section = document.getElementById(NAV_SECTIONS[i].id)
+        if (section) {
+          const top = section.offsetTop
+          if (scrollPos >= top - 20) {
+            setActiveSection(NAV_SECTIONS[i].id)
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <article className="relative mx-auto w-[92%] sm:w-[90%] max-w-4xl py-8 sm:py-14 md:py-20 transition-colors duration-300">
-      
-      {/* Top back navigation */}
-      <div className="mb-8 sm:mb-12">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 py-1 font-mono text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
-        >
-          <span aria-hidden="true">←</span> back to portfolio
-        </Link>
-      </div>
-
-      {/* ===== ESSAY HEADER ===== */}
-      <header className="mb-10 sm:mb-16 border-b border-zinc-200 pb-8 sm:pb-10 dark:border-zinc-800">
-        <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400" />
-          <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Personal Philosophy // Engineering Reality
-          </span>
-        </div>
-
-        <h1 className="font-harmond mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic tracking-tight text-zinc-950 dark:text-zinc-50 break-words leading-[1.1]">
-          What makes me different.
-        </h1>
-      </header>
-
-      {/* ===== ESSAY BODY: STRICT SEQUENTIAL SCROLL-READING FLOW ===== */}
-      <ScrollReadArticle
-        totalWords={totalWords}
-        offset={["start 85%", "end 85%"]}
-        className="space-y-8 sm:space-y-11 text-base sm:text-lg md:text-xl leading-relaxed text-zinc-700 dark:text-zinc-300"
+    <>
+      {/* ===== FIXED LEFT SCROLLSPY LINE NAVIGATION ===== */}
+      <nav
+        aria-label="Chapter scroll navigation"
+        className="fixed top-1/2 -translate-y-1/2 left-3 xl:left-8 z-50 hidden lg:flex flex-col items-start gap-1 select-none pointer-events-auto"
       >
+        <style>{`
+          .scrollspy-nav-line {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 40px;
+            height: 24px;
+            cursor: pointer;
+            text-decoration: none;
+          }
+          .scrollspy-nav-line::before {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 8px;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+          .scrollspy-nav-line:hover::before {
+            width: 14px;
+          }
+          .scrollspy-nav-line.active::before {
+            width: 22px;
+          }
+          .scrollspy-nav-line::after {
+            content: attr(data-title);
+            position: absolute;
+            left: 36px;
+            top: 50%;
+            transform: translateY(-50%) translateX(-6px);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            padding: 3px 8px;
+            border-radius: 6px;
+            backdrop-filter: blur(8px);
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+          .scrollspy-nav-line:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+          }
+        `}</style>
+        {NAV_SECTIONS.map((sec) => (
+          <a
+            key={sec.id}
+            href={`#${sec.id}`}
+            onClick={(e) => scrollToSection(e, sec.id)}
+            data-title={sec.label}
+            className={`scrollspy-nav-line ${activeSection === sec.id ? 'active' : ''}
+              before:bg-zinc-300 dark:before:bg-zinc-700
+              hover:before:bg-zinc-600 dark:hover:before:bg-zinc-300
+              [&.active]:before:bg-zinc-950 dark:[&.active]:before:bg-zinc-50
+              after:bg-white/95 dark:after:bg-zinc-900/95
+              after:text-zinc-800 dark:after:text-zinc-200
+              after:border after:border-zinc-200 dark:after:border-zinc-800
+              after:shadow-md dark:after:shadow-black/40`}
+            aria-label={sec.label}
+          />
+        ))}
+      </nav>
+
+      <article className="relative mx-auto w-[92%] sm:w-[90%] max-w-4xl py-8 sm:py-14 md:py-20 transition-colors duration-300">
         
-        {/* Paragraph 0 - Opening Lead */}
-        <div className="rounded-xl sm:rounded-2xl border border-zinc-200/90 bg-zinc-50/70 p-5 sm:p-7 md:p-8 dark:border-zinc-800 dark:bg-zinc-900/40">
-          <ScrollReadParagraph
-            text={PARAGRAPHS[0]}
-            globalStartWord={offsets[0].start}
-            totalArticleWords={totalWords}
-            className="font-palast text-lg sm:text-2xl md:text-3xl italic text-zinc-900 dark:text-zinc-100 leading-snug"
-            gradientPhrases={[
-              { phrase: 'architect', variant: 'cyan' },
-              { phrase: 'dead', variant: 'rose' },
-              { phrase: '5 hours of dead debugging', variant: 'violet' },
-            ]}
-          />
+        {/* Top back navigation */}
+        <div className="mb-8 sm:mb-12">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 py-1 font-mono text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
+          >
+            <span aria-hidden="true">←</span> back to portfolio
+          </Link>
         </div>
 
-        {/* Paragraph 1 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[1]}
-          globalStartWord={offsets[1].start}
-          totalArticleWords={totalWords}
-          gradientPhrases={[{ phrase: 'false hope', variant: 'amber' }]}
-        />
+        {/* ===== ESSAY HEADER ===== */}
+        <header className="mb-10 sm:mb-16 border-b border-zinc-200 pb-8 sm:pb-10 dark:border-zinc-800">
+          <div className="flex items-center gap-2">
+            <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+            <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              Personal Philosophy // Engineering Reality
+            </span>
+          </div>
 
-        {/* Paragraph 2 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[2]}
-          globalStartWord={offsets[2].start}
-          totalArticleWords={totalWords}
-          gradientPhrases={[
-            { phrase: 'only one feature or bug', variant: 'emerald' },
-            { phrase: 'normal human intervention', variant: 'cyan' },
-          ]}
-        />
+          <h1 className="font-harmond mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic tracking-tight text-zinc-950 dark:text-zinc-50 break-words leading-[1.1]">
+            What makes me different.
+          </h1>
+        </header>
 
-        {/* Paragraph 3 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[3]}
-          globalStartWord={offsets[3].start}
-          totalArticleWords={totalWords}
-          gradientPhrases={[{ phrase: 'exentential prompt', variant: 'fuchsia' }]}
-        />
+        {/* ===== ESSAY BODY: STRICT SEQUENTIAL SCROLL-READING FLOW ===== */}
+        <ScrollReadArticle
+          totalWords={totalWords}
+          offset={["start 85%", "end 85%"]}
+          className="space-y-12 sm:space-y-16 text-base sm:text-lg md:text-xl leading-relaxed text-zinc-700 dark:text-zinc-300"
+        >
+          
+          {/* Chapter 1: The Architect Mindset */}
+          <section id="chapter-1" className="scroll-mt-[100px] space-y-8">
+            {/* Paragraph 0 - Opening Lead */}
+            <div className="rounded-xl sm:rounded-2xl border border-zinc-200/90 bg-zinc-50/70 p-5 sm:p-7 md:p-8 dark:border-zinc-800 dark:bg-zinc-900/40">
+              <ScrollReadParagraph
+                text={PARAGRAPHS[0]}
+                globalStartWord={offsets[0].start}
+                totalArticleWords={totalWords}
+                className="font-palast text-lg sm:text-2xl md:text-3xl italic text-zinc-900 dark:text-zinc-100 leading-snug"
+                gradientPhrases={[
+                  { phrase: 'architect', variant: 'cyan' },
+                  { phrase: 'dead', variant: 'rose' },
+                  { phrase: '5 hours of dead debugging', variant: 'violet' },
+                ]}
+              />
+            </div>
+          </section>
 
-        {/* Paragraph 4 & 5 */}
-        <div className="border-l-2 border-zinc-300 pl-4 sm:pl-5 dark:border-zinc-700 space-y-3">
-          <ScrollReadParagraph
-            text={PARAGRAPHS[4]}
-            globalStartWord={offsets[4].start}
-            totalArticleWords={totalWords}
-            className="text-zinc-600 dark:text-zinc-400"
-            gradientPhrases={[{ phrase: 'backtracking', variant: 'rose' }]}
-          />
-          <ScrollReadParagraph
-            text={PARAGRAPHS[5]}
-            globalStartWord={offsets[5].start}
-            totalArticleWords={totalWords}
-            className="font-harmond text-2xl sm:text-3xl font-black italic text-zinc-950 dark:text-zinc-100"
-            gradientPhrases={[{ phrase: 'think differently!', variant: 'amber' }]}
-          />
-        </div>
+          {/* Chapter 2: Context & Human Verification */}
+          <section id="chapter-2" className="scroll-mt-[100px] space-y-8 sm:space-y-11">
+            {/* Paragraph 1 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[1]}
+              globalStartWord={offsets[1].start}
+              totalArticleWords={totalWords}
+              gradientPhrases={[{ phrase: 'false hope', variant: 'amber' }]}
+            />
 
-        {/* Paragraph 6 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[6]}
-          globalStartWord={offsets[6].start}
-          totalArticleWords={totalWords}
-          gradientPhrases={[
-            { phrase: 'taking time to read the documentation', variant: 'violet' },
-          ]}
-        />
+            {/* Paragraph 2 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[2]}
+              globalStartWord={offsets[2].start}
+              totalArticleWords={totalWords}
+              gradientPhrases={[
+                { phrase: 'only one feature or bug', variant: 'emerald' },
+                { phrase: 'normal human intervention', variant: 'cyan' },
+              ]}
+            />
 
-        {/* Paragraph 7 */}
-        <div className="rounded-xl sm:rounded-2xl border border-zinc-200 bg-white p-5 sm:p-7 dark:border-zinc-800 dark:bg-zinc-900/60 shadow-sm">
-          <ScrollReadParagraph
-            text={PARAGRAPHS[7]}
-            globalStartWord={offsets[7].start}
-            totalArticleWords={totalWords}
-            className="text-zinc-900 dark:text-zinc-100 font-medium text-base sm:text-lg leading-relaxed"
-            gradientPhrases={[
-              { phrase: 'power to solve/track every problem', variant: 'emerald' },
-              { phrase: 'crashing in production!', variant: 'rose' },
-            ]}
-          />
-        </div>
+            {/* Paragraph 3 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[3]}
+              globalStartWord={offsets[3].start}
+              totalArticleWords={totalWords}
+              gradientPhrases={[{ phrase: 'exentential prompt', variant: 'fuchsia' }]}
+            />
+          </section>
 
-        {/* Paragraph 8 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[8]}
-          globalStartWord={offsets[8].start}
-          totalArticleWords={totalWords}
-          className="font-palast text-lg sm:text-2xl italic text-zinc-900 dark:text-zinc-100"
-          gradientPhrases={[{ phrase: 'real developers back', variant: 'cyan' }]}
-        />
+          {/* Chapter 3: Backtracking & Thinking Differently */}
+          <section id="chapter-3" className="scroll-mt-[100px] space-y-8">
+            {/* Paragraph 4 & 5 */}
+            <div className="border-l-2 border-zinc-300 pl-4 sm:pl-5 dark:border-zinc-700 space-y-3">
+              <ScrollReadParagraph
+                text={PARAGRAPHS[4]}
+                globalStartWord={offsets[4].start}
+                totalArticleWords={totalWords}
+                className="text-zinc-600 dark:text-zinc-400"
+                gradientPhrases={[{ phrase: 'backtracking', variant: 'rose' }]}
+              />
+              <ScrollReadParagraph
+                text={PARAGRAPHS[5]}
+                globalStartWord={offsets[5].start}
+                totalArticleWords={totalWords}
+                className="font-harmond text-2xl sm:text-3xl font-black italic text-zinc-950 dark:text-zinc-100"
+                gradientPhrases={[{ phrase: 'think differently!', variant: 'amber' }]}
+              />
+            </div>
+          </section>
 
-        {/* Paragraph 9 */}
-        <ScrollReadParagraph
-          text={PARAGRAPHS[9]}
-          globalStartWord={offsets[9].start}
-          totalArticleWords={totalWords}
-          gradientPhrases={[
-            { phrase: 'speed of AI', variant: 'amber' },
-            { phrase: 'real developer', variant: 'emerald' },
-          ]}
-        />
+          {/* Chapter 4: Long-Term Value & Documentation */}
+          <section id="chapter-4" className="scroll-mt-[100px] space-y-8 sm:space-y-11">
+            {/* Paragraph 6 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[6]}
+              globalStartWord={offsets[6].start}
+              totalArticleWords={totalWords}
+              gradientPhrases={[
+                { phrase: 'taking time to read the documentation', variant: 'violet' },
+              ]}
+            />
 
-        {/* Paragraph 10 - Final Punch */}
-        <div className="border-t border-b border-zinc-200 py-5 sm:py-6 dark:border-zinc-800">
-          <ScrollReadParagraph
-            text={PARAGRAPHS[10]}
-            globalStartWord={offsets[10].start}
-            totalArticleWords={totalWords}
-            className="font-mono text-xs sm:text-base font-semibold text-zinc-900 dark:text-zinc-100"
-            gradientPhrases={[{ phrase: 'AGI will be ready soon', variant: 'fuchsia' }]}
-          />
-        </div>
-      </ScrollReadArticle>
+            {/* Paragraph 7 */}
+            <div className="rounded-xl sm:rounded-2xl border border-zinc-200 bg-white p-5 sm:p-7 dark:border-zinc-800 dark:bg-zinc-900/60 shadow-sm">
+              <ScrollReadParagraph
+                text={PARAGRAPHS[7]}
+                globalStartWord={offsets[7].start}
+                totalArticleWords={totalWords}
+                className="text-zinc-900 dark:text-zinc-100 font-medium text-base sm:text-lg leading-relaxed"
+                gradientPhrases={[
+                  { phrase: 'power to solve/track every problem', variant: 'emerald' },
+                  { phrase: 'crashing in production!', variant: 'rose' },
+                ]}
+              />
+            </div>
+          </section>
+
+          {/* Chapter 5: The Future with AI & AGI */}
+          <section id="chapter-5" className="scroll-mt-[100px] space-y-8 sm:space-y-11">
+            {/* Paragraph 8 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[8]}
+              globalStartWord={offsets[8].start}
+              totalArticleWords={totalWords}
+              className="font-palast text-lg sm:text-2xl italic text-zinc-900 dark:text-zinc-100"
+              gradientPhrases={[{ phrase: 'real developers back', variant: 'cyan' }]}
+            />
+
+            {/* Paragraph 9 */}
+            <ScrollReadParagraph
+              text={PARAGRAPHS[9]}
+              globalStartWord={offsets[9].start}
+              totalArticleWords={totalWords}
+              gradientPhrases={[
+                { phrase: 'speed of AI', variant: 'amber' },
+                { phrase: 'real developer', variant: 'emerald' },
+              ]}
+            />
+
+            {/* Paragraph 10 - Final Punch */}
+            <div className="border-t border-b border-zinc-200 py-5 sm:py-6 dark:border-zinc-800">
+              <ScrollReadParagraph
+                text={PARAGRAPHS[10]}
+                globalStartWord={offsets[10].start}
+                totalArticleWords={totalWords}
+                className="font-mono text-xs sm:text-base font-semibold text-zinc-900 dark:text-zinc-100"
+                gradientPhrases={[{ phrase: 'AGI will be ready soon', variant: 'fuchsia' }]}
+              />
+            </div>
+          </section>
+        </ScrollReadArticle>
 
       {/* ===== CASE STUDIES SHINY BUTTONS SECTION ===== */}
-      <section id="case-studies-section" className="pt-10 sm:pt-16 pb-6">
+      <section id="case-studies-section" className="pt-10 sm:pt-16 pb-6 scroll-mt-[100px]">
         <div className="rounded-2xl sm:rounded-3xl border border-zinc-200/90 bg-zinc-50/70 p-6 sm:p-10 dark:border-zinc-800 dark:bg-zinc-900/40 shadow-sm">
           <div className="mb-8">
             <div className="flex items-center gap-2">
@@ -313,5 +466,6 @@ export default function Different() {
       </footer>
 
     </article>
+    </>
   )
 }
