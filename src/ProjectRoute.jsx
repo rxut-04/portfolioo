@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
 import CursorBox from './CursorBox'
@@ -38,6 +38,7 @@ import FeastoProject from './Projects/Feasto'
 import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
 import GlobalSnowfall from './components/GlobalSnowfall'
+import CommandPalette from './components/CommandPalette'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -72,11 +73,14 @@ const ScrollToTop = () => {
 }
 
 const SiteLayout = () => {
+  const [isCommandOpen, setIsCommandOpen] = useState(false)
+
   return (
     <div className="flow-root relative min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-[#09090b] dark:text-zinc-100">
       <GlobalSnowfall />
       <CursorBox />
-      <Navbar />
+      <Navbar onOpenCommand={() => setIsCommandOpen(true)} />
+      <CommandPalette isOpen={isCommandOpen} setIsOpen={setIsCommandOpen} />
       <Outlet />
     </div>
   )

@@ -44,7 +44,7 @@ const ThemeToggleBtn = ({ theme, toggleTheme, className = '' }) => (
   </button>
 )
 
-const Navbar = () => {
+const Navbar = ({ onOpenCommand }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
 
@@ -59,8 +59,19 @@ const Navbar = () => {
         </NavLink>
       </div>
 
-      {/* Right controls on mobile: Theme Toggle + Menu Hamburger */}
+      {/* Right controls on mobile: Search + Theme Toggle + Menu Hamburger */}
       <div className="flex items-center gap-2 xl:hidden">
+        <button
+          type="button"
+          onClick={onOpenCommand}
+          aria-label="Open search and command menu"
+          className="inline-flex size-10 items-center justify-center rounded-full border border-gray-300 bg-gray-100/90 text-gray-800 transition-all duration-300 hover:scale-105 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800/90 dark:text-zinc-200 cursor-pointer"
+        >
+          <svg className="size-4 text-zinc-600 dark:text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+        </button>
         <ThemeToggleBtn theme={theme} toggleTheme={toggleTheme} />
         <button
           type="button"
@@ -98,8 +109,23 @@ const Navbar = () => {
           <NavLink onClick={() => setMenuOpen(false)} to="/contact">Contact</NavLink>
         </div>
 
-        {/* Desktop Theme Toggle */}
-        <div className="hidden xl:flex items-center ml-2">
+        {/* Desktop Search Trigger + Theme Toggle */}
+        <div className="hidden xl:flex items-center gap-2.5 ml-2">
+          <button
+            type="button"
+            onClick={onOpenCommand}
+            aria-label="Open Command Menu"
+            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50/90 px-3 py-1.5 font-mono text-xs text-zinc-600 transition-all hover:border-zinc-400 hover:text-zinc-900 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900/90 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-zinc-200 cursor-pointer shadow-sm"
+          >
+            <svg className="size-3.5 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <span>Search</span>
+            <kbd className="rounded border border-zinc-300 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+              ⌘K
+            </kbd>
+          </button>
           <ThemeToggleBtn theme={theme} toggleTheme={toggleTheme} />
         </div>
       </nav>
