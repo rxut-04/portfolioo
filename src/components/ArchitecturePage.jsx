@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { LineGraph } from './ui/line-graph-statistics'
 
-// SVGs for modern brand & system service integration icons
+// Service & Integration Icons for case study cards
 const ServiceIcons = {
   slack: (
-    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+    <svg className="size-full shrink-0" viewBox="0 0 24 24" fill="none">
       <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52-2.523c0-1.394 1.127-2.524 2.52-2.524h2.522v2.524c0 1.393-1.127 2.523-2.522 2.523z" fill="#E01E5A"/>
       <path d="M8.83 15.165a2.528 2.528 0 0 1 2.52-2.523 2.528 2.528 0 0 1 2.523 2.523v6.315A2.528 2.528 0 0 1 11.35 24a2.528 2.528 0 0 1-2.52-2.52v-6.315z" fill="#E01E5A"/>
       <path d="M8.83 5.045a2.528 2.528 0 0 1 2.52-2.522c1.393 0 2.523 1.128 2.523 2.522v2.522H8.83V5.045z" fill="#36C5F0"/>
@@ -16,7 +16,7 @@ const ServiceIcons = {
     </svg>
   ),
   gmail: (
-    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+    <svg className="size-full shrink-0" viewBox="0 0 24 24" fill="none">
       <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6z" fill="#EA4335" fillOpacity="0.1"/>
       <path d="M20 4H4c-1.1 0-2 .9-2 2v.5l10 6.5 10-6.5V6c0-1.1-.9-2-2-2z" fill="#EA4335"/>
       <path d="M2 7v11c0 1.1.9 2 2 2h2v-9.5L2 7z" fill="#4285F4"/>
@@ -25,14 +25,14 @@ const ServiceIcons = {
     </svg>
   ),
   meet: (
-    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+    <svg className="size-full shrink-0" viewBox="0 0 24 24" fill="none">
       <rect x="2" y="5" width="13" height="14" rx="2.5" fill="#00832D"/>
       <path d="M15 9.5l6-4v13l-6-4v-5z" fill="#00AC47"/>
       <circle cx="8.5" cy="12" r="3" fill="#ffffff" fillOpacity="0.9"/>
     </svg>
   ),
   google: (
-    <svg className="size-6 shrink-0" viewBox="0 0 24 24">
+    <svg className="size-full shrink-0" viewBox="0 0 24 24">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
@@ -40,7 +40,7 @@ const ServiceIcons = {
     </svg>
   ),
   dispatch: (
-    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+    <svg className="size-full shrink-0" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" fill="#F43F5E" fillOpacity="0.15" stroke="#F43F5E" strokeWidth="2"/>
       <path d="M12 6v6l4 2" stroke="#F43F5E" strokeWidth="2" strokeLinecap="round"/>
       <circle cx="12" cy="12" r="2" fill="#F43F5E"/>
@@ -131,113 +131,12 @@ const CASE_STUDIES = [
   },
 ]
 
-/**
- * Slatted Waveform Contour Chart matching the reference image exactly:
- * - High density vertical stripes (98 lines)
- * - Wave contour: tall hill at Wed -> valley -> amber hill at Thu -> valley -> tall green peak at Fry
- * - Extends flush to the bottom edge of the card
- */
-function SlattedWaveformChart() {
-  const lineCount = 96
-  const width = 640
-  const height = 210
-  const baseY = 210
-
-  // Calculate lines
-  const lines = []
-  for (let i = 0; i < lineCount; i++) {
-    const t = i / (lineCount - 1)
-    const x = 12 + t * (width - 24)
-
-    // Smooth spline-like profile:
-    // Left (Wed): elevated (height ~130)
-    // Valley 1 (t ~ 0.28): dips down to height ~65 (<500)
-    // Thu peak (t ~ 0.52): hill reaching height ~110 (≈1k)
-    // Valley 2 (t ~ 0.72): dips down to height ~75 (<500)
-    // Fry peak (t ~ 0.96): climbs to height ~185 (>2k)
-    const hWed = Math.exp(-Math.pow((t - 0.04) / 0.16, 2)) * 85
-    const hThu = Math.exp(-Math.pow((t - 0.52) / 0.15, 2)) * 65
-    const hFry = Math.exp(-Math.pow((t - 0.98) / 0.20, 2)) * 140
-    const baseline = 50 + 20 * Math.sin(t * Math.PI)
-
-    const totalHeight = Math.max(50, Math.min(195, baseline + hWed + hThu + hFry))
-    const topY = baseY - totalHeight
-
-    // Color mapped to value legend:
-    // <500 (height < 90): Pink/Coral (#FB7185)
-    // ≈1k  (height 90-130): Warm Amber (#FB923C / #F59E0B)
-    // >2k  (height > 130): Vibrant Green (#22C55E / #10B981)
-    let stroke = '#22C55E'
-    if (totalHeight < 90) {
-      stroke = '#FB7185'
-    } else if (totalHeight < 130) {
-      stroke = '#FB923C'
-    } else {
-      stroke = '#22C55E'
-    }
-
-    lines.push({ x, topY, stroke })
-  }
-
-  return (
-    <div className="relative w-full overflow-hidden select-none">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-48 sm:h-60 md:h-72 object-cover block"
-        preserveAspectRatio="none"
-      >
-        {/* Vertical Pinstripe Waveform Lines */}
-        {lines.map((l, idx) => (
-          <line
-            key={idx}
-            x1={l.x}
-            y1={baseY}
-            x2={l.x}
-            y2={l.topY}
-            stroke={l.stroke}
-            strokeWidth="2.6"
-            strokeLinecap="round"
-            className="opacity-95"
-          />
-        ))}
-
-        {/* Day Labels sitting inside the bottom stripes */}
-        <text
-          x="36"
-          y={baseY - 32}
-          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
-          style={{ fontFamily: 'inherit' }}
-        >
-          Wed
-        </text>
-        <text
-          x="305"
-          y={baseY - 32}
-          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
-          style={{ fontFamily: 'inherit' }}
-        >
-          Thu
-        </text>
-        <text
-          x="570"
-          y={baseY - 32}
-          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
-          style={{ fontFamily: 'inherit' }}
-        >
-          Fry
-        </text>
-      </svg>
-    </div>
-  )
-}
-
 export default function ArchitecturePage() {
   const navigate = useNavigate()
-  const [hoveredCard, setHoveredCard] = useState(null)
 
   return (
-    <main className="w-full min-h-screen bg-[#F6F7F9] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-300 py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-10">
-      <div className="mx-auto max-w-4xl">
+    <main className="min-h-screen bg-[#F6F7F9] dark:bg-[#09090b] font-light text-zinc-900 dark:text-zinc-100 transition-colors duration-300 py-6 sm:py-10 md:py-14 px-4 sm:px-6 md:px-10">
+      <div className="mx-auto max-w-5xl">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">
@@ -253,50 +152,14 @@ export default function ArchitecturePage() {
         </div>
 
         {/* ========================================================
-            TOP SECTION: PERFORMANCE TRENDS CARD (EXACT TO REFERENCE)
+            TOP SECTION: PURE GRAPH ELEMENT ONLY
             ======================================================== */}
-        <div className="overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-6 sm:p-8 shadow-sm">
-          {/* Header Row */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Performance Trends
-            </h2>
-            <span className="font-mono text-base sm:text-lg font-bold text-[#10B981]">
-              85%
-            </span>
-          </div>
-
-          {/* Number & Legend Row */}
-          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-4">
-            <span className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
-              2,683
-            </span>
-
-            {/* Legend Cluster */}
-            <div className="flex items-center gap-4 font-mono text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
-              <div className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-[#FB7185]" />
-                <span>&lt;500</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-[#FB923C]" />
-                <span>≈1k</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-[#22C55E]" />
-                <span>&gt;2k</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Slatted Waveform Chart Graphic (flush to bottom) */}
-          <div className="mt-8 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8">
-            <SlattedWaveformChart />
-          </div>
+        <div className="rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-2 sm:p-5 md:p-6 shadow-xs overflow-hidden">
+          <LineGraph />
         </div>
 
         {/* ========================================================
-            BOTTOM SECTION: RECTANGULAR CARDS (3 IN ROW 1, 2 IN ROW 2)
+            BOTTOM SECTION: 5 RECTANGULAR CARDS (3 IN ROW 1, 2 IN ROW 2)
             ======================================================== */}
         <div className="mt-5 sm:mt-6 grid grid-cols-6 gap-2.5 sm:gap-4 md:gap-5">
           {/* ROW 1: 3 CARDS (col-span-2 each) */}
@@ -304,7 +167,7 @@ export default function ArchitecturePage() {
             <div
               key={study.id}
               onClick={() => navigate(study.route)}
-              className="col-span-2 group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-2.5 sm:p-4 md:p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+              className="col-span-2 group relative flex flex-col justify-between rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-3 sm:p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
             >
               <div>
                 {/* Top: Tag + Service Icon */}
@@ -325,11 +188,11 @@ export default function ArchitecturePage() {
 
                 {/* Metric Value + Delta Pill */}
                 <div className="mt-2 sm:mt-3 flex flex-wrap items-baseline gap-1 sm:gap-1.5">
-                  <span className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                  <span className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-white">
                     {study.value}
                   </span>
                   <span
-                    className={`inline-flex items-center rounded-full px-1 sm:px-1.5 py-0.2 sm:py-0.5 text-[9px] sm:text-[11px] font-bold ${
+                    className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] sm:text-[11px] font-bold ${
                       study.isNegative
                         ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
                         : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
@@ -365,7 +228,7 @@ export default function ArchitecturePage() {
             <div
               key={study.id}
               onClick={() => navigate(study.route)}
-              className="col-span-3 group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-3 sm:p-5 md:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+              className="col-span-3 group relative flex flex-col justify-between rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-3.5 sm:p-5 md:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
             >
               <div>
                 {/* Top: Tag + Service Icon */}
@@ -386,7 +249,7 @@ export default function ArchitecturePage() {
 
                 {/* Metric Value + Delta Pill */}
                 <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
-                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-white">
                     {study.value}
                   </span>
                   <span
