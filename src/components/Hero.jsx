@@ -227,19 +227,36 @@ const Hero = () => {
             fundamentals. Looking for a developer role where I can learn fast and
             ship real work.
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <button
-              onClick={handleViewCvClick}
-              className="rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
-            >
-              View CV
-            </button>
-            <Link
-              to="/different"
-              className="inline-flex items-center rounded-xl border border-gray-300 bg-gray-100/80 px-6 py-3.5 text-base font-semibold text-gray-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-200 hover:text-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white sm:text-lg cursor-pointer"
-            >
-              what makes me different
-            </Link>
+          {/* Flex button layout: 2 buttons in row 1, 1 button in row 2 */}
+          <div className="mt-8 flex flex-col gap-3.5">
+            {/* Row 1: Two buttons */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <button
+                onClick={handleViewCvClick}
+                className="inline-flex items-center justify-center rounded-xl bg-blue-700 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-700/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 active:scale-95 sm:text-lg cursor-pointer"
+              >
+                View CV
+              </button>
+              <Link
+                to="/projects"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-zinc-400 active:scale-95 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 sm:text-lg cursor-pointer"
+              >
+                <span>Explore Projects</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+
+            {/* Row 2: One button */}
+            <div className="flex items-center">
+              <Link
+                to="/different"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-gray-100/80 px-6 py-3.5 text-base font-semibold text-gray-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-200 hover:text-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white sm:text-lg cursor-pointer w-full sm:w-auto text-center"
+              >
+                <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
+                <span>What makes me different</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
         </div>
 
