@@ -1,438 +1,418 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
+// SVGs for modern brand & system service integration icons
+const ServiceIcons = {
+  slack: (
+    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+      <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52-2.523c0-1.394 1.127-2.524 2.52-2.524h2.522v2.524c0 1.393-1.127 2.523-2.522 2.523z" fill="#E01E5A"/>
+      <path d="M8.83 15.165a2.528 2.528 0 0 1 2.52-2.523 2.528 2.528 0 0 1 2.523 2.523v6.315A2.528 2.528 0 0 1 11.35 24a2.528 2.528 0 0 1-2.52-2.52v-6.315z" fill="#E01E5A"/>
+      <path d="M8.83 5.045a2.528 2.528 0 0 1 2.52-2.522c1.393 0 2.523 1.128 2.523 2.522v2.522H8.83V5.045z" fill="#36C5F0"/>
+      <path d="M8.83 8.832a2.528 2.528 0 0 1-2.52-2.523c0-1.393 1.127-2.522 2.52-2.522H15.15a2.528 2.528 0 0 1 2.522 2.522c0 1.394-1.128 2.523-2.522 2.523H8.83z" fill="#36C5F0"/>
+      <path d="M18.958 8.832a2.528 2.528 0 0 1 2.522 2.523c0 1.393-1.128 2.523-2.522 2.523h-2.522V8.832h2.522z" fill="#2EB67D"/>
+      <path d="M15.168 8.832a2.528 2.528 0 0 1-2.522 2.523 2.528 2.528 0 0 1-2.52-2.523V2.517A2.528 2.528 0 0 1 12.646 0c1.394 0 2.522 1.127 2.522 2.517v6.315z" fill="#2EB67D"/>
+      <path d="M15.168 18.955a2.528 2.528 0 0 1-2.522 2.522c-1.394 0-2.52-1.127-2.52-2.522v-2.522h5.042v2.522z" fill="#ECB22E"/>
+      <path d="M15.168 15.165a2.528 2.528 0 0 1 2.522 2.523 2.528 2.528 0 0 1-2.522 2.523H8.83a2.528 2.528 0 0 1-2.52-2.523c0-1.394 1.127-2.523 2.52-2.523h6.338z" fill="#ECB22E"/>
+    </svg>
+  ),
+  gmail: (
+    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+      <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6z" fill="#EA4335" fillOpacity="0.1"/>
+      <path d="M20 4H4c-1.1 0-2 .9-2 2v.5l10 6.5 10-6.5V6c0-1.1-.9-2-2-2z" fill="#EA4335"/>
+      <path d="M2 7v11c0 1.1.9 2 2 2h2v-9.5L2 7z" fill="#4285F4"/>
+      <path d="M22 7l-4 3.5V20h2c1.1 0 2-.9 2-2V7z" fill="#34A853"/>
+      <path d="M18 10.5L12 14.5l-6-4V20h12v-9.5z" fill="#FBBC05"/>
+    </svg>
+  ),
+  meet: (
+    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="5" width="13" height="14" rx="2.5" fill="#00832D"/>
+      <path d="M15 9.5l6-4v13l-6-4v-5z" fill="#00AC47"/>
+      <circle cx="8.5" cy="12" r="3" fill="#ffffff" fillOpacity="0.9"/>
+    </svg>
+  ),
+  google: (
+    <svg className="size-6 shrink-0" viewBox="0 0 24 24">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  ),
+  dispatch: (
+    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" fill="#F43F5E" fillOpacity="0.15" stroke="#F43F5E" strokeWidth="2"/>
+      <path d="M12 6v6l4 2" stroke="#F43F5E" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="12" cy="12" r="2" fill="#F43F5E"/>
+    </svg>
+  ),
+}
 
 const CASE_STUDIES = [
   {
     id: 1,
+    title: 'Messages Sent',
+    caseTitle: 'Excalibur Blueprint Engine',
+    subtitle: '-7 Messages',
+    meta: '-7 Undocumented States • State Machine',
+    value: '342',
+    delta: '-4.6%',
+    isNegative: true,
+    progress: 31,
+    progressColor: 'from-[#FB7185] to-[#FB923C]',
+    route: '/projects/excalibur',
+    icon: ServiceIcons.slack,
     tag: 'Case Study 01',
-    category: 'Distributed Systems & Modeling',
-    title: 'Excalibur Blueprint Engine',
-    subtitle: 'System Architecture & Blueprint Flow',
-    desc: 'Interactive architectural modeling of distributed components, data routing boundaries, and system states into deterministic blueprints.',
-    video: '/videos/EXCALIBER-FINAL.mp4',
-    problem: 'Multi-service pipelines suffer from architectural drift and undocumented state transitions during team scale.',
-    solution: 'Live visual canvas generating deterministic component graphs, dependency hierarchies, and verified interface contracts.',
-    tech: ['React', 'TypeScript', 'Canvas Engine', 'WebSockets', 'State Machine'],
-    metrics: { label: 'State Determinism', val: '100%' },
-    color: 'from-blue-500 to-indigo-600',
-    accentBorder: 'border-blue-500/40 dark:border-blue-500/50',
-    accentGlow: 'shadow-blue-500/10 dark:shadow-blue-500/20',
   },
   {
     id: 2,
+    title: 'Emails Exchanged',
+    caseTitle: 'Personal GPT Autonomous Assistant',
+    subtitle: '+98 Emails',
+    meta: '+98 Multi-Step Context Loops • Vector DB',
+    value: '465',
+    delta: '+12%',
+    isNegative: false,
+    progress: 95,
+    progressColor: 'from-[#FB7185] via-[#FB923C] to-[#22C55E]',
+    route: '/projects/personal-gpt',
+    icon: ServiceIcons.gmail,
     tag: 'Case Study 02',
-    category: 'Autonomous Agentic AI',
-    title: 'Personal GPT Autonomous Assistant',
-    subtitle: 'Context-Driven Reasoning Loop',
-    desc: 'Context-driven autonomous assistant featuring recursive reasoning loops, verified tool execution, and persistent memory.',
-    video: '/videos/Personal-GPT.mp4',
-    problem: 'Fragile prompt chains hallucinate, lose long-term memory, and fail on complex multi-step developer operations.',
-    solution: 'Self-correcting cognitive loops with runtime validation checkpoints, sandboxed code execution, and persistent vector stores.',
-    tech: ['Next.js', 'LangChain', 'Vector DB', 'Streaming API', 'Redis'],
-    metrics: { label: 'Reasoning Efficiency', val: '4.2x' },
-    color: 'from-emerald-500 to-teal-600',
-    accentBorder: 'border-emerald-500/40 dark:border-emerald-500/50',
-    accentGlow: 'shadow-emerald-500/10 dark:shadow-emerald-500/20',
   },
   {
     id: 3,
+    title: 'All Meetings',
+    caseTitle: 'Production Deployment & Execution',
+    subtitle: '+12 Meetings',
+    meta: '+12 Canary Release Probes • Zero Downtime',
+    value: '147',
+    delta: '+7%',
+    isNegative: false,
+    progress: 78,
+    progressColor: 'from-[#FB923C] to-[#22C55E]',
+    route: '/projects/production-execution',
+    icon: ServiceIcons.meet,
     tag: 'Case Study 03',
-    category: 'Cloud Infrastructure & CI/CD',
-    title: 'Production Deployment & Execution',
-    subtitle: 'Zero-Downtime Release Pipeline',
-    desc: 'Real-time execution of zero-downtime production deployment, verified telemetry, canary routing, and end-to-end task completion.',
-    video: '/videos/Success_clip1.mp4',
-    problem: 'Manual deployments cause unexpected downtime, rollback delays, and unmonitored production configuration drift.',
-    solution: 'Automated CI/CD telemetry pipeline with automated health probing, automated canary gates, and instant rollback safety.',
-    tech: ['Docker', 'Kubernetes', 'GitHub Actions', 'Prometheus', 'Grafana'],
-    metrics: { label: 'Uptime Reliability', val: '99.99%' },
-    color: 'from-amber-500 to-orange-600',
-    accentBorder: 'border-amber-500/40 dark:border-amber-500/50',
-    accentGlow: 'shadow-amber-500/10 dark:shadow-amber-500/20',
   },
   {
     id: 4,
+    title: 'Queries In Google',
+    caseTitle: 'Immutable Archive & Ledger Records',
+    subtitle: '-15 Queries',
+    meta: '-15 Millisecond Query Latency • Merkle Roots',
+    value: '973',
+    delta: '-1.3%',
+    isNegative: true,
+    progress: 54,
+    progressColor: 'from-[#FB7185] via-[#FB923C] to-[#84CC16]',
+    route: '/projects/archive-ledger',
+    icon: ServiceIcons.google,
     tag: 'Case Study 04',
-    category: 'Financial Auditing & Ledgers',
-    title: 'Immutable Archive & Ledger Records',
-    subtitle: 'High-Integrity Historical Ledger',
-    desc: 'High-integrity archiving pipeline with persistent audit logging, deterministic state indexing, and rapid query retrieval.',
-    video: '/videos/archive-final.mp4',
-    problem: 'High-throughput financial ledgers face audit tampering risks and sluggish query degradation on millions of historical blocks.',
-    solution: 'Cryptographically signed append-only transaction ledger with Merkle tree proofs and sub-millisecond retrieval caching.',
-    tech: ['Node.js', 'Merkle Proofs', 'PostgreSQL', 'SHA-256', 'WebSockets'],
-    metrics: { label: 'Query Latency', val: '< 5ms' },
-    color: 'from-purple-500 to-violet-600',
-    accentBorder: 'border-purple-500/40 dark:border-purple-500/50',
-    accentGlow: 'shadow-purple-500/10 dark:shadow-purple-500/20',
   },
   {
     id: 5,
+    title: 'Feasto Smart Delivery Telemetry',
+    caseTitle: 'Feasto Smart Delivery Platform',
+    subtitle: '+184 Orders Handled',
+    meta: '-35% Dispatch Latency • Live Kitchen Telemetry',
+    value: '2,840',
+    delta: '+35.2%',
+    isNegative: false,
+    progress: 88,
+    progressColor: 'from-[#F43F5E] via-[#FB923C] to-[#10B981]',
+    route: '/projects/feasto',
+    icon: ServiceIcons.dispatch,
     tag: 'Case Study 05',
-    category: 'Logistics & Real-Time Telemetry',
-    title: 'Feasto Smart Delivery Platform',
-    subtitle: 'Real-Time Dispatch & Telemetry',
-    desc: 'Real-time food delivery dispatch system with intelligent order routing, live kitchen telemetry, and automated courier tracking.',
-    video: '/videos/FEASTO-FINAL.mp4',
-    problem: 'Unoptimized courier allocation and dispatch latency cause food cooling and customer churn during peak order windows.',
-    solution: 'Real-time geospatial dispatch engine coordinating order batching, preparation milestones, and live turn-by-turn routing.',
-    tech: ['React', 'Node.js', 'GeoSpatial Index', 'Socket.io', 'Google Maps'],
-    metrics: { label: 'Dispatch Latency', val: '-35%' },
-    color: 'from-rose-500 to-pink-600',
-    accentBorder: 'border-rose-500/40 dark:border-rose-500/50',
-    accentGlow: 'shadow-rose-500/10 dark:shadow-rose-500/20',
   },
 ]
 
-export default function ArchitecturePage() {
-  const navigate = useNavigate()
-  const [activeStudy, setActiveStudy] = useState(1)
-  const containerRef = useRef(null)
-  const btnRefs = useRef([])
-  const cardRefs = useRef([])
-  const [arrows, setArrows] = useState([])
+/**
+ * Slatted Waveform Contour Chart matching the reference image exactly:
+ * - High density vertical stripes (98 lines)
+ * - Wave contour: tall hill at Wed -> valley -> amber hill at Thu -> valley -> tall green peak at Fry
+ * - Extends flush to the bottom edge of the card
+ */
+function SlattedWaveformChart() {
+  const lineCount = 96
+  const width = 640
+  const height = 210
+  const baseY = 210
 
-  const STUDY_ROUTES = {
-    1: '/projects/excalibur',
-    2: '/projects/personal-gpt',
-    3: '/projects/production-execution',
-    4: '/projects/archive-ledger',
-    5: '/projects/feasto',
+  // Calculate lines
+  const lines = []
+  for (let i = 0; i < lineCount; i++) {
+    const t = i / (lineCount - 1)
+    const x = 12 + t * (width - 24)
+
+    // Smooth spline-like profile:
+    // Left (Wed): elevated (height ~130)
+    // Valley 1 (t ~ 0.28): dips down to height ~65 (<500)
+    // Thu peak (t ~ 0.52): hill reaching height ~110 (≈1k)
+    // Valley 2 (t ~ 0.72): dips down to height ~75 (<500)
+    // Fry peak (t ~ 0.96): climbs to height ~185 (>2k)
+    const hWed = Math.exp(-Math.pow((t - 0.04) / 0.16, 2)) * 85
+    const hThu = Math.exp(-Math.pow((t - 0.52) / 0.15, 2)) * 65
+    const hFry = Math.exp(-Math.pow((t - 0.98) / 0.20, 2)) * 140
+    const baseline = 50 + 20 * Math.sin(t * Math.PI)
+
+    const totalHeight = Math.max(50, Math.min(195, baseline + hWed + hThu + hFry))
+    const topY = baseY - totalHeight
+
+    // Color mapped to value legend:
+    // <500 (height < 90): Pink/Coral (#FB7185)
+    // ≈1k  (height 90-130): Warm Amber (#FB923C / #F59E0B)
+    // >2k  (height > 130): Vibrant Green (#22C55E / #10B981)
+    let stroke = '#22C55E'
+    if (totalHeight < 90) {
+      stroke = '#FB7185'
+    } else if (totalHeight < 130) {
+      stroke = '#FB923C'
+    } else {
+      stroke = '#22C55E'
+    }
+
+    lines.push({ x, topY, stroke })
   }
-
-  const handleStudySelect = (id) => {
-    setActiveStudy(id)
-    if (STUDY_ROUTES[id]) {
-      navigate(STUDY_ROUTES[id])
-    }
-  }
-
-  // Calculate connector arrow paths between center buttons and content cards
-  useEffect(() => {
-    const updateArrows = () => {
-      if (!containerRef.current) return
-      const containerRect = containerRef.current.getBoundingClientRect()
-
-      const newArrows = CASE_STUDIES.map((_, i) => {
-        const btn = btnRefs.current[i]
-        const card = cardRefs.current[i]
-        if (!btn || !card) return null
-
-        const bRect = btn.getBoundingClientRect()
-        const cRect = card.getBoundingClientRect()
-
-        // Start point at button edge
-        const startX = bRect.left + bRect.width / 2 - containerRect.left
-        const startY = bRect.top + bRect.height / 2 - containerRect.top
-
-        // Target point at card edge
-        let endX = cRect.left + cRect.width / 2 - containerRect.left
-        let endY = cRect.top + cRect.height / 2 - containerRect.top
-
-        if (i === 0) {
-          endX = cRect.right - containerRect.left - 20
-          endY = cRect.bottom - containerRect.top
-        } else if (i === 1) {
-          endX = cRect.left + cRect.width / 2 - containerRect.left
-          endY = cRect.bottom - containerRect.top
-        } else if (i === 2) {
-          endX = cRect.left - containerRect.left + 20
-          endY = cRect.bottom - containerRect.top
-        } else if (i === 3) {
-          endX = cRect.right - containerRect.left - 20
-          endY = cRect.top - containerRect.top
-        } else if (i === 4) {
-          endX = cRect.left + cRect.width / 2 - containerRect.left
-          endY = cRect.top - containerRect.top
-        }
-
-        // Curved control points for natural hand-drawn flow
-        const dx = endX - startX
-        const dy = endY - startY
-        const cpX = startX + dx * 0.25 - (dy * 0.15)
-        const cpY = startY + dy * 0.65
-
-        const path = `M ${startX} ${startY} Q ${cpX} ${cpY} ${endX} ${endY}`
-        return { path, startX, startY, endX, endY }
-      })
-
-      setArrows(newArrows)
-    }
-
-    updateArrows()
-    window.addEventListener('resize', updateArrows)
-    const timer = setTimeout(updateArrows, 200)
-    return () => {
-      window.removeEventListener('resize', updateArrows)
-      clearTimeout(timer)
-    }
-  }, [activeStudy])
 
   return (
-    <main className="relative min-h-screen bg-white text-zinc-900 transition-colors duration-300 dark:bg-[#09090b] dark:text-zinc-100 py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-10 lg:px-12">
-      {/* Top Header & Breadcrumb */}
-      <header className="mx-auto max-w-7xl mb-8 sm:mb-12">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 pb-5 dark:border-zinc-800">
-          <div>
-            <Link
-              to="/different"
-              className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
-            >
-              <span aria-hidden="true">←</span> Back to What Makes Me Different
-            </Link>
-            <div className="flex items-center gap-2 mt-3">
-              <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-              <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-                Architectural Blueprint Map // 5 Systems
-              </span>
-            </div>
-            <h1 className="font-harmond text-3xl sm:text-4xl md:text-5xl font-black italic text-zinc-950 dark:text-zinc-50 mt-1">
-              Systems Architecture & Case Studies
-            </h1>
-          </div>
-
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-5 py-2.5 text-xs sm:text-sm font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition active:scale-95 shadow-xs"
-          >
-            <span>View All Projects</span>
-            <span aria-hidden="true">→</span>
-          </Link>
-        </div>
-      </header>
-
-      {/* ===== INTERACTIVE MAP CANVAS (MATCHING USER DIAGRAM) ===== */}
-      <section className="mx-auto max-w-7xl">
-        <div
-          ref={containerRef}
-          className="relative min-h-[960px] lg:min-h-[1100px] rounded-3xl border border-zinc-200/90 dark:border-zinc-800/90 bg-gradient-to-b from-zinc-50/70 via-white to-zinc-50/70 dark:from-zinc-950/70 dark:via-zinc-900/30 dark:to-zinc-950/70 p-4 sm:p-6 lg:p-8 shadow-sm overflow-hidden"
-        >
-          {/* Subtle grid background for architectural blueprint feel */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-            style={{
-              backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-            }}
+    <div className="relative w-full overflow-hidden select-none">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-48 sm:h-60 md:h-72 object-cover block"
+        preserveAspectRatio="none"
+      >
+        {/* Vertical Pinstripe Waveform Lines */}
+        {lines.map((l, idx) => (
+          <line
+            key={idx}
+            x1={l.x}
+            y1={baseY}
+            x2={l.x}
+            y2={l.topY}
+            stroke={l.stroke}
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            className="opacity-95"
           />
+        ))}
 
-          {/* SVG Arrow Connectors Layer (Visible on Desktop/Laptop) */}
-          <svg className="pointer-events-none absolute inset-0 size-full hidden lg:block z-10">
-            <defs>
-              <marker
-                id="arrowhead-active"
-                markerWidth="8"
-                markerHeight="8"
-                refX="6"
-                refY="4"
-                orient="auto"
-              >
-                <polygon points="0 1, 8 4, 0 7" fill="#3b82f6" />
-              </marker>
-              <marker
-                id="arrowhead-idle"
-                markerWidth="8"
-                markerHeight="8"
-                refX="6"
-                refY="4"
-                orient="auto"
-              >
-                <polygon points="0 1, 8 4, 0 7" fill="currentColor" className="text-zinc-300 dark:text-zinc-700" />
-              </marker>
-            </defs>
-
-            {arrows.map((arr, i) => {
-              if (!arr) return null
-              const isActive = activeStudy === i + 1
-              return (
-                <g key={i}>
-                  <path
-                    d={arr.path}
-                    fill="none"
-                    stroke={isActive ? '#3b82f6' : 'currentColor'}
-                    strokeWidth={isActive ? 2.5 : 1.5}
-                    strokeDasharray={isActive ? 'none' : '5 4'}
-                    markerEnd={isActive ? 'url(#arrowhead-active)' : 'url(#arrowhead-idle)'}
-                    className={
-                      isActive
-                        ? 'transition-all duration-300'
-                        : 'text-zinc-300 dark:text-zinc-700/80 transition-all duration-300'
-                    }
-                  />
-                </g>
-              )
-            })}
-          </svg>
-
-          {/* ===== 3-TIER SPATIAL BLUEPRINT LAYOUT (EXACTLY MATCHING USER DRAWING) ===== */}
-          <div className="relative z-20 flex flex-col gap-8 lg:gap-12">
-            
-            {/* TIER 1 (TOP): Case Studies 1, 2, 3 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {/* Card 1: Top-Left */}
-              <div
-                ref={(el) => (cardRefs.current[0] = el)}
-                className={`transition-all duration-300 ${
-                  activeStudy === 1 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
-                }`}
-              >
-                <CaseStudyCard study={CASE_STUDIES[0]} isActive={activeStudy === 1} onSelect={() => setActiveStudy(1)} />
-              </div>
-
-              {/* Card 2: Top-Center */}
-              <div
-                ref={(el) => (cardRefs.current[1] = el)}
-                className={`transition-all duration-300 ${
-                  activeStudy === 2 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
-                }`}
-              >
-                <CaseStudyCard study={CASE_STUDIES[1]} isActive={activeStudy === 2} onSelect={() => setActiveStudy(2)} />
-              </div>
-
-              {/* Card 3: Top-Right */}
-              <div
-                ref={(el) => (cardRefs.current[2] = el)}
-                className={`transition-all duration-300 ${
-                  activeStudy === 3 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
-                }`}
-              >
-                <CaseStudyCard study={CASE_STUDIES[2]} isActive={activeStudy === 3} onSelect={() => setActiveStudy(3)} />
-              </div>
-            </div>
-
-            {/* TIER 2 (CENTER): 5 Hub Buttons matching drawing (Row 1: 3 pills, Row 2: 2 pills) */}
-            <div className="flex flex-col items-center justify-center gap-3 py-4 lg:py-6">
-              <div className="text-center mb-1">
-                <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500 font-semibold">
-                  • Blueprint Control Hub •
-                </span>
-              </div>
-
-              {/* Row 1: 3 buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                {[0, 1, 2].map((idx) => {
-                  const study = CASE_STUDIES[idx]
-                  const isSelected = activeStudy === study.id
-                  return (
-                    <button
-                      key={study.id}
-                      ref={(el) => (btnRefs.current[idx] = el)}
-                      type="button"
-                      onClick={() => handleStudySelect(study.id)}
-                      className={`group relative inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
-                        isSelected
-                          ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/25 scale-105'
-                          : 'border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-500 hover:scale-[1.02]'
-                      }`}
-                    >
-                      <span
-                        className={`size-2 rounded-full ${
-                          isSelected ? 'bg-white animate-pulse' : 'bg-zinc-400 dark:bg-zinc-600'
-                        }`}
-                      />
-                      <span>case study {study.id}</span>
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* Row 2: 2 buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                {[3, 4].map((idx) => {
-                  const study = CASE_STUDIES[idx]
-                  const isSelected = activeStudy === study.id
-                  return (
-                    <button
-                      key={study.id}
-                      ref={(el) => (btnRefs.current[idx] = el)}
-                      type="button"
-                      onClick={() => handleStudySelect(study.id)}
-                      className={`group relative inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
-                        isSelected
-                          ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/25 scale-105'
-                          : 'border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-500 hover:scale-[1.02]'
-                      }`}
-                    >
-                      <span
-                        className={`size-2 rounded-full ${
-                          isSelected ? 'bg-white animate-pulse' : 'bg-zinc-400 dark:bg-zinc-600'
-                        }`}
-                      />
-                      <span>case study {study.id}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* TIER 3 (BOTTOM): Case Studies 4 & 5 */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              {/* Card 4: Bottom-Left (Col 1) */}
-              <div
-                ref={(el) => (cardRefs.current[3] = el)}
-                className={`lg:col-span-1 transition-all duration-300 ${
-                  activeStudy === 4 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
-                }`}
-              >
-                <CaseStudyCard study={CASE_STUDIES[3]} isActive={activeStudy === 4} onSelect={() => handleStudySelect(4)} />
-              </div>
-
-              {/* Card 5: Bottom-Right (Col 2 & 3, Wide Rectangle matching diagram) */}
-              <div
-                ref={(el) => (cardRefs.current[4] = el)}
-                className={`lg:col-span-2 transition-all duration-300 ${
-                  activeStudy === 5 ? 'scale-[1.02] z-30' : 'opacity-85 hover:opacity-100'
-                }`}
-              >
-                <CaseStudyCard study={CASE_STUDIES[4]} isActive={activeStudy === 5} onSelect={() => handleStudySelect(5)} isWide />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-    </main>
+        {/* Day Labels sitting inside the bottom stripes */}
+        <text
+          x="36"
+          y={baseY - 32}
+          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
+          style={{ fontFamily: 'inherit' }}
+        >
+          Wed
+        </text>
+        <text
+          x="305"
+          y={baseY - 32}
+          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
+          style={{ fontFamily: 'inherit' }}
+        >
+          Thu
+        </text>
+        <text
+          x="570"
+          y={baseY - 32}
+          className="text-lg sm:text-xl font-bold fill-zinc-950 dark:fill-white"
+          style={{ fontFamily: 'inherit' }}
+        >
+          Fry
+        </text>
+      </svg>
+    </div>
   )
 }
 
-function CaseStudyCard({ study, isActive, onSelect, isWide = false }) {
+export default function ArchitecturePage() {
+  const navigate = useNavigate()
+  const [hoveredCard, setHoveredCard] = useState(null)
+
   return (
-    <div
-      onClick={onSelect}
-      className={`group relative flex flex-col justify-between rounded-2xl border bg-white dark:bg-zinc-900 p-5 transition-all duration-200 cursor-pointer shadow-sm ${
-        isActive
-          ? 'border-blue-500 ring-2 ring-blue-500/20 dark:ring-blue-500/30 shadow-md'
-          : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
-      }`}
-    >
-      <div>
-        <div className="flex items-center justify-between gap-2 mb-2.5">
-          <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-            {study.tag}
-          </span>
-          <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500">
-            {study.category.split(' ')[0]}
+    <main className="w-full min-h-screen bg-[#F6F7F9] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors duration-300 py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-10">
+      <div className="mx-auto max-w-4xl">
+        
+        {/* Navigation Breadcrumb */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link
+            to="/different"
+            className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
+          >
+            ← Back to What Makes Me Different
+          </Link>
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+            Systems & Telemetry Blueprint
           </span>
         </div>
 
-        <h3 className="font-harmond text-lg sm:text-xl font-bold italic text-zinc-950 dark:text-zinc-50 leading-snug">
-          {study.title}
-        </h3>
+        {/* ========================================================
+            TOP SECTION: PERFORMANCE TRENDS CARD (EXACT TO REFERENCE)
+            ======================================================== */}
+        <div className="overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-6 sm:p-8 shadow-sm">
+          {/* Header Row */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Performance Trends
+            </h2>
+            <span className="font-mono text-base sm:text-lg font-bold text-[#10B981]">
+              85%
+            </span>
+          </div>
 
-        <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 line-clamp-3 leading-relaxed">
-          {study.desc}
-        </p>
-      </div>
+          {/* Number & Legend Row */}
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-4">
+            <span className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+              2,683
+            </span>
 
-      <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-        <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
-          Metric: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{study.metrics.val}</span>
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-xs group-hover:bg-blue-700 transition">
-          Open Case Study <span aria-hidden="true">→</span>
-        </span>
+            {/* Legend Cluster */}
+            <div className="flex items-center gap-4 font-mono text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <div className="flex items-center gap-1.5">
+                <span className="size-2 rounded-full bg-[#FB7185]" />
+                <span>&lt;500</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="size-2 rounded-full bg-[#FB923C]" />
+                <span>≈1k</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="size-2 rounded-full bg-[#22C55E]" />
+                <span>&gt;2k</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Slatted Waveform Chart Graphic (flush to bottom) */}
+          <div className="mt-8 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8">
+            <SlattedWaveformChart />
+          </div>
+        </div>
+
+        {/* ========================================================
+            BOTTOM SECTION: 2x2 TELEMETRY GRID FOR CASE STUDIES
+            ======================================================== */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+          {/* Cards 1 to 4: Exact 2x2 Layout */}
+          {CASE_STUDIES.slice(0, 4).map((study) => (
+            <div
+              key={study.id}
+              onClick={() => navigate(study.route)}
+              onMouseEnter={() => setHoveredCard(study.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+              className="group relative flex flex-col justify-between rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+            >
+              <div>
+                {/* Card Top: Title + Service Icon */}
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                      {study.tag}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-zinc-100 mt-0.5">
+                      {study.title}
+                    </h3>
+                  </div>
+                  <div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-2 shadow-2xs">
+                    {study.icon}
+                  </div>
+                </div>
+
+                {/* Big Metric Value + Delta Badge */}
+                <div className="mt-4 flex items-baseline gap-2.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                    {study.value}
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold ${
+                      study.isNegative
+                        ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                    }`}
+                  >
+                    {study.delta}
+                  </span>
+                </div>
+
+                {/* Subtitle count */}
+                <p className="mt-1 text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                  {study.subtitle}
+                </p>
+
+                {/* Case Study Context Link */}
+                <p className="mt-2 text-xs font-mono text-zinc-400 dark:text-zinc-500 truncate">
+                  {study.caseTitle}
+                </p>
+              </div>
+
+              {/* Bottom: Progress Bar + Percentage */}
+              <div className="mt-6 flex items-center gap-3">
+                <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                  <div
+                    className={`h-full rounded-full bg-gradient-to-r ${study.progressColor} transition-all duration-500`}
+                    style={{ width: `${study.progress}%` }}
+                  />
+                </div>
+                <span className="font-mono text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300 shrink-0">
+                  {study.progress}%
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {/* Card 5: Full Width 5th Case Study */}
+          <div
+            onClick={() => navigate(CASE_STUDIES[4].route)}
+            className="md:col-span-2 group relative flex flex-col sm:flex-row sm:items-center justify-between gap-5 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                  {CASE_STUDIES[4].tag}
+                </span>
+                <span className="text-zinc-300 dark:text-zinc-700">•</span>
+                <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                  Real-Time Dispatch & Kitchen Telemetry
+                </span>
+              </div>
+
+              <div className="mt-1 flex items-center justify-between sm:justify-start gap-4">
+                <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                  {CASE_STUDIES[4].caseTitle}
+                </h3>
+              </div>
+
+              <div className="mt-2 flex items-baseline gap-2.5">
+                <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                  {CASE_STUDIES[4].value}
+                </span>
+                <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 px-2 py-0.5 text-xs font-bold">
+                  {CASE_STUDIES[4].delta}
+                </span>
+                <span className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                  {CASE_STUDIES[4].subtitle}
+                </span>
+              </div>
+            </div>
+
+            {/* Right Side / Progress for 5th Card */}
+            <div className="w-full sm:w-64 shrink-0 flex flex-col justify-end">
+              <div className="flex items-center justify-between text-xs font-mono text-zinc-400 dark:text-zinc-500 mb-1.5">
+                <span>Dispatch Efficiency</span>
+                <span className="font-semibold text-zinc-700 dark:text-zinc-300">{CASE_STUDIES[4].progress}%</span>
+              </div>
+              <div className="relative h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                <div
+                  className={`h-full rounded-full bg-gradient-to-r ${CASE_STUDIES[4].progressColor}`}
+                  style={{ width: `${CASE_STUDIES[4].progress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </main>
   )
 }
