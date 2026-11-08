@@ -37,6 +37,7 @@ import ArchiveLedgerProject from './Projects/ArchiveLedger'
 import FeastoProject from './Projects/Feasto'
 import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
+import GlobalSnowfall from './components/GlobalSnowfall'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -73,6 +74,7 @@ const ScrollToTop = () => {
 const SiteLayout = () => {
   return (
     <div className="flow-root relative min-h-screen bg-white text-gray-900 transition-colors duration-300 dark:bg-[#09090b] dark:text-zinc-100">
+      <GlobalSnowfall />
       <CursorBox />
       <Navbar />
       <Outlet />
