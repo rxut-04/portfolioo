@@ -52,6 +52,7 @@ const CASE_STUDIES = [
   {
     id: 1,
     title: 'Messages Sent',
+    shortTitle: 'Messages',
     caseTitle: 'Excalibur Blueprint Engine',
     subtitle: '-7 Messages',
     meta: '-7 Undocumented States • State Machine',
@@ -62,11 +63,12 @@ const CASE_STUDIES = [
     progressColor: 'from-[#FB7185] to-[#FB923C]',
     route: '/projects/excalibur',
     icon: ServiceIcons.slack,
-    tag: 'Case Study 01',
+    tag: 'Case 01',
   },
   {
     id: 2,
     title: 'Emails Exchanged',
+    shortTitle: 'Emails',
     caseTitle: 'Personal GPT Autonomous Assistant',
     subtitle: '+98 Emails',
     meta: '+98 Multi-Step Context Loops • Vector DB',
@@ -77,11 +79,12 @@ const CASE_STUDIES = [
     progressColor: 'from-[#FB7185] via-[#FB923C] to-[#22C55E]',
     route: '/projects/personal-gpt',
     icon: ServiceIcons.gmail,
-    tag: 'Case Study 02',
+    tag: 'Case 02',
   },
   {
     id: 3,
     title: 'All Meetings',
+    shortTitle: 'Meetings',
     caseTitle: 'Production Deployment & Execution',
     subtitle: '+12 Meetings',
     meta: '+12 Canary Release Probes • Zero Downtime',
@@ -92,11 +95,12 @@ const CASE_STUDIES = [
     progressColor: 'from-[#FB923C] to-[#22C55E]',
     route: '/projects/production-execution',
     icon: ServiceIcons.meet,
-    tag: 'Case Study 03',
+    tag: 'Case 03',
   },
   {
     id: 4,
     title: 'Queries In Google',
+    shortTitle: 'Google Queries',
     caseTitle: 'Immutable Archive & Ledger Records',
     subtitle: '-15 Queries',
     meta: '-15 Millisecond Query Latency • Merkle Roots',
@@ -107,11 +111,12 @@ const CASE_STUDIES = [
     progressColor: 'from-[#FB7185] via-[#FB923C] to-[#84CC16]',
     route: '/projects/archive-ledger',
     icon: ServiceIcons.google,
-    tag: 'Case Study 04',
+    tag: 'Case 04',
   },
   {
     id: 5,
-    title: 'Feasto Smart Delivery Telemetry',
+    title: 'Feasto Smart Delivery',
+    shortTitle: 'Feasto Delivery',
     caseTitle: 'Feasto Smart Delivery Platform',
     subtitle: '+184 Orders Handled',
     meta: '-35% Dispatch Latency • Live Kitchen Telemetry',
@@ -122,7 +127,7 @@ const CASE_STUDIES = [
     progressColor: 'from-[#F43F5E] via-[#FB923C] to-[#10B981]',
     route: '/projects/feasto',
     icon: ServiceIcons.dispatch,
-    tag: 'Case Study 05',
+    tag: 'Case 05',
   },
 ]
 
@@ -291,41 +296,40 @@ export default function ArchitecturePage() {
         </div>
 
         {/* ========================================================
-            BOTTOM SECTION: 2x2 TELEMETRY GRID FOR CASE STUDIES
+            BOTTOM SECTION: RECTANGULAR CARDS (3 IN ROW 1, 2 IN ROW 2)
             ======================================================== */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-          {/* Cards 1 to 4: Exact 2x2 Layout */}
-          {CASE_STUDIES.slice(0, 4).map((study) => (
+        <div className="mt-5 sm:mt-6 grid grid-cols-6 gap-2.5 sm:gap-4 md:gap-5">
+          {/* ROW 1: 3 CARDS (col-span-2 each) */}
+          {CASE_STUDIES.slice(0, 3).map((study) => (
             <div
               key={study.id}
               onClick={() => navigate(study.route)}
-              onMouseEnter={() => setHoveredCard(study.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group relative flex flex-col justify-between rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+              className="col-span-2 group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-2.5 sm:p-4 md:p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
             >
               <div>
-                {/* Card Top: Title + Service Icon */}
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                      {study.tag}
-                    </span>
-                    <h3 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-zinc-100 mt-0.5">
-                      {study.title}
-                    </h3>
-                  </div>
-                  <div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-2 shadow-2xs">
+                {/* Top: Tag + Service Icon */}
+                <div className="flex items-center justify-between gap-1 sm:gap-2">
+                  <span className="font-mono text-[9px] sm:text-[10px] md:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 truncate">
+                    {study.tag}
+                  </span>
+                  <div className="size-6 sm:size-8 shrink-0 flex items-center justify-center rounded-lg sm:rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-1 sm:p-1.5 shadow-2xs">
                     {study.icon}
                   </div>
                 </div>
 
-                {/* Big Metric Value + Delta Badge */}
-                <div className="mt-4 flex items-baseline gap-2.5">
-                  <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                {/* Title */}
+                <h3 className="text-xs sm:text-sm md:text-base font-semibold text-zinc-900 dark:text-zinc-100 mt-1 sm:mt-1.5 truncate">
+                  <span className="sm:hidden">{study.shortTitle || study.title}</span>
+                  <span className="hidden sm:inline">{study.title}</span>
+                </h3>
+
+                {/* Metric Value + Delta Pill */}
+                <div className="mt-2 sm:mt-3 flex flex-wrap items-baseline gap-1 sm:gap-1.5">
+                  <span className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
                     {study.value}
                   </span>
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold ${
+                    className={`inline-flex items-center rounded-full px-1 sm:px-1.5 py-0.2 sm:py-0.5 text-[9px] sm:text-[11px] font-bold ${
                       study.isNegative
                         ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
                         : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
@@ -336,80 +340,86 @@ export default function ArchitecturePage() {
                 </div>
 
                 {/* Subtitle count */}
-                <p className="mt-1 text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="mt-0.5 text-[10px] sm:text-xs font-medium text-zinc-500 dark:text-zinc-400 truncate">
                   {study.subtitle}
-                </p>
-
-                {/* Case Study Context Link */}
-                <p className="mt-2 text-xs font-mono text-zinc-400 dark:text-zinc-500 truncate">
-                  {study.caseTitle}
                 </p>
               </div>
 
               {/* Bottom: Progress Bar + Percentage */}
-              <div className="mt-6 flex items-center gap-3">
-                <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <div className="mt-3 sm:mt-4 flex items-center gap-1.5 sm:gap-2">
+                <div className="relative h-1.5 sm:h-2 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
                   <div
                     className={`h-full rounded-full bg-gradient-to-r ${study.progressColor} transition-all duration-500`}
                     style={{ width: `${study.progress}%` }}
                   />
                 </div>
-                <span className="font-mono text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300 shrink-0">
+                <span className="font-mono text-[10px] sm:text-xs font-semibold text-zinc-700 dark:text-zinc-300 shrink-0">
                   {study.progress}%
                 </span>
               </div>
             </div>
           ))}
 
-          {/* Card 5: Full Width 5th Case Study */}
-          <div
-            onClick={() => navigate(CASE_STUDIES[4].route)}
-            className="md:col-span-2 group relative flex flex-col sm:flex-row sm:items-center justify-between gap-5 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
-          >
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                  {CASE_STUDIES[4].tag}
-                </span>
-                <span className="text-zinc-300 dark:text-zinc-700">•</span>
-                <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                  Real-Time Dispatch & Kitchen Telemetry
-                </span>
-              </div>
+          {/* ROW 2: 2 CARDS (col-span-3 each) */}
+          {CASE_STUDIES.slice(3, 5).map((study) => (
+            <div
+              key={study.id}
+              onClick={() => navigate(study.route)}
+              className="col-span-3 group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121214] p-3 sm:p-5 md:p-6 shadow-xs transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5 cursor-pointer"
+            >
+              <div>
+                {/* Top: Tag + Service Icon */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-[9px] sm:text-[10px] md:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 truncate">
+                    {study.tag}
+                  </span>
+                  <div className="size-6 sm:size-8 shrink-0 flex items-center justify-center rounded-lg sm:rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-1 sm:p-1.5 shadow-2xs">
+                    {study.icon}
+                  </div>
+                </div>
 
-              <div className="mt-1 flex items-center justify-between sm:justify-start gap-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-                  {CASE_STUDIES[4].caseTitle}
+                {/* Title */}
+                <h3 className="text-xs sm:text-sm md:text-base font-semibold text-zinc-900 dark:text-zinc-100 mt-1 sm:mt-1.5 truncate">
+                  <span className="sm:hidden">{study.shortTitle || study.title}</span>
+                  <span className="hidden sm:inline">{study.title}</span>
                 </h3>
+
+                {/* Metric Value + Delta Pill */}
+                <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
+                    {study.value}
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] sm:text-[11px] font-bold ${
+                      study.isNegative
+                        ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                    }`}
+                  >
+                    {study.delta}
+                  </span>
+                </div>
+
+                {/* Subtitle count */}
+                <p className="mt-0.5 text-[10px] sm:text-xs font-medium text-zinc-500 dark:text-zinc-400 truncate">
+                  {study.subtitle}
+                </p>
               </div>
 
-              <div className="mt-2 flex items-baseline gap-2.5">
-                <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50">
-                  {CASE_STUDIES[4].value}
-                </span>
-                <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 px-2 py-0.5 text-xs font-bold">
-                  {CASE_STUDIES[4].delta}
-                </span>
-                <span className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {CASE_STUDIES[4].subtitle}
+              {/* Bottom: Progress Bar + Percentage */}
+              <div className="mt-3 sm:mt-4 flex items-center gap-2">
+                <div className="relative h-1.5 sm:h-2 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                  <div
+                    className={`h-full rounded-full bg-gradient-to-r ${study.progressColor} transition-all duration-500`}
+                    style={{ width: `${study.progress}%` }}
+                  />
+                </div>
+                <span className="font-mono text-[10px] sm:text-xs font-semibold text-zinc-700 dark:text-zinc-300 shrink-0">
+                  {study.progress}%
                 </span>
               </div>
             </div>
-
-            {/* Right Side / Progress for 5th Card */}
-            <div className="w-full sm:w-64 shrink-0 flex flex-col justify-end">
-              <div className="flex items-center justify-between text-xs font-mono text-zinc-400 dark:text-zinc-500 mb-1.5">
-                <span>Dispatch Efficiency</span>
-                <span className="font-semibold text-zinc-700 dark:text-zinc-300">{CASE_STUDIES[4].progress}%</span>
-              </div>
-              <div className="relative h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-                <div
-                  className={`h-full rounded-full bg-gradient-to-r ${CASE_STUDIES[4].progressColor}`}
-                  style={{ width: `${CASE_STUDIES[4].progress}%` }}
-                />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
       </div>
