@@ -238,7 +238,7 @@ const Hero = () => {
                 View CV
               </button>
               <Link
-                to="/projects"
+                to="/sphere"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-900 bg-zinc-900 px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-zinc-400 active:scale-95 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 sm:text-lg cursor-pointer"
               >
                 <span>Explore Projects</span>
