@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const ThemeContext = createContext({
-  theme: 'light',
+  theme: 'dark',
   toggleTheme: () => {},
 })
 
@@ -10,11 +10,10 @@ export const ThemeProvider = ({ children }) => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme')
       if (saved === 'dark' || saved === 'light') return saved
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
+      // Default to dark theme first across all pages
+      return 'dark'
     }
-    return 'light'
+    return 'dark'
   })
 
   useEffect(() => {
