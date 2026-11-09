@@ -178,12 +178,21 @@ const FEATURED_PROJECTS = [
 ]
 
 const HEROES = [
-  { ...FEATURED_PROJECTS[0], heroIndex: 0 },
-  { ...FEATURED_PROJECTS[1], heroIndex: 1 },
-  { ...FEATURED_PROJECTS[2], heroIndex: 2 },
-  { ...FEATURED_PROJECTS[0], heroIndex: 0, rz: 1 },
-  { ...FEATURED_PROJECTS[1], heroIndex: 1, rz: -1 },
-  { ...FEATURED_PROJECTS[2], heroIndex: 2, rz: 0.5 },
+  {
+    ...FEATURED_PROJECTS[0],
+    heroIndex: 0,
+    p: V(0, 0, 1), // 0 deg: starts directly centered in front
+  },
+  {
+    ...FEATURED_PROJECTS[1],
+    heroIndex: 1,
+    p: V(Math.sin((2 * Math.PI) / 3), 0, Math.cos((2 * Math.PI) / 3)), // 120 deg
+  },
+  {
+    ...FEATURED_PROJECTS[2],
+    heroIndex: 2,
+    p: V(Math.sin((4 * Math.PI) / 3), 0, Math.cos((4 * Math.PI) / 3)), // 240 deg
+  },
 ]
 
 const SATELLITE_CONFIGS = [
@@ -255,13 +264,13 @@ const ART = {
 }
 
 const P = 2
-const NS = 42
+const NS = 36
 
 /** builds the project field every time (seeded) */
 function buildCards() {
   let seed = 7
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
-  const heroes = HEROES.map((o, i) => ({ ...o, type: 'video', p: fib(HEROES.length, i, 1.1), hero: true }))
+  const heroes = HEROES.map((o) => ({ ...o, type: 'video', hero: true }))
   const small = []
   for (let i = 0; i < NS; i++) {
     const p = fib(NS, i, 0.37)
@@ -269,7 +278,7 @@ function buildCards() {
     p.y += (rnd() - 0.5) * 0.08
     p.z += (rnd() - 0.5) * 0.08
     const q = norm(p)
-    if (heroes.some((h) => dot(h.p, q) > 0.85)) continue
+    if (heroes.some((h) => dot(h.p, q) > 0.8)) continue
     const conf = SATELLITE_CONFIGS[i % SATELLITE_CONFIGS.length]
     const w = conf.type === 'metric' ? 190 : conf.type === 'thumb' ? 180 : 160
     const h = conf.type === 'metric' ? 130 : conf.type === 'thumb' ? 120 : 70
@@ -349,6 +358,7 @@ export default function CardSphere({
     ro.observe(root)
 
     const FRONT = V(0, 0, 1)
+    let currentHeroIndex = 0
     let rot = qbetween(heroes[0].p, FRONT)
     let wv = V(0, 0, 0)
     let drag = null
@@ -358,27 +368,29 @@ export default function CardSphere({
     let settled = true
 
     const startSnap = (target) => {
-      const sp = Math.hypot(wv.x, wv.y, wv.z)
-      const ahead = sp > 0 ? qnorm(qmul(qaxis(wv, Math.min(2.4, sp * 0.3)), rot)) : rot
-      let best = target || heroes[0]
-      let bz = -2
-      if (!target) {
+      let best = target
+      if (!best) {
+        // Find which of the 3 hero cards is closest to the front orientation
+        let bz = -2
         for (const h of heroes) {
-          const z = qrot(ahead, h.p).z
+          const z = qrot(rot, h.p).z
           if (z > bz) {
             bz = z
             best = h
           }
         }
       }
+      best = best || heroes[currentHeroIndex] || heroes[0]
+      currentHeroIndex = best.heroIndex ?? 0
+
       const to = qnorm(qmul(qbetween(qrot(rot, best.p), FRONT), rot))
       const ang = 2 * Math.acos(clamp(Math.abs(rot[0] * to[0] + rot[1] * to[1] + rot[2] * to[2] + rot[3] * to[3])))
       snap = {
         from: rot,
         to,
         t0: performance.now(),
-        ms: 420 + ang * 260,
-        hero: best.heroIndex ?? heroes.indexOf(best),
+        ms: 460 + ang * 240,
+        hero: currentHeroIndex,
       }
       settled = false
     }
@@ -405,6 +417,7 @@ export default function CardSphere({
           snap = null
           wv = V(0, 0, 0)
           settled = true
+          currentHeroIndex = h
           cb.current.onSettle?.(h)
         }
       }
@@ -417,7 +430,7 @@ export default function CardSphere({
         const sx = cx + q.x * F * s * Ax
         const sy = cy - q.y * F * s * Ay
         const k = clamp((q.z - 0.2) / 0.55)
-        const hf = o.hero ? lerp(0.5, 1, k * k * (3 - 2 * k)) : 0.5
+        const hf = o.hero ? lerp(0.55, 1, k * k * (3 - 2 * k)) : 0.5
         const sc = s * u * hf
         const ry = Math.atan2(q.x, Math.max(0.2, q.z)) * 57.3 * 0.35
         const rx = Math.atan2(q.y, Math.max(0.2, q.z)) * 57.3 * 0.35
@@ -432,13 +445,6 @@ export default function CardSphere({
         e.style.transform = `translate(${sx}px,${sy}px) scale(${sc * o.hv}) perspective(${o.w * 2.6}px) rotateX(${rx}deg) rotateY(${ry}deg) rotate(${o.rz}deg) translate(${-o.w / 2}px,${-o.h / 2}px)`
         e.style.zIndex = String(Math.round((3 - d) * 1000))
         e.style.opacity = String(o.hero ? clamp((q.z + 0.9) / 0.3) : clamp((q.z + 0.8) / 0.35))
-        if (o.morph) {
-          const ic = q.z > 0.97 ? 'flower' : q.z > 0.6 ? (o.ic === 'flower' ? 'flower' : 'x') : 'search'
-          if (o.ic !== ic) {
-            o.ic = ic
-            e.innerHTML = iconSvg(ic, o.w * 0.72)
-          }
-        }
       }
     }
 
@@ -531,20 +537,26 @@ export default function CardSphere({
       lastInput = performance.now() + 90
     }
     const onKey = (e) => {
-      const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]
-      if (m) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
-        snap = null
-        settled = false
-        flick(-m[0] * 1500 * u, -m[1] * 1500 * u)
+        const next = (currentHeroIndex + 1) % 3
+        currentHeroIndex = next
+        startSnap(heroes[next])
+        lastInput = performance.now()
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        const prev = (currentHeroIndex + 2) % 3
+        currentHeroIndex = prev
+        startSnap(heroes[prev])
         lastInput = performance.now()
       }
       if (e.key === 't' || e.key === 'T') toggle()
     }
 
-    // Gyroscope / Device Motion Integration for Mobile
+    // Gyroscope / Device Motion Integration for Mobile with Focused Anchoring
     let lastOri = { gamma: null, beta: null, t: 0 }
     let gyroActive = false
+    let lastWaveTime = 0
 
     const onDeviceOrientation = (e) => {
       if (e.gamma == null || e.beta == null) return
@@ -580,20 +592,26 @@ export default function CardSphere({
       // Discard orientation wraps/jumps (e.g. crossing ±180)
       if (Math.abs(dGamma) > 40 || Math.abs(dBeta) > 40) return
 
-      // Smooth proportional tilt rotation
-      const sensitivity = 7.5
-      const dx = dGamma * sensitivity
-      const dy = dBeta * sensitivity
-      turn(dx, dy)
+      const angSpeed = Math.hypot(dGamma, dBeta) / dt
 
-      // Wave / flick detection: sudden wrist flick or waving the phone in the air
-      const angSpeed = Math.hypot(dGamma, dBeta) / dt // deg/sec
-      if (angSpeed > 45) {
-        snap = null
-        settled = false
-        const flickMultiplier = Math.min(24, angSpeed * 0.22)
-        flick(dGamma * flickMultiplier, dBeta * flickMultiplier)
-        lastInput = now
+      // INTENTIONAL PHONE WAVE / FLICK TO SWITCH VIDEO CARDS:
+      // A deliberate wrist flick or phone wave smoothly switches focus to the next/prev video card
+      if (angSpeed > 50 && now - lastWaveTime > 700) {
+        lastWaveTime = now
+        const dir = dGamma > 0 ? 1 : -1
+        const nextIndex = (currentHeroIndex + (dir > 0 ? 1 : 2)) % 3
+        currentHeroIndex = nextIndex
+        startSnap(heroes[nextIndex])
+        return
+      }
+
+      // SMOOTH PARALLAX ON CURRENT VIDEO CARD ONLY:
+      // When gently tilting the phone, apply a smooth 3D holographic tilt
+      // anchored firmly onto the current active video card without drifting away!
+      if (!snap) {
+        const dx = dGamma * 2.2
+        const dy = dBeta * 2.2
+        turn(dx, dy)
       }
     }
 
