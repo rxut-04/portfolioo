@@ -253,6 +253,9 @@ const CSS = `
 .csph.dark{background:#09090b}
 .csph.grabbing{cursor:grabbing}
 .csph-c{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;overflow:hidden;backface-visibility:hidden;box-sizing:border-box;box-shadow:0 8px 32px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12)}
+.csph-project{cursor:pointer;}
+.csph-project .csph-case-btn{cursor:pointer;transition:transform 0.18s ease, background 0.18s ease;}
+.csph-project .csph-case-btn:hover{transform:scale(1.06);background:rgba(255,255,255,0.25)!important;}
 @media (prefers-reduced-motion:reduce){.csph-c{will-change:auto}}
 `
 
@@ -410,14 +413,33 @@ export default function CardSphere({
       wv = V((vy / Ay) * k, (vx / Ax) * k, 0)
     }
     const cardAt = (t) => t?.closest?.('.csph-c')?._o ?? null
+    const btnAt = (t) => t?.closest?.('.csph-case-btn') ?? null
+    const getHitElement = (e) => {
+      let el = e?.target
+      if (!el || el === root) {
+        if (e && e.clientX != null && e.clientY != null) {
+          el = document.elementFromPoint(e.clientX, e.clientY)
+        }
+      }
+      return el
+    }
+
     const toggle = () => {
       if (!cb.current.allowThemeToggle) return
       const dark = root.classList.toggle('dark')
       cb.current.onThemeChange?.(dark ? 'dark' : 'light')
     }
 
+    const triggerSelectCard = (targetCard) => {
+      if (!targetCard) return false
+      const targetRoute = targetCard.route || '/projects'
+      cb.current.onSelectProject?.(targetRoute)
+      return true
+    }
+
     const onClick = (e) => {
-      const btn = e.target.closest?.('.csph-case-btn')
+      const hit = getHitElement(e)
+      const btn = btnAt(hit)
       if (btn) {
         e.stopPropagation()
         e.preventDefault()
@@ -425,20 +447,38 @@ export default function CardSphere({
         cb.current.onSelectProject?.(route)
         return
       }
+
+      const o = cardAt(hit)
+      if (o && o.hero) {
+        const q = qrot(rot, o.p)
+        if (q.z > 0.4 || heroes[currentHeroIndex] === o) {
+          e.stopPropagation()
+          e.preventDefault()
+          triggerSelectCard(o)
+          return
+        }
+      }
     }
 
+    let downCard = null
+    let downBtn = null
+
     const onDown = (e) => {
-      root.setPointerCapture(e.pointerId)
       drag = { x: e.clientX, y: e.clientY, moved: 0 }
+      const hit = getHitElement(e)
+      downBtn = btnAt(hit)
+      downCard = cardAt(hit)
       snap = null
       wv = V(0, 0, 0)
       settled = false
       samples.length = 0
       root.classList.add('grabbing')
     }
+
     const onMove = (e) => {
       if (!drag) {
-        hover = cardAt(e.target)
+        const hit = getHitElement(e)
+        hover = cardAt(hit)
         return
       }
       const dx = e.clientX - drag.x
@@ -451,36 +491,64 @@ export default function CardSphere({
       samples.push([now, dx, dy])
       while (samples.length && now - samples[0][0] > 90) samples.shift()
     }
+
     const onUp = (e) => {
       if (!drag) return
       root.classList.remove('grabbing')
       const moved = drag.moved
       drag = null
       lastInput = performance.now()
-      if (moved < 6) {
-        const btn = e.target.closest?.('.csph-case-btn')
+
+      // Click or tap detected (minimal movement)
+      if (moved < 10) {
+        const hit = getHitElement(e)
+        const btn = downBtn || btnAt(hit)
         if (btn) {
           const route = btn.getAttribute('data-route') || '/projects'
           cb.current.onSelectProject?.(route)
           return
         }
-        const o = cardAt(e.target)
+
+        const o = downCard || cardAt(hit)
         if (o && o.hero) {
           const q = qrot(rot, o.p)
-          if (q.z > 0.65 && o.route) {
-            cb.current.onSelectProject?.(o.route)
+          // Front-facing project card: redirect to case study!
+          if (q.z > 0.4 || heroes[currentHeroIndex] === o) {
+            triggerSelectCard(o)
+            return
+          }
+          // Side project card: snap to front
+          startSnap(o)
+          return
+        }
+
+        // Fallback: check if clicked within current front hero's bounding box
+        const curHero = heroes[currentHeroIndex]
+        if (curHero?.el) {
+          const rect = curHero.el.getBoundingClientRect()
+          if (
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom
+          ) {
+            triggerSelectCard(curHero)
             return
           }
         }
+
         startSnap(o && o.hero ? o : null)
         return
       }
+
       const span = samples.length > 1 ? Math.max(0.016, (samples[samples.length - 1][0] - samples[0][0]) / 1000) : 0.016
       flick(samples.reduce((a, s) => a + s[1], 0) / span, samples.reduce((a, s) => a + s[2], 0) / span)
     }
+
     const onLeave = () => {
       if (!drag) hover = null
     }
+
     const onWheel = (e) => {
       e.preventDefault()
       snap = null
@@ -491,6 +559,7 @@ export default function CardSphere({
       flick(dx * 9, dy * 9)
       lastInput = performance.now() + 90
     }
+
     const onKey = (e) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
@@ -510,9 +579,9 @@ export default function CardSphere({
 
     root.addEventListener('click', onClick)
     root.addEventListener('pointerdown', onDown)
-    root.addEventListener('pointermove', onMove)
-    root.addEventListener('pointerup', onUp)
-    root.addEventListener('pointercancel', onUp)
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointercancel', onUp)
     root.addEventListener('pointerleave', onLeave)
     root.addEventListener('wheel', onWheel, { passive: false })
     root.addEventListener('keydown', onKey)
@@ -534,9 +603,9 @@ export default function CardSphere({
       ro.disconnect()
       root.removeEventListener('click', onClick)
       root.removeEventListener('pointerdown', onDown)
-      root.removeEventListener('pointermove', onMove)
-      root.removeEventListener('pointerup', onUp)
-      root.removeEventListener('pointercancel', onUp)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onUp)
       root.removeEventListener('pointerleave', onLeave)
       root.removeEventListener('wheel', onWheel)
       root.removeEventListener('keydown', onKey)
