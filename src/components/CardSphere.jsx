@@ -236,13 +236,15 @@ export default function CardSphere({
   allowThemeToggle = true,
   onThemeChange,
   onSettle,
+  enableGyro = true,
+  onGyroActive,
   loadFont = true,
   className = '',
   style = {},
 }) {
   const rootRef = useRef(null)
-  const cb = useRef({ onThemeChange, onSettle, allowThemeToggle })
-  cb.current = { onThemeChange, onSettle, allowThemeToggle }
+  const cb = useRef({ onThemeChange, onSettle, allowThemeToggle, onGyroActive })
+  cb.current = { onThemeChange, onSettle, allowThemeToggle, onGyroActive }
 
   useEffect(() => {
     rootRef.current?.classList.toggle('dark', theme === 'dark')
@@ -394,6 +396,20 @@ export default function CardSphere({
     }
 
     const onDown = (e) => {
+      // Trigger iOS device orientation permission prompt on first touch if required
+      if (
+        enableGyro &&
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
+        DeviceOrientationEvent.requestPermission().then((res) => {
+          if (res === 'granted') {
+            window.removeEventListener('deviceorientation', onDeviceOrientation)
+            window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true })
+          }
+        }).catch(() => {})
+      }
+
       root.setPointerCapture(e.pointerId)
       drag = { x: e.clientX, y: e.clientY, moved: 0 }
       snap = null
@@ -456,6 +472,65 @@ export default function CardSphere({
       if (e.key === 't' || e.key === 'T') toggle()
     }
 
+    // Gyroscope / Device Motion Integration for Mobile
+    let lastOri = { gamma: null, beta: null, t: 0 }
+    let gyroActive = false
+
+    const onDeviceOrientation = (e) => {
+      if (e.gamma == null || e.beta == null) return
+      if (!gyroActive) {
+        gyroActive = true
+        cb.current.onGyroActive?.(true)
+      }
+      const now = performance.now()
+
+      // If user is actively touching/dragging, align baseline and yield control
+      if (drag) {
+        lastOri.gamma = e.gamma
+        lastOri.beta = e.beta
+        lastOri.t = now
+        return
+      }
+
+      if (lastOri.gamma === null) {
+        lastOri.gamma = e.gamma
+        lastOri.beta = e.beta
+        lastOri.t = now
+        return
+      }
+
+      const dt = Math.max(0.008, Math.min(0.1, (now - lastOri.t) / 1000))
+      const dGamma = e.gamma - lastOri.gamma
+      const dBeta = e.beta - lastOri.beta
+
+      lastOri.gamma = e.gamma
+      lastOri.beta = e.beta
+      lastOri.t = now
+
+      // Discard orientation wraps/jumps (e.g. crossing ±180)
+      if (Math.abs(dGamma) > 40 || Math.abs(dBeta) > 40) return
+
+      // Smooth proportional tilt rotation
+      const sensitivity = 7.5
+      const dx = dGamma * sensitivity
+      const dy = dBeta * sensitivity
+      turn(dx, dy)
+
+      // Wave / flick detection: sudden wrist flick or waving the phone in the air
+      const angSpeed = Math.hypot(dGamma, dBeta) / dt // deg/sec
+      if (angSpeed > 45) {
+        snap = null
+        settled = false
+        const flickMultiplier = Math.min(24, angSpeed * 0.22)
+        flick(dGamma * flickMultiplier, dBeta * flickMultiplier)
+        lastInput = now
+      }
+    }
+
+    if (enableGyro && typeof window !== 'undefined') {
+      window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true })
+    }
+
     root.addEventListener('pointerdown', onDown)
     root.addEventListener('pointermove', onMove)
     root.addEventListener('pointerup', onUp)
@@ -479,6 +554,9 @@ export default function CardSphere({
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      if (enableGyro && typeof window !== 'undefined') {
+        window.removeEventListener('deviceorientation', onDeviceOrientation)
+      }
       root.removeEventListener('pointerdown', onDown)
       root.removeEventListener('pointermove', onMove)
       root.removeEventListener('pointerup', onUp)
