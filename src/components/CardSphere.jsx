@@ -128,48 +128,140 @@ const dotCluster = (w, h, col, seedN) => {
   return `<svg viewBox="0 0 100 124" width="${w * 0.82}" height="${h * 0.82}"><g fill="${col}">${out}</g></svg>`
 }
 
-const lbl = 'position:absolute;font-family:Inter,system-ui,sans-serif;font-weight:600;line-height:1;letter-spacing:-.04em;color:#0d0d0d'
-
-const ART = {
-  lime: (w) => `<div style="font-size:${w * 0.3}px">Cue.</div>`,
-  icon: (w, _h, o) => iconSvg(o.icon || 'search', w * 0.72),
-  chip: (w) => `<span style="font-size:${w * 0.17}px;padding:${w * 0.07}px ${w * 0.1}px;border-radius:${w * 0.04}px">Cue.</span>`,
-  box: (w) => `<span style="font-size:${w * 0.2}px;padding:${w * 0.1}px ${w * 0.09}px;border-radius:${w * 0.02}px;box-shadow:0 0 ${w * 0.1}px rgba(255,255,255,.75),0 0 ${w * 0.3}px rgba(255,255,255,.35)">Cue.<svg viewBox="0 0 10 10" width="${w * 0.12}" height="${w * 0.12}" style="margin-left:${w * 0.05}px"><g fill="#bdbdbd">${[[2, 2], [5, 2], [8, 2], [2, 5], [5, 5], [2, 8], [5, 8], [8, 8]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9"/>`).join('')}</g></svg></span>`,
-  dots: (w, h, o) => dotCluster(w, h, o.col || LIME, o.seed || 3),
-  type: (w) => `<div style="font:600 ${w * 0.46}px/1 Inter,system-ui,sans-serif;letter-spacing:-.06em;color:${INK}">Aa</div><div style="${lbl};left:${w * 0.07}px;bottom:${w * 0.07}px;font-size:${w * 0.06}px;font-weight:500;color:#6b6b6b">Inter 600</div><div style="${lbl};right:${w * 0.07}px;bottom:${w * 0.07}px;font-size:${w * 0.06}px;font-weight:500;color:#6b6b6b">−6%</div>`,
-  shape: (w, _h, o) => `<svg viewBox="0 0 100 100" width="${w * 0.7}" height="${w * 0.7}"><g fill="${o.fg || INK}">${SHAPES[o.shape || 'circle']}</g></svg>`,
-  target: (w) => `<svg viewBox="0 0 100 100" width="${w * 0.78}" height="${w * 0.78}"><g fill="none" stroke="${INK}" stroke-width="1.6"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="16"/></g><circle cx="50" cy="50" r="5" fill="${INK}"/><g stroke="${INK}" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0.01 4.5"><path d="M50 2V98M2 50H98"/></g></svg>`,
-  swatch: (w, _h, o) => `<div style="position:absolute;inset:0;display:grid;grid-template-rows:2fr 1fr 1fr">${(o.cols || [LIME, INK, PAPER]).map((c) => `<div style="background:${c};position:relative"><span style="${lbl};left:${w * 0.08}px;bottom:${w * 0.06}px;font-size:${w * 0.075}px;font-weight:500;color:${c === INK ? PAPER : INK}">${c.toUpperCase()}</span></div>`).join('')}</div>`,
-  stripe: (w, h) => `<svg viewBox="0 0 100 120" width="${w}" height="${h}" preserveAspectRatio="none" style="position:absolute;inset:0"><g fill="${INK}">${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="0" y="${12 + i * 17}" width="100" height="${3 + i * 1.6}"/>`).join('')}</g></svg>`,
-  poster: (w, h) => `<div style="width:${w * 0.8}px;height:${h * 0.86}px;border-radius:${w * 0.012}px;background:#fbfbfa;position:relative;overflow:hidden">
-      <div style="${lbl};left:${w * 0.05}px;top:${w * 0.05}px;font-size:${w * 0.05}px;line-height:1.12;font-weight:500">Where design<br>meets code</div>
-      <svg viewBox="0 0 100 100" style="position:absolute;left:14%;top:26%;width:72%;height:auto"><circle cx="50" cy="50" r="38" fill="${INK}"/><path d="M50 12a38 38 0 0 1 0 76z" fill="${LIME}"/></svg>
-      <div style="${lbl};right:${w * 0.05}px;bottom:${w * 0.05}px;font-size:${w * 0.046}px">Cue.</div></div>`,
-  words: (w) => `<div style="font:700 ${w * 0.15}px/1.02 Inter,system-ui,sans-serif;letter-spacing:-.05em;color:${PAPER};padding:${w * 0.08}px;align-self:end">Copy.<br>Paste.<br><span style="color:${LIME}">Ship.</span></div>`,
-}
-
-const HEROES = [
-  { type: 'lime', w: 412, h: 515, rz: -1.5 },
-  { type: 'dots', col: LIME, seed: 5, w: 420, h: 528, rz: 0.5 },
-  { type: 'type', w: 390, h: 495, rz: -1 },
-  { type: 'icon', icon: 'search', morph: true, w: 415, h: 516, rz: 1 },
-  { type: 'target', w: 410, h: 501, rz: -0.5 },
-  { type: 'poster', w: 420, h: 525, rz: 1.5 },
-  { type: 'box', w: 421, h: 533, rz: -1 },
-  { type: 'words', w: 420, h: 525, rz: 0.8 },
+/* ---------- Featured Projects Data from Featured.jsx ---------- */
+const FEATURED_PROJECTS = [
+  {
+    id: 'banking',
+    title: 'Apex — Core Banking',
+    subtitle: '01 // Core Financial Engine',
+    desc: 'High-performance core banking with ACID transactions, automated fund transfers & real-time audit ledger.',
+    tag: 'ACID Guaranteed',
+    video: '/banking.mp4',
+    poster: '/images/banking-preview.png',
+    route: '/projects/banking',
+    accent: '#38bdf8', // sky blue
+    heroIndex: 0,
+    w: 480,
+    h: 300,
+    rz: -1,
+  },
+  {
+    id: 'medlink',
+    title: 'MedLink — Clinical Aid',
+    subtitle: '02 // Clinical Decisions',
+    desc: 'AI-assisted medical risk assessment, second opinion triage, and clinical decision support for 500+ specialists.',
+    tag: 'Clinical Decisions',
+    video: '/medlink.mp4',
+    poster: '/images/medlink-preview.png',
+    route: '/projects/medlink',
+    accent: '#a855f7', // purple
+    heroIndex: 1,
+    w: 480,
+    h: 300,
+    rz: 1.2,
+  },
+  {
+    id: 'rfid',
+    title: 'RFID Library Auditing',
+    subtitle: '03 // Physical Computing',
+    desc: 'Real-time library auditing bridge connecting physical HF RFID scanning with Java backend ledger validation.',
+    tag: 'Physical Computing',
+    video: '/rfid.mp4',
+    poster: '/images/food.png',
+    route: '/projects/rfid',
+    accent: '#f59e0b', // amber
+    heroIndex: 2,
+    w: 480,
+    h: 300,
+    rz: -0.8,
+  },
 ]
 
-const TYPES = ['lime', 'lime', 'lime', 'icon', 'icon', 'icon', 'dots', 'dots', 'shape', 'shape', 'shape', 'swatch', 'stripe', 'type', 'chip', 'target']
-const ICK = ['layers', 'basket', 'person', 'search', 'ring', 'x', 'flower']
-const P = 2
-const NS = 64
+const HEROES = [
+  { ...FEATURED_PROJECTS[0], heroIndex: 0 },
+  { ...FEATURED_PROJECTS[1], heroIndex: 1 },
+  { ...FEATURED_PROJECTS[2], heroIndex: 2 },
+  { ...FEATURED_PROJECTS[0], heroIndex: 0, rz: 1 },
+  { ...FEATURED_PROJECTS[1], heroIndex: 1, rz: -1 },
+  { ...FEATURED_PROJECTS[2], heroIndex: 2, rz: 0.5 },
+]
 
-/** builds the same field every time (seeded) */
+const SATELLITE_CONFIGS = [
+  { type: 'metric', label: 'TRANSACTION SPEED', val: '< 45ms', sub: 'ACID Guaranteed Latency', color: '#38bdf8' },
+  { type: 'metric', label: 'CLINICAL SPECIALISTS', val: '500+', sub: 'Verified Medical Doctors', color: '#a855f7' },
+  { type: 'metric', label: 'BATCH RECONCILIATION', val: '1.2s', sub: 'HF Serial RFID COM Driver', color: '#f59e0b' },
+  { type: 'tech', label: 'REACT + NODE.JS', color: '#38bdf8' },
+  { type: 'tech', label: 'DECISION TREES', color: '#a855f7' },
+  { type: 'tech', label: 'JAVA SERVLETS', color: '#f59e0b' },
+  { type: 'tech', label: 'DOUBLE-ENTRY LEDGER', color: '#38bdf8' },
+  { type: 'tech', label: 'HIPAA SECURITY', color: '#10b981' },
+  { type: 'thumb', img: '/images/banking-preview.png', title: 'Apex Core Banking' },
+  { type: 'thumb', img: '/images/medlink-preview.png', title: 'MedLink Decision Aid' },
+  { type: 'thumb', img: '/images/food.png', title: 'RFID Inventory System' },
+  { type: 'status', label: 'ACID TRANSACTION PIPELINE', color: '#38bdf8' },
+  { type: 'status', label: 'REAL-TIME TRIAGE QUEUE', color: '#a855f7' },
+  { type: 'status', label: 'HARDWARE SERIAL BRIDGE', color: '#f59e0b' },
+]
+
+const ART = {
+  video: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#09090b;">
+      <video src="${o.video}" poster="${o.poster}" autoplay loop muted playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"></video>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(9,9,11,0.94) 0%, rgba(9,9,11,0.2) 40%, rgba(9,9,11,0.6) 100%);display:flex;flex-direction:column;justify-content:space-between;padding:${w * 0.05}px;pointer-events:none;box-sizing:border-box;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:ui-monospace,monospace;font-size:${w * 0.026}px;font-weight:700;color:${o.accent || '#38bdf8'};text-transform:uppercase;letter-spacing:0.08em;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);padding:${w * 0.012}px ${w * 0.024}px;border-radius:${w * 0.012}px;border:1px solid rgba(255,255,255,0.15);">${o.tag}</span>
+          <span style="font-family:ui-monospace,monospace;font-size:${w * 0.024}px;font-weight:600;color:#22c55e;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:${w * 0.01}px ${w * 0.022}px;border-radius:999px;">
+            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;"></span>
+            <span>FEATURED</span>
+          </span>
+        </div>
+        <div>
+          <h2 style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.054}px;font-weight:800;color:#ffffff;margin:0 0 ${w * 0.012}px 0;line-height:1.15;letter-spacing:-0.02em;text-shadow:0 2px 6px rgba(0,0,0,0.8);">${o.title}</h2>
+          <p style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.028}px;color:#d4d4d8;margin:0 0 ${w * 0.028}px 0;line-height:1.3;text-shadow:0 1px 3px rgba(0,0,0,0.8);">${o.desc}</p>
+          <div style="display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:${w * 0.028}px;font-weight:700;background:${o.accent || '#38bdf8'};color:#09090b;padding:${w * 0.016}px ${w * 0.035}px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,0.4);">
+            <span>VIEW CASE STUDY</span>
+            <span>→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  thumb: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#18181b;">
+      <img src="${o.img}" alt="${o.title}" style="width:100%;height:100%;object-fit:cover;display:block;opacity:0.85;" />
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.88), transparent);padding:${w * 0.06}px;">
+        <span style="font-family:ui-monospace,monospace;font-size:${w * 0.065}px;font-weight:700;color:#fff;">${o.title}</span>
+      </div>
+    </div>
+  `,
+  metric: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:${w * 0.08}px;background:#121214;border:1px solid rgba(255,255,255,0.1);border-radius:inherit;box-sizing:border-box;">
+      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.055}px;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.05em;">${o.label}</span>
+      <span style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.12}px;font-weight:800;color:${o.color || '#38bdf8'};margin-top:${w * 0.02}px;letter-spacing:-0.03em;">${o.val}</span>
+      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.048}px;color:#71717a;margin-top:${w * 0.02}px;">${o.sub}</span>
+    </div>
+  `,
+  tech: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:${w * 0.06}px;background:#09090b;border:1.5px solid ${o.color || '#38bdf8'};border-radius:inherit;box-sizing:border-box;">
+      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.095}px;font-weight:700;color:#ffffff;letter-spacing:0.04em;text-align:center;">${o.label}</span>
+    </div>
+  `,
+  status: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;gap:${w * 0.04}px;padding:${w * 0.08}px;background:#18181b;border:1px solid rgba(255,255,255,0.08);border-radius:inherit;box-sizing:border-box;">
+      <span style="display:inline-block;width:${w * 0.06}px;height:${w * 0.06}px;border-radius:50%;background:${o.color || '#4ade80'};box-shadow:0 0 8px ${o.color || '#4ade80'};"></span>
+      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.06}px;font-weight:700;color:#e4e4e7;">${o.label}</span>
+    </div>
+  `,
+}
+
+const P = 2
+const NS = 42
+
+/** builds the project field every time (seeded) */
 function buildCards() {
   let seed = 7
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
-  const heroes = HEROES.map((o, i) => ({ ...o, p: fib(8, i, 1.1), hero: true }))
-  const shapes = Object.keys(SHAPES)
+  const heroes = HEROES.map((o, i) => ({ ...o, type: 'video', p: fib(HEROES.length, i, 1.1), hero: true }))
   const small = []
   for (let i = 0; i < NS; i++) {
     const p = fib(NS, i, 0.37)
@@ -177,57 +269,27 @@ function buildCards() {
     p.y += (rnd() - 0.5) * 0.08
     p.z += (rnd() - 0.5) * 0.08
     const q = norm(p)
-    if (heroes.some((h) => dot(h.p, q) > 0.9)) continue
-    const type = TYPES[Math.floor(rnd() * TYPES.length)]
-    const w = type === 'chip' ? 130 + rnd() * 60 : 110 + rnd() * 120
-    const h = type === 'chip' ? w * 0.55 : w * (1.05 + rnd() * 0.3)
+    if (heroes.some((h) => dot(h.p, q) > 0.85)) continue
+    const conf = SATELLITE_CONFIGS[i % SATELLITE_CONFIGS.length]
+    const w = conf.type === 'metric' ? 190 : conf.type === 'thumb' ? 180 : 160
+    const h = conf.type === 'metric' ? 130 : conf.type === 'thumb' ? 120 : 70
     const o = {
-      type,
+      ...conf,
       w,
       h,
       p: q,
-      icon: ICK[Math.floor(rnd() * ICK.length)],
       rz: (rnd() - 0.5) * 8,
-      seed: Math.floor(rnd() * 999),
     }
-    if (type === 'shape') {
-      const pair = [[PAPER, INK], [LIME, INK], [CARD, LIME], [CARD, PAPER]][Math.floor(rnd() * 4)]
-      o.bg = pair[0]
-      o.fg = pair[1]
-      o.shape = shapes[Math.floor(rnd() * shapes.length)]
-    }
-    if (type === 'dots' && rnd() < 0.4) {
-      o.bg = LIME
-      o.col = INK
-    }
-    if (type === 'lime') {
-      o.type = 'dots'
-      o.bg = LIME
-      o.col = INK
-    }
-    if (type === 'stripe' && rnd() < 0.5) o.bg = PAPER
-    if (type === 'swatch') o.cols = [[LIME, INK, PAPER], [INK, LIME, GREY], [PAPER, GREY, INK]][Math.floor(rnd() * 3)]
     small.push(o)
   }
   return [...heroes, ...small]
 }
 
 const CSS = `
-.csph{position:relative;width:100%;height:100%;min-height:320px;overflow:hidden;background:#fff;contain:strict;user-select:none;-webkit-user-select:none;outline:none;touch-action:none;cursor:grab;transition:background-color 0s}
-.csph.dark{background:#111}
+.csph{position:relative;width:100%;height:100%;min-height:320px;overflow:hidden;background:#09090b;contain:strict;user-select:none;-webkit-user-select:none;outline:none;touch-action:none;cursor:grab;transition:background-color 0.2s}
+.csph.dark{background:#09090b}
 .csph.grabbing{cursor:grabbing}
-.csph-c{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;overflow:hidden;backface-visibility:hidden;box-sizing:border-box}
-.csph-lime{background:${LIME};display:grid;place-items:center;font:700 1px/1 Inter,system-ui,sans-serif;color:${INK};letter-spacing:-.05em}
-.csph-icon,.csph-dots,.csph-words{background:${CARD};display:grid;place-items:center}
-.csph-words{place-items:end start}
-.csph-chip{background:#151515;display:grid;place-items:center}
-.csph-chip span{background:#f4f4f4;color:#111;font:600 1px/1 Inter,system-ui,sans-serif;letter-spacing:-.03em;display:block}
-.csph-box{background:${INK};display:grid;place-items:center}
-.csph-box span{background:#fafafa;color:#111;font:600 1px/1 Inter,system-ui,sans-serif;letter-spacing:-.05em;display:flex;align-items:center}
-.csph-poster{background:${GREY};display:grid;place-items:center}
-.csph-type{background:${PAPER};display:grid;place-items:center}
-.csph-shape{display:grid;place-items:center}
-.csph-target,.csph-swatch,.csph-stripe{background:${LIME};display:grid;place-items:center}
+.csph-c{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;overflow:hidden;backface-visibility:hidden;box-sizing:border-box;box-shadow:0 8px 32px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12)}
 @media (prefers-reduced-motion:reduce){.csph-c{will-change:auto}}
 `
 
@@ -236,6 +298,7 @@ export default function CardSphere({
   allowThemeToggle = true,
   onThemeChange,
   onSettle,
+  onSelectProject,
   enableGyro = true,
   onGyroActive,
   loadFont = true,
@@ -243,8 +306,8 @@ export default function CardSphere({
   style = {},
 }) {
   const rootRef = useRef(null)
-  const cb = useRef({ onThemeChange, onSettle, allowThemeToggle, onGyroActive })
-  cb.current = { onThemeChange, onSettle, allowThemeToggle, onGyroActive }
+  const cb = useRef({ onThemeChange, onSettle, onSelectProject, allowThemeToggle, onGyroActive })
+  cb.current = { onThemeChange, onSettle, onSelectProject, allowThemeToggle, onGyroActive }
 
   useEffect(() => {
     rootRef.current?.classList.toggle('dark', theme === 'dark')
@@ -315,7 +378,7 @@ export default function CardSphere({
         to,
         t0: performance.now(),
         ms: 420 + ang * 260,
-        hero: heroes.indexOf(best),
+        hero: best.heroIndex ?? heroes.indexOf(best),
       }
       settled = false
     }
@@ -441,6 +504,13 @@ export default function CardSphere({
       lastInput = performance.now()
       if (moved < 6) {
         const o = cardAt(e.target)
+        if (o && o.hero) {
+          const q = qrot(rot, o.p)
+          if (q.z > 0.65 && o.route) {
+            cb.current.onSelectProject?.(o.route)
+            return
+          }
+        }
         startSnap(o && o.hero ? o : null)
         return
       }
