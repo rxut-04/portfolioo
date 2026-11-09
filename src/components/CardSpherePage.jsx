@@ -28,6 +28,22 @@ const FEATURED_PROJECTS = [
     tag: 'Hardware Bridge',
     accentColor: '#f59e0b',
   },
+  {
+    index: 3,
+    title: 'Archive & Ledger',
+    badge: '04 // Immutable Ledger',
+    route: '/projects/archive-ledger',
+    tag: 'Cryptographic Audit',
+    accentColor: '#10b981',
+  },
+  {
+    index: 4,
+    title: 'Feasto Smart Delivery',
+    badge: '05 // Smart Logistics',
+    route: '/projects/feasto',
+    tag: 'Geospatial Dispatch',
+    accentColor: '#f43f5e',
+  },
 ]
 
 export default function CardSpherePage() {

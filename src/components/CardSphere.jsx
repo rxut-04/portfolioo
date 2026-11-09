@@ -128,149 +128,102 @@ const dotCluster = (w, h, col, seedN) => {
   return `<svg viewBox="0 0 100 124" width="${w * 0.82}" height="${h * 0.82}"><g fill="${col}">${out}</g></svg>`
 }
 
-/* ---------- Featured Projects Data from Featured.jsx ---------- */
-const FEATURED_PROJECTS = [
+/* ---------- Featured Projects from Snapshots Directory ---------- */
+const SNAPSHOT_PROJECTS = [
   {
     id: 'banking',
     title: 'Apex — Core Banking',
-    subtitle: '01 // Core Financial Engine',
-    desc: 'High-performance core banking with ACID transactions, automated fund transfers & real-time audit ledger.',
-    tag: 'ACID Guaranteed',
-    video: '/banking.mp4',
-    poster: '/images/banking-preview.png',
+    img: '/Snapshots/banking.png',
     route: '/projects/banking',
-    accent: '#38bdf8', // sky blue
     heroIndex: 0,
-    w: 480,
-    h: 300,
-    rz: -1,
+    w: 520,
+    h: 295,
+    rz: 0,
+    p: V(0, 0, 1),
   },
   {
     id: 'medlink',
     title: 'MedLink — Clinical Aid',
-    subtitle: '02 // Clinical Decisions',
-    desc: 'AI-assisted medical risk assessment, second opinion triage, and clinical decision support for 500+ specialists.',
-    tag: 'Clinical Decisions',
-    video: '/medlink.mp4',
-    poster: '/images/medlink-preview.png',
+    img: '/Snapshots/medlink.png',
     route: '/projects/medlink',
-    accent: '#a855f7', // purple
     heroIndex: 1,
-    w: 480,
-    h: 300,
-    rz: 1.2,
+    w: 520,
+    h: 295,
+    rz: 0,
+    p: V(Math.sin((2 * Math.PI) / 5), 0, Math.cos((2 * Math.PI) / 5)),
   },
   {
     id: 'rfid',
     title: 'RFID Library Auditing',
-    subtitle: '03 // Physical Computing',
-    desc: 'Real-time library auditing bridge connecting physical HF RFID scanning with Java backend ledger validation.',
-    tag: 'Physical Computing',
-    video: '/rfid.mp4',
-    poster: '/images/food.png',
+    img: '/Snapshots/rfid.png',
     route: '/projects/rfid',
-    accent: '#f59e0b', // amber
     heroIndex: 2,
-    w: 480,
-    h: 300,
-    rz: -0.8,
+    w: 520,
+    h: 295,
+    rz: 0,
+    p: V(Math.sin((4 * Math.PI) / 5), 0, Math.cos((4 * Math.PI) / 5)),
+  },
+  {
+    id: 'archive',
+    title: 'Archive & Ledger',
+    img: '/Snapshots/archive.png',
+    route: '/projects/archive-ledger',
+    heroIndex: 3,
+    w: 520,
+    h: 295,
+    rz: 0,
+    p: V(Math.sin((6 * Math.PI) / 5), 0, Math.cos((6 * Math.PI) / 5)),
+  },
+  {
+    id: 'feasto',
+    title: 'Feasto Smart Delivery',
+    img: '/Snapshots/feasto.png',
+    route: '/projects/feasto',
+    heroIndex: 4,
+    w: 520,
+    h: 295,
+    rz: 0,
+    p: V(Math.sin((8 * Math.PI) / 5), 0, Math.cos((8 * Math.PI) / 5)),
   },
 ]
 
-const HEROES = [
-  {
-    ...FEATURED_PROJECTS[0],
-    heroIndex: 0,
-    p: V(0, 0, 1), // 0 deg: starts directly centered in front
-  },
-  {
-    ...FEATURED_PROJECTS[1],
-    heroIndex: 1,
-    p: V(Math.sin((2 * Math.PI) / 3), 0, Math.cos((2 * Math.PI) / 3)), // 120 deg
-  },
-  {
-    ...FEATURED_PROJECTS[2],
-    heroIndex: 2,
-    p: V(Math.sin((4 * Math.PI) / 3), 0, Math.cos((4 * Math.PI) / 3)), // 240 deg
-  },
-]
+const HEROES = SNAPSHOT_PROJECTS
 
-const SATELLITE_CONFIGS = [
-  { type: 'metric', label: 'TRANSACTION SPEED', val: '< 45ms', sub: 'ACID Guaranteed Latency', color: '#38bdf8' },
-  { type: 'metric', label: 'CLINICAL SPECIALISTS', val: '500+', sub: 'Verified Medical Doctors', color: '#a855f7' },
-  { type: 'metric', label: 'BATCH RECONCILIATION', val: '1.2s', sub: 'HF Serial RFID COM Driver', color: '#f59e0b' },
-  { type: 'tech', label: 'REACT + NODE.JS', color: '#38bdf8' },
-  { type: 'tech', label: 'DECISION TREES', color: '#a855f7' },
-  { type: 'tech', label: 'JAVA SERVLETS', color: '#f59e0b' },
-  { type: 'tech', label: 'DOUBLE-ENTRY LEDGER', color: '#38bdf8' },
-  { type: 'tech', label: 'HIPAA SECURITY', color: '#10b981' },
-  { type: 'thumb', img: '/images/banking-preview.png', title: 'Apex Core Banking' },
-  { type: 'thumb', img: '/images/medlink-preview.png', title: 'MedLink Decision Aid' },
-  { type: 'thumb', img: '/images/food.png', title: 'RFID Inventory System' },
-  { type: 'status', label: 'ACID TRANSACTION PIPELINE', color: '#38bdf8' },
-  { type: 'status', label: 'REAL-TIME TRIAGE QUEUE', color: '#a855f7' },
-  { type: 'status', label: 'HARDWARE SERIAL BRIDGE', color: '#f59e0b' },
+const SATELLITE_IMAGES = [
+  '/Snapshots/banking.png',
+  '/Snapshots/medlink.png',
+  '/Snapshots/rfid.png',
+  '/Snapshots/archive.png',
+  '/Snapshots/feasto.png',
 ]
 
 const ART = {
-  video: (w, h, o) => `
+  project: (w, h, o) => `
     <div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#09090b;">
-      <video src="${o.video}" poster="${o.poster}" autoplay loop muted playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"></video>
-      <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(9,9,11,0.94) 0%, rgba(9,9,11,0.2) 40%, rgba(9,9,11,0.6) 100%);display:flex;flex-direction:column;justify-content:space-between;padding:${w * 0.05}px;pointer-events:none;box-sizing:border-box;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-family:ui-monospace,monospace;font-size:${w * 0.026}px;font-weight:700;color:${o.accent || '#38bdf8'};text-transform:uppercase;letter-spacing:0.08em;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);padding:${w * 0.012}px ${w * 0.024}px;border-radius:${w * 0.012}px;border:1px solid rgba(255,255,255,0.15);">${o.tag}</span>
-          <span style="font-family:ui-monospace,monospace;font-size:${w * 0.024}px;font-weight:600;color:#22c55e;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:${w * 0.01}px ${w * 0.022}px;border-radius:999px;">
-            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;"></span>
-            <span>FEATURED</span>
-          </span>
-        </div>
-        <div>
-          <h2 style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.054}px;font-weight:800;color:#ffffff;margin:0 0 ${w * 0.012}px 0;line-height:1.15;letter-spacing:-0.02em;text-shadow:0 2px 6px rgba(0,0,0,0.8);">${o.title}</h2>
-          <p style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.028}px;color:#d4d4d8;margin:0 0 ${w * 0.028}px 0;line-height:1.3;text-shadow:0 1px 3px rgba(0,0,0,0.8);">${o.desc}</p>
-          <div style="display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:${w * 0.028}px;font-weight:700;background:${o.accent || '#38bdf8'};color:#09090b;padding:${w * 0.016}px ${w * 0.035}px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,0.4);">
-            <span>VIEW CASE STUDY</span>
-            <span>→</span>
-          </div>
-        </div>
+      <img src="${o.img}" alt="${o.title}" loading="eager" style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;" />
+      <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.68) 0%, transparent 40%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:${w * 0.05}px;pointer-events:none;box-sizing:border-box;">
+        <button class="csph-case-btn" data-route="${o.route}" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:${w * 0.03}px;font-weight:600;letter-spacing:0.03em;background:rgba(9,9,11,0.85);backdrop-filter:blur(8px);color:#ffffff;border:1px solid rgba(255,255,255,0.3);padding:${w * 0.02}px ${w * 0.05}px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 8px 24px rgba(0,0,0,0.6);pointer-events:auto;transition:transform 0.2s ease;">
+          <span>View Case Study</span>
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
     </div>
   `,
-  thumb: (w, h, o) => `
-    <div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#18181b;">
-      <img src="${o.img}" alt="${o.title}" style="width:100%;height:100%;object-fit:cover;display:block;opacity:0.85;" />
-      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.88), transparent);padding:${w * 0.06}px;">
-        <span style="font-family:ui-monospace,monospace;font-size:${w * 0.065}px;font-weight:700;color:#fff;">${o.title}</span>
-      </div>
-    </div>
-  `,
-  metric: (w, h, o) => `
-    <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:${w * 0.08}px;background:#121214;border:1px solid rgba(255,255,255,0.1);border-radius:inherit;box-sizing:border-box;">
-      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.055}px;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.05em;">${o.label}</span>
-      <span style="font-family:Inter,system-ui,sans-serif;font-size:${w * 0.12}px;font-weight:800;color:${o.color || '#38bdf8'};margin-top:${w * 0.02}px;letter-spacing:-0.03em;">${o.val}</span>
-      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.048}px;color:#71717a;margin-top:${w * 0.02}px;">${o.sub}</span>
-    </div>
-  `,
-  tech: (w, h, o) => `
-    <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:${w * 0.06}px;background:#09090b;border:1.5px solid ${o.color || '#38bdf8'};border-radius:inherit;box-sizing:border-box;">
-      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.095}px;font-weight:700;color:#ffffff;letter-spacing:0.04em;text-align:center;">${o.label}</span>
-    </div>
-  `,
-  status: (w, h, o) => `
-    <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;gap:${w * 0.04}px;padding:${w * 0.08}px;background:#18181b;border:1px solid rgba(255,255,255,0.08);border-radius:inherit;box-sizing:border-box;">
-      <span style="display:inline-block;width:${w * 0.06}px;height:${w * 0.06}px;border-radius:50%;background:${o.color || '#4ade80'};box-shadow:0 0 8px ${o.color || '#4ade80'};"></span>
-      <span style="font-family:ui-monospace,monospace;font-size:${w * 0.06}px;font-weight:700;color:#e4e4e7;">${o.label}</span>
+  satellite: (w, h, o) => `
+    <div style="position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#18181b;border:1px solid rgba(255,255,255,0.12);">
+      <img src="${o.img}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;opacity:0.65;" />
     </div>
   `,
 }
 
 const P = 2
-const NS = 36
+const NS = 24
 
 /** builds the project field every time (seeded) */
 function buildCards() {
   let seed = 7
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
-  const heroes = HEROES.map((o) => ({ ...o, type: 'video', hero: true }))
+  const heroes = HEROES.map((o) => ({ ...o, type: 'project', hero: true }))
   const small = []
   for (let i = 0; i < NS; i++) {
     const p = fib(NS, i, 0.37)
@@ -279,11 +232,12 @@ function buildCards() {
     p.z += (rnd() - 0.5) * 0.08
     const q = norm(p)
     if (heroes.some((h) => dot(h.p, q) > 0.8)) continue
-    const conf = SATELLITE_CONFIGS[i % SATELLITE_CONFIGS.length]
-    const w = conf.type === 'metric' ? 190 : conf.type === 'thumb' ? 180 : 160
-    const h = conf.type === 'metric' ? 130 : conf.type === 'thumb' ? 120 : 70
+    const img = SATELLITE_IMAGES[i % SATELLITE_IMAGES.length]
+    const w = 170
+    const h = 96
     const o = {
-      ...conf,
+      type: 'satellite',
+      img,
       w,
       h,
       p: q,
@@ -464,6 +418,17 @@ export default function CardSphere({
       cb.current.onThemeChange?.(dark ? 'dark' : 'light')
     }
 
+    const onClick = (e) => {
+      const btn = e.target.closest?.('.csph-case-btn')
+      if (btn) {
+        e.stopPropagation()
+        e.preventDefault()
+        const route = btn.getAttribute('data-route') || '/projects'
+        cb.current.onSelectProject?.(route)
+        return
+      }
+    }
+
     const onDown = (e) => {
       // Trigger iOS device orientation permission prompt on first touch if required
       if (
@@ -509,6 +474,12 @@ export default function CardSphere({
       drag = null
       lastInput = performance.now()
       if (moved < 6) {
+        const btn = e.target.closest?.('.csph-case-btn')
+        if (btn) {
+          const route = btn.getAttribute('data-route') || '/projects'
+          cb.current.onSelectProject?.(route)
+          return
+        }
         const o = cardAt(e.target)
         if (o && o.hero) {
           const q = qrot(rot, o.p)
@@ -539,13 +510,13 @@ export default function CardSphere({
     const onKey = (e) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
-        const next = (currentHeroIndex + 1) % 3
+        const next = (currentHeroIndex + 1) % heroes.length
         currentHeroIndex = next
         startSnap(heroes[next])
         lastInput = performance.now()
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault()
-        const prev = (currentHeroIndex + 2) % 3
+        const prev = (currentHeroIndex + heroes.length - 1) % heroes.length
         currentHeroIndex = prev
         startSnap(heroes[prev])
         lastInput = performance.now()
@@ -594,20 +565,20 @@ export default function CardSphere({
 
       const angSpeed = Math.hypot(dGamma, dBeta) / dt
 
-      // INTENTIONAL PHONE WAVE / FLICK TO SWITCH VIDEO CARDS:
-      // A deliberate wrist flick or phone wave smoothly switches focus to the next/prev video card
+      // INTENTIONAL PHONE WAVE / FLICK TO SWITCH PROJECT CARDS:
+      // A deliberate wrist flick or phone wave smoothly switches focus to the next/prev project card
       if (angSpeed > 50 && now - lastWaveTime > 700) {
         lastWaveTime = now
         const dir = dGamma > 0 ? 1 : -1
-        const nextIndex = (currentHeroIndex + (dir > 0 ? 1 : 2)) % 3
+        const nextIndex = (currentHeroIndex + (dir > 0 ? 1 : heroes.length - 1)) % heroes.length
         currentHeroIndex = nextIndex
         startSnap(heroes[nextIndex])
         return
       }
 
-      // SMOOTH PARALLAX ON CURRENT VIDEO CARD ONLY:
+      // SMOOTH PARALLAX ON CURRENT PROJECT CARD ONLY:
       // When gently tilting the phone, apply a smooth 3D holographic tilt
-      // anchored firmly onto the current active video card without drifting away!
+      // anchored firmly onto the current active project card without drifting away!
       if (!snap) {
         const dx = dGamma * 2.2
         const dy = dBeta * 2.2
@@ -619,6 +590,7 @@ export default function CardSphere({
       window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true })
     }
 
+    root.addEventListener('click', onClick)
     root.addEventListener('pointerdown', onDown)
     root.addEventListener('pointermove', onMove)
     root.addEventListener('pointerup', onUp)
@@ -645,6 +617,7 @@ export default function CardSphere({
       if (enableGyro && typeof window !== 'undefined') {
         window.removeEventListener('deviceorientation', onDeviceOrientation)
       }
+      root.removeEventListener('click', onClick)
       root.removeEventListener('pointerdown', onDown)
       root.removeEventListener('pointermove', onMove)
       root.removeEventListener('pointerup', onUp)
