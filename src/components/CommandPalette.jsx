@@ -90,15 +90,6 @@ export default function CommandPalette({ isOpen, setIsOpen }) {
 
     // --- Core Navigation ---
     {
-      id: 'nav-sphere',
-      title: 'Interactive Card Sphere',
-      description: '3D physics-driven field of graphic cards with quaternion coasting',
-      category: 'Navigation',
-      keywords: 'card sphere 3d interactive physics field explore projects cue',
-      icon: '🌐',
-      action: () => navigate('/sphere'),
-    },
-    {
       id: 'nav-home',
       title: 'Home // Overview',
       description: 'Landing page, engineering intro, and featured projects',

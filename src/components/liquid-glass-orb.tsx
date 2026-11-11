@@ -2290,7 +2290,7 @@ export function createFluidAgentOrbEntrance(host: HTMLElement) {
   const context = gsap.context(() => {}, host);
   let intersection: IntersectionObserver | undefined;
   let changes: MutationObserver | undefined;
-  let visible = typeof IntersectionObserver === 'undefined';
+  let visible = true;
   let started = false;
   let disposed = false;
   delete host.dataset.orbEntered;
@@ -2344,10 +2344,10 @@ export function createFluidAgentOrbEntrance(host: HTMLElement) {
     if (!visible) {
       intersection = new IntersectionObserver(
         ([entry]) => {
-          visible = entry?.isIntersecting ?? false;
+          visible = (entry?.isIntersecting ?? false) || (entry?.intersectionRatio ?? 0) > 0;
           reveal();
         },
-        { threshold: 0.15 },
+        { threshold: 0 },
       );
       intersection.observe(host);
     }

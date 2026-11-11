@@ -39,7 +39,6 @@ import Different from './components/Different'
 import UnderstandingSystem from './components/UnderstandingSystem'
 import GlobalSnowfall from './components/GlobalSnowfall'
 import CommandPalette from './components/CommandPalette'
-import CardSpherePage from './components/CardSpherePage'
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation()
@@ -151,9 +150,6 @@ const ProjectRoute = () => {
           <Route path="different/part-2" element={<UnderstandingSystem />} />
           <Route path="architecture" element={<Navigate to="/different" replace />} />
           <Route path="case-studies" element={<Navigate to="/different" replace />} />
-          <Route path="sphere" element={<CardSpherePage />} />
-          <Route path="explore-projects" element={<CardSpherePage />} />
-          <Route path="card-sphere" element={<CardSpherePage />} />
           <Route path="hero" element={<Hero />} />
           <Route path="grid" element={<Grid />} />
         </Route>

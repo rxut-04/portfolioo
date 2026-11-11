@@ -776,6 +776,7 @@ html.dark p {
   transition: opacity 250ms ease-in;
 }
 .explore-orb.is-leaving { opacity: 0; }
+.explore-orb .fluid-agent-orb--entrance { opacity: 1 !important; }
 
 /* exact 250px orb, shrunk to fit the 32px slot (32 / 250 = 0.128) */
 .explore-orb-inner {

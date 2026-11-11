@@ -107,7 +107,7 @@ const MobileMarquee = ({ row1, row2 }) => (
 const Featured = () => {
     return (
         <>
-            <div id="projects" className="mt-12 flex flex-col gap-5 scroll-mt-6">
+            <div className="mt-12 flex flex-col gap-5">
                 <div aria-hidden="true" className="mx-auto h-px w-[90%] max-w-5xl bg-zinc-200 transition-colors duration-300 dark:bg-zinc-800" />
 
                 <div className="w-full overflow-hidden py-2">

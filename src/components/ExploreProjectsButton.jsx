@@ -1,52 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { LiquidGlassOrb } from "./liquid-glass-orb";
 
 export default function ExploreProjectsButton({
-  targetId = "projects",
   className = "",
-  children = "Explore Projects",
+  children = "Ask me",
 }) {
-  const [phase, setPhase] = useState("idle"); // idle | searching | success | leaving
-  const timers = useRef([]);
-  const observer = useRef(null);
-
-  const clearAll = () => {
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-    observer.current?.disconnect();
-    observer.current = null;
-  };
-  useEffect(() => clearAll, []);
-
-  const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
-
-  const finish = () => {
-    clearAll(); // stops the observer and the fallback timer so this runs once
-    setPhase("success");
-    later(() => setPhase("leaving"), 800);
-    later(() => setPhase("idle"), 1050);
-  };
+  const [phase, setPhase] = useState("idle"); // idle | listening | thinking | speaking | searching
+  const states = ["listening", "thinking", "speaking", "searching"];
 
   const handleClick = () => {
-    if (phase !== "idle") return;
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      target.scrollIntoView();
-      return;
+    if (phase === "idle") {
+      setPhase("listening");
+    } else {
+      const nextIndex = (states.indexOf(phase) + 1) % states.length;
+      setPhase(states[nextIndex]);
     }
-
-    setPhase("searching");
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    observer.current = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && finish(),
-      { threshold: 0.3 }
-    );
-    observer.current.observe(target);
-
-    later(finish, 3000); // fallback so the sequence always completes
   };
 
   const showOrb = phase !== "idle";
@@ -55,14 +23,14 @@ export default function ExploreProjectsButton({
     <button
       type="button"
       onClick={handleClick}
-      aria-label="Explore projects"
+      aria-label={children}
       className={`explore-btn ${className}`}
     >
       <span>{children}</span>
       <span className="explore-slot" aria-hidden="true">
         <span className={`explore-arrow ${showOrb ? "is-hidden" : ""}`}>→</span>
         {showOrb && (
-          <span className={`explore-orb ${phase === "leaving" ? "is-leaving" : ""}`}>
+          <span className="explore-orb">
             <span className="explore-orb-inner">
               <LiquidGlassOrb
                 baseColor={"#ffffff"}
@@ -93,7 +61,7 @@ export default function ExploreProjectsButton({
                 animateDistortion={true}
                 grainMode={"fine"}
                 flowType={"drift"}
-                state={phase === "leaving" ? "success" : phase}
+                state={phase}
                 thinkingAnimation={"ripples"}
                 searchingAnimation={"lens"}
                 preserveWhites={true}
