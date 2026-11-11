@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { ConversationProvider, useConversation } from "@elevenlabs/react";
 import { LiquidGlassOrb } from "./liquid-glass-orb";
+import { ShiningText } from "./ui/shining-text";
 import { AGENT_ID } from "../lib/elevenlabs";
 
 function ExploreVoiceAssistantInner({
@@ -127,11 +128,9 @@ function ExploreVoiceAssistantInner({
         </div>
       </div>
 
-      {/* State Name Text (clean, no pill background, no border-radius, no colorful dot) */}
+      {/* State Name Text with shining animation */}
       <div className="flex items-center gap-2">
-        <span className="font-mono text-xs sm:text-sm tracking-wide text-zinc-700 dark:text-zinc-300 font-medium">
-          {errorMessage || stateLabel}
-        </span>
+        <ShiningText text={errorMessage || stateLabel} />
         <button
           type="button"
           onClick={handleStop}
