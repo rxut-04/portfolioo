@@ -21,10 +21,6 @@
   opacity: 1;
 }
 
-.cursor-box.grow {
-  transform: scale(2.2);
-}
-
 /* In dark mode, invert cursor box to solid crisp white with subtle dark border */
 html.dark .cursor-box {
   background: #fff;

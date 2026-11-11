@@ -26,12 +26,6 @@ export default function CursorBox() {
       }
     };
 
-    const onOver = (e) => {
-      if (!boxRef.current) return;
-      const hit = e.target.closest?.("a, button, [data-cursor='grow']");
-      boxRef.current.classList.toggle("grow", Boolean(hit));
-    };
-
     const onLeave = () => {
       if (boxRef.current) boxRef.current.classList.remove("visible");
     };
@@ -51,14 +45,12 @@ export default function CursorBox() {
     animate();
 
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", onOver);
     document.documentElement.addEventListener("mouseleave", onLeave);
     document.documentElement.addEventListener("mouseenter", onEnter);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onOver);
       document.documentElement.removeEventListener("mouseleave", onLeave);
       document.documentElement.removeEventListener("mouseenter", onEnter);
     };
