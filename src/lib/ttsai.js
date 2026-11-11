@@ -2,12 +2,12 @@ export const TTSAI_API_KEY =
   import.meta.env.VITE_TTSAI_API_KEY || "";
 
 export const DEFAULT_TTS_MODEL = "kokoro";
-export const DEFAULT_TTS_VOICE = "af_bella"; // Clear natural voice
+export const DEFAULT_TTS_VOICE = "am_adam"; // Young, energetic, natural American male voice
 
 export const DEFAULT_GREETING_TEXT =
   "Hi! I am Om Raut portfolio assistant. Ask me anything about Om work and experience.";
 export const CACHED_GREETING_AUDIO_URL =
-  "https://cdn.tts.ai/44b927d3ee2e4403bb6c61486a6ac424/tts_output.mp3";
+  "https://cdn.tts.ai/7b644cf4468f4df689be0eca08e6ccce/tts_output.mp3";
 
 /**
  * Generate speech audio from text using TTS.ai API (supports immediate CDN or queued polling)
