@@ -61,13 +61,6 @@ function ExploreVoiceAssistantInner({
       ? "Listening..."
       : "Listening...";
 
-  const dotColor =
-    conversation.status === "connecting"
-      ? "bg-amber-500"
-      : conversation.isSpeaking
-      ? "bg-violet-500 animate-bounce"
-      : "bg-emerald-500 animate-pulse";
-
   // Initial State: Clean "Ask me" button
   if (!isActivated) {
     return (
@@ -134,18 +127,15 @@ function ExploreVoiceAssistantInner({
         </div>
       </div>
 
-      {/* State Name Pill */}
-      <div
-        className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-zinc-200/90 bg-zinc-50/90 dark:border-zinc-800/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-200"
-      >
-        <span className={`size-2 rounded-full ${dotColor}`} />
-        <span className="font-mono text-xs sm:text-sm font-semibold tracking-wide text-zinc-800 dark:text-zinc-200">
+      {/* State Name Text (clean, no pill background, no border-radius, no colorful dot) */}
+      <div className="flex items-center gap-2">
+        <span className="font-mono text-xs sm:text-sm tracking-wide text-zinc-700 dark:text-zinc-300 font-medium">
           {errorMessage || stateLabel}
         </span>
         <button
           type="button"
           onClick={handleStop}
-          className="ml-1 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 text-xs px-1 py-0.5 hover:bg-zinc-200/60 dark:hover:bg-zinc-800/60 rounded transition-colors"
+          className="text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 text-xs px-1 py-0.5 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 rounded transition-colors cursor-pointer"
           title="End conversation"
           aria-label="Back to Ask me"
         >
