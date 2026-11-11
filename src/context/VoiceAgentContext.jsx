@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { synthesizeSpeech, playTtsAudio } from '../lib/ttsai';
+import { synthesizeSpeech, playTtsAudio, DEFAULT_GREETING_TEXT, CACHED_GREETING_AUDIO_URL } from '../lib/ttsai';
 import { askPortfolioAI } from '../lib/openrouter';
 
 const VoiceAgentContext = createContext(null);
@@ -203,23 +203,63 @@ export function VoiceAgentProvider({ children }) {
     }
   }, [handleUserSpeech]);
 
-  // Start the voice session
+  // Start the voice session with an immediate spoken greeting as the orb loads
   const startSession = useCallback(async () => {
     setIsActivated(true);
     isActivatedRef.current = true;
     hasNetworkErrorRef.current = false;
     setErrorMessage(null);
-    setCurrentState('listening');
-    setStateLabel('Listening...');
-    setAudioLevel(0.42);
 
+    // Request microphone permission in background
     try {
       if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
         await navigator.mediaDevices.getUserMedia({ audio: true });
       }
     } catch (_) {}
 
-    startListening();
+    // Immediately play the greeting voice as the orb loads
+    setCurrentState('speaking');
+    setStateLabel('Speaking...');
+    isSpeakingRef.current = true;
+
+    try {
+      const greetingUrl =
+        CACHED_GREETING_AUDIO_URL || (await synthesizeSpeech(DEFAULT_GREETING_TEXT));
+
+      if (!isActivatedRef.current) return;
+
+      audioPlayerRef.current = playTtsAudio(greetingUrl, {
+        onAudioLevel: (level) => {
+          setAudioLevel(Math.max(0.4, level * 1.2));
+        },
+        onEnded: () => {
+          isSpeakingRef.current = false;
+          if (isActivatedRef.current) {
+            setCurrentState('listening');
+            setStateLabel('Listening...');
+            setAudioLevel(0.42);
+            startListening();
+          }
+        },
+        onError: () => {
+          isSpeakingRef.current = false;
+          if (isActivatedRef.current) {
+            setCurrentState('listening');
+            setStateLabel('Listening...');
+            setAudioLevel(0.42);
+            startListening();
+          }
+        },
+      });
+    } catch (_) {
+      isSpeakingRef.current = false;
+      if (isActivatedRef.current) {
+        setCurrentState('listening');
+        setStateLabel('Listening...');
+        setAudioLevel(0.42);
+        startListening();
+      }
+    }
   }, [startListening]);
 
   // Clean up on unmount
