@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FallingLeaves } from 'falling-leaves/react'
 import GlossySliderButton from './ui/glossy-slider-button'
+import ExploreProjectsButton from './ExploreProjectsButton'
 
 const Hero = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false)
@@ -238,13 +239,10 @@ const Hero = () => {
               >
                 View CV
               </button>
-              <Link
-                to="/sphere"
+              <ExploreProjectsButton
+                targetId="projects"
                 className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-zinc-900 bg-zinc-900 px-4.5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-md focus:outline-none focus-visible:ring-3 focus-visible:ring-zinc-400 active:scale-95 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
-              >
-                <span>Explore Projects</span>
-                <span aria-hidden="true">→</span>
-              </Link>
+              />
             </div>
 
             {/* Row 2: One button */}
