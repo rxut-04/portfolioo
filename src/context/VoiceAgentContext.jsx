@@ -10,12 +10,14 @@ export function VoiceAgentProvider({ children }) {
   const [stateLabel, setStateLabel] = useState('Listening...');
   const [errorMessage, setErrorMessage] = useState(null);
   const [audioLevel, setAudioLevel] = useState(0.42);
+  const [showTextInput, setShowTextInput] = useState(false);
 
   const recognitionRef = useRef(null);
   const audioPlayerRef = useRef(null);
   const isActivatedRef = useRef(false);
   const isSpeakingRef = useRef(false);
   const isProcessingRef = useRef(false);
+  const hasNetworkErrorRef = useRef(false);
 
   // Sync ref with state
   useEffect(() => {
@@ -27,6 +29,7 @@ export function VoiceAgentProvider({ children }) {
     isActivatedRef.current = false;
     isSpeakingRef.current = false;
     isProcessingRef.current = false;
+    hasNetworkErrorRef.current = false;
 
     if (audioPlayerRef.current) {
       try {
@@ -47,6 +50,7 @@ export function VoiceAgentProvider({ children }) {
     setStateLabel('Listening...');
     setAudioLevel(0);
     setErrorMessage(null);
+    setShowTextInput(false);
   }, []);
 
   // Process user speech with OpenRouter -> TTS.ai -> playback
@@ -59,6 +63,7 @@ export function VoiceAgentProvider({ children }) {
       setCurrentState('thinking');
       setStateLabel('Thinking...');
       setAudioLevel(0.3);
+      setErrorMessage(null);
 
       // 2. Query LLM via OpenRouter
       const replyText = await askPortfolioAI(transcript);
@@ -88,8 +93,10 @@ export function VoiceAgentProvider({ children }) {
             setCurrentState('listening');
             setStateLabel('Listening...');
             setAudioLevel(0.42);
-            // Resume microphone listening
-            startListening();
+            // Resume listening if speech recognition is available
+            if (!hasNetworkErrorRef.current) {
+              startListening();
+            }
           }
         },
         onError: (err) => {
@@ -99,7 +106,9 @@ export function VoiceAgentProvider({ children }) {
           if (isActivatedRef.current) {
             setCurrentState('listening');
             setStateLabel('Listening...');
-            startListening();
+            if (!hasNetworkErrorRef.current) {
+              startListening();
+            }
           }
         },
       });
@@ -114,16 +123,18 @@ export function VoiceAgentProvider({ children }) {
             setErrorMessage(null);
             setCurrentState('listening');
             setStateLabel('Listening...');
-            startListening();
+            if (!hasNetworkErrorRef.current) {
+              startListening();
+            }
           }
-        }, 2000);
+        }, 2500);
       }
     }
   }, []);
 
   // Setup / start speech recognition
   const startListening = useCallback(() => {
-    if (!isActivatedRef.current || isSpeakingRef.current) return;
+    if (!isActivatedRef.current || isSpeakingRef.current || hasNetworkErrorRef.current) return;
 
     const SpeechRecognition =
       typeof window !== 'undefined'
@@ -131,7 +142,7 @@ export function VoiceAgentProvider({ children }) {
         : null;
 
     if (!SpeechRecognition) {
-      setErrorMessage('Speech not supported');
+      setShowTextInput(true);
       return;
     }
 
@@ -142,7 +153,7 @@ export function VoiceAgentProvider({ children }) {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = false; // Capture discrete sentence, process, reply
+    recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = 'en-US';
 
@@ -154,15 +165,22 @@ export function VoiceAgentProvider({ children }) {
     };
 
     recognition.onerror = (e) => {
-      // 'no-speech' or 'aborted' is expected when idle
-      if (e.error !== 'no-speech' && e.error !== 'aborted') {
+      if (e.error === 'network' || e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        hasNetworkErrorRef.current = true;
+        setShowTextInput(true);
+      } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
         console.warn('Speech recognition warning:', e.error);
       }
     };
 
     recognition.onend = () => {
-      // If still activated and not speaking/processing, restart listening
-      if (isActivatedRef.current && !isSpeakingRef.current && !isProcessingRef.current) {
+      // Only restart if active, not speaking, not processing, and no network fatal error
+      if (
+        isActivatedRef.current &&
+        !isSpeakingRef.current &&
+        !isProcessingRef.current &&
+        !hasNetworkErrorRef.current
+      ) {
         try {
           recognition.start();
         } catch (_) {}
@@ -172,13 +190,24 @@ export function VoiceAgentProvider({ children }) {
     try {
       recognition.start();
       recognitionRef.current = recognition;
-    } catch (_) {}
+    } catch (_) {
+      hasNetworkErrorRef.current = true;
+      setShowTextInput(true);
+    }
   }, [handleUserSpeech]);
 
-  // Start the entire voice session
+  // Ask a question directly via text or quick-chips
+  const askQuestion = useCallback((text) => {
+    if (text && text.trim()) {
+      handleUserSpeech(text.trim());
+    }
+  }, [handleUserSpeech]);
+
+  // Start the voice session
   const startSession = useCallback(async () => {
     setIsActivated(true);
     isActivatedRef.current = true;
+    hasNetworkErrorRef.current = false;
     setErrorMessage(null);
     setCurrentState('listening');
     setStateLabel('Listening...');
@@ -188,14 +217,12 @@ export function VoiceAgentProvider({ children }) {
       if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
         await navigator.mediaDevices.getUserMedia({ audio: true });
       }
-    } catch (err) {
-      console.warn('Microphone permission notice:', err);
-    }
+    } catch (_) {}
 
     startListening();
   }, [startListening]);
 
-  // Clean up on window unload
+  // Clean up on unmount
   useEffect(() => {
     return () => {
       stopSession();
@@ -208,6 +235,9 @@ export function VoiceAgentProvider({ children }) {
       setIsActivated,
       startSession,
       stopSession,
+      askQuestion,
+      showTextInput,
+      setShowTextInput,
       currentState,
       stateLabel,
       errorMessage,
@@ -218,6 +248,8 @@ export function VoiceAgentProvider({ children }) {
       isActivated,
       startSession,
       stopSession,
+      askQuestion,
+      showTextInput,
       currentState,
       stateLabel,
       errorMessage,
