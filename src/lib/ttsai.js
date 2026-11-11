@@ -2,10 +2,10 @@ export const TTSAI_API_KEY =
   import.meta.env.VITE_TTSAI_API_KEY || "";
 
 export const DEFAULT_TTS_MODEL = "kokoro";
-export const DEFAULT_TTS_VOICE = "af_bella"; // Clear, friendly natural voice
+export const DEFAULT_TTS_VOICE = "af_bella"; // Clear natural voice
 
 /**
- * Generate speech audio from text using TTS.ai API
+ * Generate speech audio from text using TTS.ai API (supports immediate CDN or queued polling)
  * @param {string} text
  * @param {Object} options
  * @returns {Promise<string>} result audio URL
@@ -42,11 +42,45 @@ export async function synthesizeSpeech(text, options = {}) {
   }
 
   const data = await response.json();
-  if (!data?.result_url) {
-    throw new Error("TTS.ai returned response without result_url");
+
+  // If already completed and cached
+  if (data?.result_url || data?.url) {
+    return data.result_url || data.url;
   }
 
-  return data.result_url;
+  // If queued, poll the results endpoint with uuid
+  const uuid = data?.uuid;
+  if (!uuid) {
+    throw new Error("TTS.ai response missing result_url and uuid");
+  }
+
+  // Poll https://api.tts.ai/v1/speech/results/?uuid=<uuid>
+  const maxAttempts = 20; // 20 * 700ms = ~14s max
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, 700));
+
+    try {
+      const pollRes = await fetch(`https://api.tts.ai/v1/speech/results/?uuid=${uuid}`, {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+        },
+      });
+
+      if (pollRes.ok) {
+        const pollData = await pollRes.json();
+        if (pollData?.status === "completed" && (pollData?.result_url || pollData?.url)) {
+          return pollData.result_url || pollData.url;
+        }
+        if (pollData?.status === "failed") {
+          throw new Error("TTS.ai speech synthesis failed on server");
+        }
+      }
+    } catch (pollErr) {
+      console.warn("Polling TTS.ai attempt warning:", pollErr);
+    }
+  }
+
+  throw new Error("TTS.ai speech synthesis timed out");
 }
 
 /**
