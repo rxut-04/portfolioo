@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
+import { VoiceAgentProvider } from './context/VoiceAgentContext'
 import CursorBox from './CursorBox'
 import App from './App'
 import About from "./components/About"
@@ -89,7 +90,8 @@ const SiteLayout = () => {
 const ProjectRoute = () => {
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <VoiceAgentProvider>
+        <BrowserRouter>
         <ScrollToTop />
         <Routes>
         <Route element={<SiteLayout />}>
@@ -156,6 +158,7 @@ const ProjectRoute = () => {
         <Route path="navbar" element={<Navbar />} />
       </Routes>
     </BrowserRouter>
+      </VoiceAgentProvider>
   </ThemeProvider>
   )
 }

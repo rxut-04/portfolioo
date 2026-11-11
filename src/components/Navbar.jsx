@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { useVoiceAgent } from '../context/VoiceAgentContext'
+import { LiquidGlassOrb } from './liquid-glass-orb'
+import { ShiningText } from './ui/shining-text'
 
 const ThemeToggleBtn = ({ theme, toggleTheme, className = '' }) => (
   <button
@@ -44,6 +47,83 @@ const ThemeToggleBtn = ({ theme, toggleTheme, className = '' }) => (
   </button>
 )
 
+const NavbarVoiceOrb = () => {
+  const { isActivated, stopSession, currentState, stateLabel, errorMessage, isSpeaking } = useVoiceAgent()
+  const location = useLocation()
+
+  // Only render on the navbar when voice is active AND user is not on the home page ('/')
+  if (!isActivated || location.pathname === '/') {
+    return null
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2 select-none animate-in fade-in zoom-in-95 duration-300 mr-1 sm:mr-2">
+      {/* On the LEFT of the orb: text of current state */}
+      <ShiningText text={errorMessage || stateLabel} className="text-xs sm:text-sm font-medium" />
+
+      {/* Liquid Glass Orb */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={stopSession}
+        title={isSpeaking ? "ElevenLabs is speaking (Click to end)" : "Listening to your voice (Click to end)"}
+        className="relative size-8 sm:size-9 rounded-full overflow-hidden shrink-0 shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 ring-1 ring-zinc-300 dark:ring-zinc-700/80 bg-zinc-100 dark:bg-zinc-900"
+      >
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] pointer-events-none scale-[0.14] sm:scale-[0.155] origin-center">
+          <LiquidGlassOrb
+            baseColor={"#ffffff"}
+            colorA={"#000000"}
+            colorB={"#4d4d4d"}
+            colorC={"#a9a9a9"}
+            seed={145}
+            startTime={18}
+            speed={1.5}
+            distortion={0.8}
+            clusterCount={7.2}
+            clusterIntensity={3}
+            clusterSize={22.5}
+            scale={0.23}
+            spotSize={1.15}
+            rotation={0}
+            softness={0.31}
+            relief={2.94}
+            refraction={0.65}
+            roughness={0}
+            reflection={1.3}
+            caustics={0}
+            dispersion={1}
+            colorDistribution={0}
+            grain={0.3}
+            grainSize={1}
+            paused={false}
+            animateDistortion={true}
+            grainMode={"fine"}
+            flowType={"drift"}
+            state={currentState}
+            thinkingAnimation={"ripples"}
+            searchingAnimation={"lens"}
+            preserveWhites={true}
+            animateEntrance={false}
+            size={250}
+            audioLevel={isSpeaking ? 0.78 : 0.42}
+          />
+        </div>
+      </div>
+
+      {/* Subtle close button */}
+      <button
+        type="button"
+        onClick={stopSession}
+        className="text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 text-xs px-1 py-0.5 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 rounded transition-colors cursor-pointer"
+        title="End conversation"
+        aria-label="End conversation"
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
+
 const Navbar = ({ onOpenCommand }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
@@ -59,8 +139,9 @@ const Navbar = ({ onOpenCommand }) => {
         </NavLink>
       </div>
 
-      {/* Right controls on mobile: Search + Theme Toggle + Menu Hamburger */}
+      {/* Right controls on mobile: Voice Orb (on other pages) + Search + Theme Toggle + Menu Hamburger */}
       <div className="flex items-center gap-2 xl:hidden">
+        <NavbarVoiceOrb />
         <button
           type="button"
           onClick={onOpenCommand}
@@ -111,6 +192,7 @@ const Navbar = ({ onOpenCommand }) => {
 
         {/* Desktop Search Trigger + Theme Toggle */}
         <div className="hidden xl:flex items-center gap-2.5 ml-2">
+          <NavbarVoiceOrb />
           <button
             type="button"
             onClick={onOpenCommand}
