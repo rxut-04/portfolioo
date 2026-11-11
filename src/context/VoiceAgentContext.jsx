@@ -1,85 +1,227 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { ConversationProvider, useConversation } from '@elevenlabs/react';
-import { AGENT_ID } from '../lib/elevenlabs';
+import { createContext, useContext, useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { synthesizeSpeech, playTtsAudio } from '../lib/ttsai';
+import { askPortfolioAI } from '../lib/openrouter';
 
 const VoiceAgentContext = createContext(null);
 
-function VoiceAgentProviderInner({ children }) {
+export function VoiceAgentProvider({ children }) {
   const [isActivated, setIsActivated] = useState(false);
+  const [currentState, setCurrentState] = useState('listening'); // 'listening' | 'thinking' | 'speaking' | 'searching'
+  const [stateLabel, setStateLabel] = useState('Listening...');
   const [errorMessage, setErrorMessage] = useState(null);
+  const [audioLevel, setAudioLevel] = useState(0.42);
 
-  const conversation = useConversation({
-    onConnect: () => {
-      setErrorMessage(null);
-    },
-    onDisconnect: () => {},
-    onError: (err) => {
-      console.warn("ElevenLabs conversation warning/error:", err);
-    },
-  });
+  const recognitionRef = useRef(null);
+  const audioPlayerRef = useRef(null);
+  const isActivatedRef = useRef(false);
+  const isSpeakingRef = useRef(false);
+  const isProcessingRef = useRef(false);
 
-  const startSession = useCallback(async () => {
-    setIsActivated(true);
+  // Sync ref with state
+  useEffect(() => {
+    isActivatedRef.current = isActivated;
+  }, [isActivated]);
+
+  // Clean stop of all audio & recognition
+  const stopSession = useCallback(() => {
+    isActivatedRef.current = false;
+    isSpeakingRef.current = false;
+    isProcessingRef.current = false;
+
+    if (audioPlayerRef.current) {
+      try {
+        audioPlayerRef.current.stop();
+      } catch (_) {}
+      audioPlayerRef.current = null;
+    }
+
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (_) {}
+      recognitionRef.current = null;
+    }
+
+    setIsActivated(false);
+    setCurrentState('listening');
+    setStateLabel('Listening...');
+    setAudioLevel(0);
     setErrorMessage(null);
+  }, []);
+
+  // Process user speech with OpenRouter -> TTS.ai -> playback
+  const handleUserSpeech = useCallback(async (transcript) => {
+    if (!isActivatedRef.current || isProcessingRef.current) return;
+    isProcessingRef.current = true;
+
     try {
-      if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      }
-      await conversation.startSession({
-        agentId: AGENT_ID,
+      // 1. Thinking phase
+      setCurrentState('thinking');
+      setStateLabel('Thinking...');
+      setAudioLevel(0.3);
+
+      // 2. Query LLM via OpenRouter
+      const replyText = await askPortfolioAI(transcript);
+
+      if (!isActivatedRef.current) return;
+
+      // 3. Synthesize speech via TTS.ai
+      setCurrentState('searching');
+      setStateLabel('Synthesizing...');
+      const audioUrl = await synthesizeSpeech(replyText);
+
+      if (!isActivatedRef.current) return;
+
+      // 4. Play speech with real-time audio analysis
+      setCurrentState('speaking');
+      setStateLabel('Speaking...');
+      isSpeakingRef.current = true;
+
+      audioPlayerRef.current = playTtsAudio(audioUrl, {
+        onAudioLevel: (level) => {
+          setAudioLevel(Math.max(0.4, level * 1.2));
+        },
+        onEnded: () => {
+          isSpeakingRef.current = false;
+          isProcessingRef.current = false;
+          if (isActivatedRef.current) {
+            setCurrentState('listening');
+            setStateLabel('Listening...');
+            setAudioLevel(0.42);
+            // Resume microphone listening
+            startListening();
+          }
+        },
+        onError: (err) => {
+          console.warn('TTS.ai audio playback note:', err);
+          isSpeakingRef.current = false;
+          isProcessingRef.current = false;
+          if (isActivatedRef.current) {
+            setCurrentState('listening');
+            setStateLabel('Listening...');
+            startListening();
+          }
+        },
       });
     } catch (err) {
-      console.warn("Microphone or session initialization:", err);
+      console.error('Voice conversation error:', err);
+      isProcessingRef.current = false;
+      isSpeakingRef.current = false;
+      if (isActivatedRef.current) {
+        setErrorMessage('Try again');
+        setTimeout(() => {
+          if (isActivatedRef.current) {
+            setErrorMessage(null);
+            setCurrentState('listening');
+            setStateLabel('Listening...');
+            startListening();
+          }
+        }, 2000);
+      }
     }
-  }, [conversation]);
+  }, []);
 
-  const stopSession = useCallback(async () => {
+  // Setup / start speech recognition
+  const startListening = useCallback(() => {
+    if (!isActivatedRef.current || isSpeakingRef.current) return;
+
+    const SpeechRecognition =
+      typeof window !== 'undefined'
+        ? window.SpeechRecognition || window.webkitSpeechRecognition
+        : null;
+
+    if (!SpeechRecognition) {
+      setErrorMessage('Speech not supported');
+      return;
+    }
+
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (_) {}
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false; // Capture discrete sentence, process, reply
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event) => {
+      const transcript = event.results?.[0]?.[0]?.transcript;
+      if (transcript && transcript.trim()) {
+        handleUserSpeech(transcript.trim());
+      }
+    };
+
+    recognition.onerror = (e) => {
+      // 'no-speech' or 'aborted' is expected when idle
+      if (e.error !== 'no-speech' && e.error !== 'aborted') {
+        console.warn('Speech recognition warning:', e.error);
+      }
+    };
+
+    recognition.onend = () => {
+      // If still activated and not speaking/processing, restart listening
+      if (isActivatedRef.current && !isSpeakingRef.current && !isProcessingRef.current) {
+        try {
+          recognition.start();
+        } catch (_) {}
+      }
+    };
+
     try {
-      await conversation.endSession();
+      recognition.start();
+      recognitionRef.current = recognition;
     } catch (_) {}
-    setIsActivated(false);
-  }, [conversation]);
+  }, [handleUserSpeech]);
 
-  // Derive dynamic state for the LiquidGlassOrb
-  const currentState =
-    conversation.status === "connecting"
-      ? "searching"
-      : conversation.isSpeaking
-      ? "speaking"
-      : conversation.status === "connected"
-      ? "listening"
-      : "listening";
+  // Start the entire voice session
+  const startSession = useCallback(async () => {
+    setIsActivated(true);
+    isActivatedRef.current = true;
+    setErrorMessage(null);
+    setCurrentState('listening');
+    setStateLabel('Listening...');
+    setAudioLevel(0.42);
 
-  const stateLabel =
-    conversation.status === "connecting"
-      ? "Connecting..."
-      : conversation.isSpeaking
-      ? "Speaking..."
-      : conversation.status === "connected"
-      ? "Listening..."
-      : "Listening...";
+    try {
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+    } catch (err) {
+      console.warn('Microphone permission notice:', err);
+    }
+
+    startListening();
+  }, [startListening]);
+
+  // Clean up on window unload
+  useEffect(() => {
+    return () => {
+      stopSession();
+    };
+  }, [stopSession]);
 
   const value = useMemo(
     () => ({
       isActivated,
       setIsActivated,
-      conversation,
       startSession,
       stopSession,
       currentState,
       stateLabel,
       errorMessage,
-      isSpeaking: conversation.isSpeaking,
-      status: conversation.status,
+      isSpeaking: currentState === 'speaking',
+      audioLevel,
     }),
     [
       isActivated,
-      conversation,
       startSession,
       stopSession,
       currentState,
       stateLabel,
       errorMessage,
+      audioLevel,
     ]
   );
 
@@ -90,18 +232,10 @@ function VoiceAgentProviderInner({ children }) {
   );
 }
 
-export function VoiceAgentProvider({ children }) {
-  return (
-    <ConversationProvider>
-      <VoiceAgentProviderInner>{children}</VoiceAgentProviderInner>
-    </ConversationProvider>
-  );
-}
-
 export function useVoiceAgent() {
   const context = useContext(VoiceAgentContext);
   if (!context) {
-    throw new Error("useVoiceAgent must be used within a VoiceAgentProvider");
+    throw new Error('useVoiceAgent must be used within a VoiceAgentProvider');
   }
   return context;
 }

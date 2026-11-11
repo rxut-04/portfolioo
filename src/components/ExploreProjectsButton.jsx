@@ -15,6 +15,7 @@ export default function ExploreProjectsButton({
     stateLabel,
     errorMessage,
     isSpeaking,
+    audioLevel,
   } = useVoiceAgent();
 
   // Initial State: Liquid Glass "Ask me" button
@@ -78,7 +79,7 @@ export default function ExploreProjectsButton({
             preserveWhites={true}
             animateEntrance={false}
             size={250}
-            audioLevel={isSpeaking ? 0.78 : 0.42}
+            audioLevel={audioLevel || (isSpeaking ? 0.78 : 0.42)}
           />
         </div>
       </div>

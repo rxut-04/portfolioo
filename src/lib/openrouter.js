@@ -3,6 +3,8 @@ export const OPENROUTER_API_KEY =
 
 export const DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct";
 
+export const SYSTEM_PORTFOLIO_PROMPT = `You are the interactive AI voice assistant on Om Raut's developer portfolio website. Om Raut is a Full-Stack Developer specializing in React, Java, Spring Boot, DSA, and scalable web architectures. His notable projects include Apex Core Banking, MedLink Clinical Decision AI, RFID Library Auditing, Archive Ledger, and Personal GPT. Answer questions conversationally, concisely, and naturally in 1 to 2 spoken sentences without markdown formatting, emojis, asterisks, or bullet points so it sounds natural when spoken aloud. Keep it friendly, clear, and direct.`;
+
 /**
  * Ask OpenRouter with portfolio context or custom prompt.
  * @param {Array<{role: string, content: string}>} messages
@@ -40,4 +42,17 @@ export async function chatWithOpenRouter(messages, options = {}) {
 
   const data = await response.json();
   return data.choices?.[0]?.message?.content || "";
+}
+
+/**
+ * Ask the portfolio assistant a question and get a spoken-friendly answer.
+ * @param {string} userQuestion
+ * @returns {Promise<string>}
+ */
+export async function askPortfolioAI(userQuestion) {
+  const messages = [
+    { role: "system", content: SYSTEM_PORTFOLIO_PROMPT },
+    { role: "user", content: userQuestion },
+  ];
+  return chatWithOpenRouter(messages, { max_tokens: 120 });
 }

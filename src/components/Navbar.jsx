@@ -48,7 +48,7 @@ const ThemeToggleBtn = ({ theme, toggleTheme, className = '' }) => (
 )
 
 const NavbarVoiceOrb = () => {
-  const { isActivated, stopSession, currentState, stateLabel, errorMessage, isSpeaking } = useVoiceAgent()
+  const { isActivated, stopSession, currentState, stateLabel, errorMessage, isSpeaking, audioLevel } = useVoiceAgent()
   const location = useLocation()
 
   // Only render on the navbar when voice is active AND user is not on the home page ('/')
@@ -105,7 +105,7 @@ const NavbarVoiceOrb = () => {
             preserveWhites={true}
             animateEntrance={false}
             size={250}
-            audioLevel={isSpeaking ? 0.78 : 0.42}
+            audioLevel={audioLevel || (isSpeaking ? 0.78 : 0.42)}
           />
         </div>
       </div>
