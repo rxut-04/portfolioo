@@ -48,7 +48,7 @@ const ThemeToggleBtn = ({ theme, toggleTheme, className = '' }) => (
 )
 
 const NavbarVoiceOrb = () => {
-  const { isActivated, stopSession, currentState, stateLabel, errorMessage, isSpeaking } = useVoiceAgent()
+  const { isActivated, stopSession, currentState, stateLabel, errorMessage, isSpeaking, audioLevel } = useVoiceAgent()
   const location = useLocation()
 
   // Only render on the navbar when voice is active AND user is not on the home page ('/')
@@ -66,7 +66,7 @@ const NavbarVoiceOrb = () => {
         role="button"
         tabIndex={0}
         onClick={stopSession}
-        title={isSpeaking ? "ElevenLabs is speaking (Click to end)" : "Listening to your voice (Click to end)"}
+        title={isSpeaking ? "Assistant is speaking (Click to end)" : "Listening to your voice (Click to end)"}
         className="relative size-8 sm:size-9 rounded-full overflow-hidden shrink-0 shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 ring-1 ring-zinc-300 dark:ring-zinc-700/80 bg-zinc-100 dark:bg-zinc-900"
       >
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] pointer-events-none scale-[0.14] sm:scale-[0.155] origin-center">
@@ -105,7 +105,7 @@ const NavbarVoiceOrb = () => {
             preserveWhites={true}
             animateEntrance={false}
             size={250}
-            audioLevel={isSpeaking ? 0.78 : 0.42}
+            audioLevel={audioLevel || (isSpeaking ? 0.78 : 0.42)}
           />
         </div>
       </div>

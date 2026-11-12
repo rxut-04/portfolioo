@@ -15,6 +15,7 @@ export default function ExploreProjectsButton({
     stateLabel,
     errorMessage,
     isSpeaking,
+    audioLevel,
     isRateLimited,
     currentToneNotice,
     resetCredits,
@@ -28,7 +29,7 @@ export default function ExploreProjectsButton({
           type="button"
           onClick={startSession}
           aria-label="Demo rate limit reached"
-          title="1,000 credit demo limit reached. Click to hear notice in a different tone."
+          title="1,000 credit demo limit reached. Click to talk freely in zero-credit mode."
           className={`${className} opacity-90`}
         >
           <span>{currentToneNotice || "Limit reached (1k credits)"}</span>
@@ -59,7 +60,7 @@ export default function ExploreProjectsButton({
     );
   }
 
-  // Activated State: Button disappears, ONLY the Orb + ElevenLabs State Name appears
+  // Activated State: Button disappears, ONLY the Orb + Live State Name appears
   return (
     <div className="inline-flex items-center gap-3.5 select-none transition-all duration-300 animate-in fade-in zoom-in-95">
       {/* Liquid Glass Orb Container (shrunk with CSS transform, size={250} intact) */}
@@ -67,7 +68,7 @@ export default function ExploreProjectsButton({
         role="button"
         tabIndex={0}
         onClick={stopSession}
-        title={isSpeaking ? "ElevenLabs is speaking (Click to end)" : "Listening to your voice (Click to end)"}
+        title={isSpeaking ? "Assistant is speaking (Click to end)" : "Listening to your voice (Click to end)"}
         className="relative size-12 sm:size-14 rounded-full overflow-hidden shrink-0 shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95 ring-1 ring-zinc-300 dark:ring-zinc-700/80 bg-zinc-100 dark:bg-zinc-900"
       >
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] pointer-events-none scale-[0.208] sm:scale-[0.23] origin-center">
@@ -106,7 +107,7 @@ export default function ExploreProjectsButton({
             preserveWhites={true}
             animateEntrance={false}
             size={250}
-            audioLevel={isSpeaking ? 0.78 : 0.42}
+            audioLevel={audioLevel || (isSpeaking ? 0.78 : 0.42)}
           />
         </div>
       </div>
