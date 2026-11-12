@@ -15,7 +15,34 @@ export default function ExploreProjectsButton({
     stateLabel,
     errorMessage,
     isSpeaking,
+    isRateLimited,
+    resetCredits,
   } = useVoiceAgent();
+
+  // Rate Limited State: Show polite limit badge with testing reset option
+  if (isRateLimited && !isActivated) {
+    return (
+      <div className="inline-flex items-center gap-2 select-none">
+        <LiquidButton
+          type="button"
+          onClick={startSession}
+          aria-label="Demo rate limit reached"
+          title="1,000 credit demo limit reached. Click to hear notice."
+          className={`${className} opacity-90`}
+        >
+          <span>Limit reached (1k credits)</span>
+        </LiquidButton>
+        <button
+          type="button"
+          onClick={resetCredits}
+          title="Reset demo credits (testing)"
+          className="text-[10px] font-mono text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 underline cursor-pointer px-1 transition-colors"
+        >
+          reset
+        </button>
+      </div>
+    );
+  }
 
   // Initial State: Liquid Glass "Ask me" button
   if (!isActivated) {
