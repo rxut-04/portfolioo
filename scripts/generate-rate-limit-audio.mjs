@@ -7,39 +7,45 @@ const VOICE_ID = process.env.VITE_ELEVENLABS_VOICE_ID || "rU18Fk3uSDhmg5Xh41o4";
 const TONES = [
   {
     id: 'polite',
-    text: "Sorry to say, but you have reached the 1,000 credit demo limit for this session. Feel free to explore Om's portfolio and reach out directly!",
-    stability: 0.5,
+    text: "Oh, I'm so sorry! We've just hit our 1,000 credit demo limit for today, but I had so much fun chatting with you! Definitely check out Om's projects right below and reach out to him directly!",
+    stability: 0.32,
+    style: 0.60,
   },
   {
     id: 'playful',
-    text: "Whoops! Looks like we've hit our 1,000 credit demo ceiling for now. Time to explore Om's projects and connect with him directly!",
-    stability: 0.35,
+    text: "Oops, my bad! Looks like our 1,000 credit demo quota just maxed out! I'd love to keep talking, but my voice quota is capped for now. Definitely explore Om's portfolio and say hi to him directly!",
+    stability: 0.30,
+    style: 0.65,
   },
   {
     id: 'professional',
-    text: "Apologies, but the 1,000 credit quota for this interactive demo has been fulfilled. Please feel free to inspect Om's case studies or contact him directly.",
-    stability: 0.65,
+    text: "Ah, so sorry about that! Our interactive demo credits just ran out for this session, but you were wonderful to talk to! Feel free to browse through Om's case studies and drop him a message anytime!",
+    stability: 0.34,
+    style: 0.58,
   },
   {
     id: 'casual',
-    text: "And that's a wrap on our 1,000 credit voice demo! Feel free to look around the rest of Om's portfolio and say hi directly.",
-    stability: 0.45,
+    text: "Aww, so sorry to cut our chat short, but that wraps up our 1,000 credit voice demo! Feel free to check out everything Om built on the page and connect with him directly!",
+    stability: 0.32,
+    style: 0.60,
   },
   {
     id: 'architect',
-    text: "System update: 1,000 credit threshold reached for this session. Voice pipeline on standby. Check out Om's system blueprints and drop him a message!",
-    stability: 0.7,
+    text: "Ah, looks like we just touched our 1,000 credit session ceiling! I'm so sorry, but you can explore all of Om's full-stack blueprints right here, or ping him directly to team up!",
+    stability: 0.33,
+    style: 0.58,
   },
   {
     id: 'enthusiastic',
-    text: "You've reached the 1,000 credit limit! Thanks for chatting—be sure to explore Om's featured work and reach out directly to connect!",
-    stability: 0.38,
+    text: "Oh no, our 1,000 credit demo limit has officially been reached! Thank you so much for chatting with me today! Please take a look around Om's portfolio, he would love to connect with you!",
+    stability: 0.30,
+    style: 0.68,
   },
 ];
 
 async function generateAudio(tone) {
   const filePath = path.join(process.cwd(), 'public', 'audio', `rate-limit-${tone.id}.mp3`);
-  console.log(`Generating audio for ${tone.id}...`);
+  console.log(`Generating energetic apologetic audio for ${tone.id}...`);
 
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
     method: 'POST',
@@ -53,7 +59,7 @@ async function generateAudio(tone) {
       voice_settings: {
         stability: tone.stability,
         similarity_boost: 0.85,
-        style: 0.2,
+        style: tone.style,
         use_speaker_boost: true,
       },
     }),
@@ -73,7 +79,7 @@ async function main() {
   for (const tone of TONES) {
     await generateAudio(tone);
   }
-  console.log("All 6 tone audio files generated successfully with the exact ElevenLabs voice!");
+  console.log("All 6 energetic apologetic audio files generated successfully!");
 }
 
 main().catch((err) => {
