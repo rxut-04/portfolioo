@@ -6,8 +6,94 @@ export const MAX_CREDITS = 1000;
 const STORAGE_KEY = 'portfolio_voice_credits_used';
 const RESET_TIMESTAMP_KEY = 'portfolio_voice_credits_last_reset';
 
-export const RATE_LIMIT_MESSAGE =
-  "Sorry to say, but you have reached the 1,000 credit demo limit for this session. Feel free to explore Om's portfolio and reach out directly!";
+export const RATE_LIMIT_TONES = [
+  {
+    id: 'polite',
+    toneName: 'Polite & Warm',
+    message: "Sorry to say, but you have reached the 1,000 credit demo limit for this session. Feel free to explore Om's portfolio and reach out directly!",
+    shortText: "Limit reached (1k credits)",
+    pitch: 1.0,
+    rate: 1.0,
+  },
+  {
+    id: 'playful',
+    toneName: 'Playful & Witty',
+    message: "Whoops! Looks like we've hit our 1,000 credit demo ceiling for now. Time to explore Om's projects and connect with him directly!",
+    shortText: "1k demo ceiling reached!",
+    pitch: 1.15,
+    rate: 1.05,
+  },
+  {
+    id: 'professional',
+    toneName: 'Professional & Polished',
+    message: "Apologies, but the 1,000 credit quota for this interactive demo has been fulfilled. Please feel free to inspect Om's case studies or contact him directly.",
+    shortText: "Quota fulfilled (1,000 credits)",
+    pitch: 0.92,
+    rate: 0.95,
+  },
+  {
+    id: 'casual',
+    toneName: 'Casual & Chill',
+    message: "And that's a wrap on our 1,000 credit voice demo! Feel free to look around the rest of Om's portfolio and say hi directly.",
+    shortText: "That's a wrap! (1k used)",
+    pitch: 1.02,
+    rate: 0.98,
+  },
+  {
+    id: 'architect',
+    toneName: 'System / Architect',
+    message: "System update: 1,000 credit threshold reached for this session. Voice pipeline on standby. Check out Om's system blueprints and drop him a message!",
+    shortText: "Threshold reached (1k units)",
+    pitch: 0.95,
+    rate: 1.05,
+  },
+  {
+    id: 'enthusiastic',
+    toneName: 'Upbeat & Enthusiastic',
+    message: "You've reached the 1,000 credit limit! Thanks for chatting—be sure to explore Om's featured work and reach out directly to connect!",
+    shortText: "Thanks for chatting! (1k reached)",
+    pitch: 1.18,
+    rate: 1.08,
+  },
+];
+
+let lastToneIndex = -1;
+
+export function getNextRateLimitTone() {
+  let nextIndex;
+  do {
+    nextIndex = Math.floor(Math.random() * RATE_LIMIT_TONES.length);
+  } while (nextIndex === lastToneIndex && RATE_LIMIT_TONES.length > 1);
+  lastToneIndex = nextIndex;
+  return RATE_LIMIT_TONES[nextIndex];
+}
+
+export function speakRateLimitNotice(customTone) {
+  const tone = customTone || getNextRateLimitTone();
+
+  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(tone.message);
+      utterance.pitch = tone.pitch;
+      utterance.rate = tone.rate;
+
+      // Select among available browser English voices for dynamic inflection
+      const voices = window.speechSynthesis.getVoices().filter((v) => v.lang?.startsWith("en"));
+      if (voices.length > 0) {
+        const voiceIndex =
+          Math.abs(tone.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % voices.length;
+        utterance.voice = voices[voiceIndex];
+      }
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn("Speech synthesis notice warning:", e);
+    }
+  }
+
+  return tone;
+}
 
 function getStoredCredits() {
   if (typeof window === "undefined") return 0;
@@ -33,20 +119,6 @@ function saveStoredCredits(credits) {
   } catch {}
 }
 
-export function speakRateLimitNotice() {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(RATE_LIMIT_MESSAGE);
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.warn("Speech synthesis notice warning:", e);
-    }
-  }
-}
-
 const VoiceAgentContext = createContext(null);
 
 function VoiceAgentProviderInner({ children }) {
@@ -54,6 +126,9 @@ function VoiceAgentProviderInner({ children }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [usedCredits, setUsedCredits] = useState(getStoredCredits);
   const [isRateLimited, setIsRateLimited] = useState(() => getStoredCredits() >= MAX_CREDITS);
+  const [currentToneNotice, setCurrentToneNotice] = useState(() =>
+    getStoredCredits() >= MAX_CREDITS ? "Limit reached (1k credits)" : null
+  );
   const pendingCutoffRef = useRef(false);
 
   const resetCredits = useCallback(() => {
@@ -61,6 +136,7 @@ function VoiceAgentProviderInner({ children }) {
     setUsedCredits(0);
     setIsRateLimited(false);
     setErrorMessage(null);
+    setCurrentToneNotice(null);
     pendingCutoffRef.current = false;
   }, []);
 
@@ -91,7 +167,7 @@ function VoiceAgentProviderInner({ children }) {
   });
 
   // When rate limit is triggered during a live conversation:
-  // Allow the AI to finish speaking its current sentence, then gracefully terminate session & speak parting notice
+  // Allow the AI to finish speaking its current sentence, then gracefully terminate session & speak parting notice in a unique tone
   useEffect(() => {
     if (pendingCutoffRef.current && !conversation.isSpeaking && conversation.status === "connected") {
       pendingCutoffRef.current = false;
@@ -100,8 +176,9 @@ function VoiceAgentProviderInner({ children }) {
           await conversation.endSession();
         } catch (_) {}
         setIsActivated(false);
-        setErrorMessage("Limit reached (1k credits)");
-        speakRateLimitNotice();
+        const tone = speakRateLimitNotice();
+        setCurrentToneNotice(tone.shortText);
+        setErrorMessage(tone.shortText);
       })();
     }
   }, [conversation.isSpeaking, conversation.status, conversation]);
@@ -110,8 +187,10 @@ function VoiceAgentProviderInner({ children }) {
     const current = getStoredCredits();
     if (current >= MAX_CREDITS) {
       setIsRateLimited(true);
-      setErrorMessage("Limit reached (1,000 credits used)");
-      speakRateLimitNotice();
+      // Play in a different tone each time clicked!
+      const tone = speakRateLimitNotice();
+      setCurrentToneNotice(tone.shortText);
+      setErrorMessage(tone.shortText);
       return;
     }
 
@@ -174,7 +253,9 @@ function VoiceAgentProviderInner({ children }) {
       remainingCredits: Math.max(0, MAX_CREDITS - usedCredits),
       maxCredits: MAX_CREDITS,
       isRateLimited,
+      currentToneNotice,
       resetCredits,
+      speakRateLimitNotice,
     }),
     [
       isActivated,
@@ -186,6 +267,7 @@ function VoiceAgentProviderInner({ children }) {
       errorMessage,
       usedCredits,
       isRateLimited,
+      currentToneNotice,
       resetCredits,
     ]
   );

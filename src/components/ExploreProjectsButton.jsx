@@ -16,10 +16,11 @@ export default function ExploreProjectsButton({
     errorMessage,
     isSpeaking,
     isRateLimited,
+    currentToneNotice,
     resetCredits,
   } = useVoiceAgent();
 
-  // Rate Limited State: Show polite limit badge with testing reset option
+  // Rate Limited State: Show dynamic tone badge with testing reset option
   if (isRateLimited && !isActivated) {
     return (
       <div className="inline-flex items-center gap-2 select-none">
@@ -27,10 +28,10 @@ export default function ExploreProjectsButton({
           type="button"
           onClick={startSession}
           aria-label="Demo rate limit reached"
-          title="1,000 credit demo limit reached. Click to hear notice."
+          title="1,000 credit demo limit reached. Click to hear notice in a different tone."
           className={`${className} opacity-90`}
         >
-          <span>Limit reached (1k credits)</span>
+          <span>{currentToneNotice || "Limit reached (1k credits)"}</span>
         </LiquidButton>
         <button
           type="button"
