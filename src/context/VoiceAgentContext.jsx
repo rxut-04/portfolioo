@@ -21,6 +21,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "Sorry to say, but you have reached the 1,000 credit demo limit for this session. Feel free to explore Om's portfolio and reach out directly!",
     shortText: "Limit reached (1k credits)",
+    audioUrl: "/audio/rate-limit-polite.mp3",
     pitch: 1.0,
     rate: 1.0,
   },
@@ -30,6 +31,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "Whoops! Looks like we've hit our 1,000 credit demo ceiling for now. Time to explore Om's projects and connect with him directly!",
     shortText: "1k demo ceiling reached!",
+    audioUrl: "/audio/rate-limit-playful.mp3",
     pitch: 1.15,
     rate: 1.05,
   },
@@ -39,6 +41,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "Apologies, but the 1,000 credit quota for this interactive demo has been fulfilled. Please feel free to inspect Om's case studies or contact him directly.",
     shortText: "Quota fulfilled (1,000 credits)",
+    audioUrl: "/audio/rate-limit-professional.mp3",
     pitch: 0.92,
     rate: 0.95,
   },
@@ -48,6 +51,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "And that's a wrap on our 1,000 credit voice demo! Feel free to look around the rest of Om's portfolio and say hi directly.",
     shortText: "That's a wrap! (1k used)",
+    audioUrl: "/audio/rate-limit-casual.mp3",
     pitch: 1.02,
     rate: 0.98,
   },
@@ -57,6 +61,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "System update: 1,000 credit threshold reached for this session. Voice pipeline on standby. Check out Om's system blueprints and drop him a message!",
     shortText: "Threshold reached (1k units)",
+    audioUrl: "/audio/rate-limit-architect.mp3",
     pitch: 0.95,
     rate: 1.05,
   },
@@ -66,6 +71,7 @@ export const RATE_LIMIT_TONES = [
     message:
       "You've reached the 1,000 credit limit! Thanks for chatting—be sure to explore Om's featured work and reach out directly to connect!",
     shortText: "Thanks for chatting! (1k reached)",
+    audioUrl: "/audio/rate-limit-enthusiastic.mp3",
     pitch: 1.18,
     rate: 1.08,
   },
@@ -121,12 +127,27 @@ function VoiceAgentProviderInner({ children }) {
   const [localAudioLevel, setLocalAudioLevel] = useState(0.42);
 
   const pendingCutoffRef = useRef(false);
+  const activeAudioRef = useRef(null);
   const micStreamRef = useRef(null);
   const audioCtxRef = useRef(null);
   const vadIntervalRef = useRef(null);
   const isLocalSpeakingRef = useRef(false);
 
+  const stopActiveAudio = useCallback(() => {
+    if (activeAudioRef.current) {
+      try {
+        activeAudioRef.current.pause();
+        activeAudioRef.current.currentTime = 0;
+      } catch (_) {}
+      activeAudioRef.current = null;
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
   const cleanupLocalAudio = useCallback(() => {
+    stopActiveAudio();
     if (vadIntervalRef.current) {
       clearInterval(vadIntervalRef.current);
       vadIntervalRef.current = null;
@@ -139,13 +160,10 @@ function VoiceAgentProviderInner({ children }) {
       audioCtxRef.current.close().catch(() => {});
       audioCtxRef.current = null;
     }
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
     isLocalSpeakingRef.current = false;
     setLocalIsSpeaking(false);
     setIsLocalLimitMode(false);
-  }, []);
+  }, [stopActiveAudio]);
 
   const resetCredits = useCallback(() => {
     cleanupLocalAudio();
@@ -157,7 +175,8 @@ function VoiceAgentProviderInner({ children }) {
     pendingCutoffRef.current = false;
   }, [cleanupLocalAudio]);
 
-  // Starts the interactive zero-credit local assistant loop with Voice Activity Detection (VAD)
+  // Starts the interactive zero-credit assistant loop with Voice Activity Detection (VAD)
+  // using pre-rendered studio ElevenLabs voice audio clips
   const startLocalAssistantLoop = useCallback(async (initialTone) => {
     cleanupLocalAudio();
     setIsLocalLimitMode(true);
@@ -167,28 +186,16 @@ function VoiceAgentProviderInner({ children }) {
     setCurrentToneNotice(toneToSpeak.shortText);
     setErrorMessage(toneToSpeak.shortText);
 
-    // Speaks a rate-limit response with unique tone & inflection
-    const triggerToneResponse = (specificTone) => {
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      const tone = specificTone || getNextRateLimitTone();
-      setCurrentToneNotice(tone.shortText);
-      setErrorMessage(tone.shortText);
-
-      setLocalIsSpeaking(true);
-      isLocalSpeakingRef.current = true;
-      window.speechSynthesis.cancel();
-
+    // Fallback if browser audio fails to load
+    const fallbackSpeak = (tone) => {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        setLocalIsSpeaking(false);
+        isLocalSpeakingRef.current = false;
+        return;
+      }
       const utterance = new SpeechSynthesisUtterance(tone.message);
       utterance.pitch = tone.pitch;
       utterance.rate = tone.rate;
-
-      const voices = window.speechSynthesis.getVoices().filter((v) => v.lang?.startsWith("en"));
-      if (voices.length > 0) {
-        const voiceIndex =
-          Math.abs(tone.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % voices.length;
-        utterance.voice = voices[voiceIndex];
-      }
-
       utterance.onend = () => {
         setLocalIsSpeaking(false);
         isLocalSpeakingRef.current = false;
@@ -199,14 +206,48 @@ function VoiceAgentProviderInner({ children }) {
         isLocalSpeakingRef.current = false;
         setLocalAudioLevel(0.42);
       };
-
       window.speechSynthesis.speak(utterance);
     };
 
-    // Speak initial message
+    // Plays the EXACT ElevenLabs studio voice clip for this tone
+    const triggerToneResponse = (specificTone) => {
+      stopActiveAudio();
+      const tone = specificTone || getNextRateLimitTone();
+      setCurrentToneNotice(tone.shortText);
+      setErrorMessage(tone.shortText);
+
+      setLocalIsSpeaking(true);
+      isLocalSpeakingRef.current = true;
+
+      try {
+        const audio = new Audio(tone.audioUrl);
+        activeAudioRef.current = audio;
+
+        audio.onended = () => {
+          setLocalIsSpeaking(false);
+          isLocalSpeakingRef.current = false;
+          setLocalAudioLevel(0.42);
+          activeAudioRef.current = null;
+        };
+
+        audio.onerror = (e) => {
+          console.warn("Studio voice audio load warning, falling back:", e);
+          fallbackSpeak(tone);
+        };
+
+        audio.play().catch((err) => {
+          console.warn("Auto-play error, falling back:", err);
+          fallbackSpeak(tone);
+        });
+      } catch (err) {
+        fallbackSpeak(tone);
+      }
+    };
+
+    // Speak initial message with ElevenLabs voice
     triggerToneResponse(toneToSpeak);
 
-    // Setup local microphone VAD so user can talk freely without consuming any ElevenLabs credits
+    // Setup local microphone VAD so user can talk freely without consuming any ElevenLabs API credits
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       micStreamRef.current = stream;
@@ -251,7 +292,7 @@ function VoiceAgentProviderInner({ children }) {
           if (silenceStart === 0) {
             silenceStart = Date.now();
           } else if (Date.now() - silenceStart > 1100) {
-            // User finished speaking! Respond with the preset message in a different tone
+            // User finished speaking! Respond with the exact ElevenLabs voice in a new tone
             hasSpoken = false;
             silenceStart = 0;
             triggerToneResponse();
@@ -261,7 +302,7 @@ function VoiceAgentProviderInner({ children }) {
     } catch (err) {
       console.warn("Local mic VAD setup warning:", err);
     }
-  }, [cleanupLocalAudio]);
+  }, [cleanupLocalAudio, stopActiveAudio]);
 
   const conversation = useConversation({
     onConnect: () => {
@@ -290,7 +331,7 @@ function VoiceAgentProviderInner({ children }) {
   });
 
   // Seamless transition: when 1k credits is reached during active ElevenLabs call,
-  // disconnect ElevenLabs (0 further API credits) and switch to the zero-credit local assistant loop!
+  // disconnect ElevenLabs (0 further API credits) and switch to the zero-credit local ElevenLabs voice loop!
   useEffect(() => {
     if (pendingCutoffRef.current && !conversation.isSpeaking && conversation.status === "connected") {
       pendingCutoffRef.current = false;
@@ -298,7 +339,7 @@ function VoiceAgentProviderInner({ children }) {
         try {
           await conversation.endSession();
         } catch (_) {}
-        // Switch seamlessly to the interactive local assistant loop
+        // Switch seamlessly to the interactive ElevenLabs voice loop
         startLocalAssistantLoop();
       })();
     }
@@ -308,7 +349,7 @@ function VoiceAgentProviderInner({ children }) {
     const current = getStoredCredits();
     if (current >= MAX_CREDITS) {
       setIsRateLimited(true);
-      // Directly start the local zero-credit assistant loop!
+      // Directly start the local zero-credit assistant loop with the exact ElevenLabs voice!
       startLocalAssistantLoop();
       return;
     }
