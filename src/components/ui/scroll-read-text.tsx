@@ -6,15 +6,31 @@ import React, {
   createContext,
   useContext,
 } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  MotionValue,
+} from "motion/react";
 import { GradientText } from "./text-gradient";
+import { Highlighter, type AnnotationAction } from "./highlighter";
 
-export type GradientPhraseConfig =
-  | string
-  | {
-      phrase: string;
-      variant?: string;
-    };
+export type { AnnotationAction };
+
+export interface PhraseConfig {
+  phrase: string;
+  variant?: string;
+  action?: AnnotationAction;
+  color?: string;
+  strokeWidth?: number;
+  animationDuration?: number;
+  iterations?: number;
+  padding?: number;
+  multiline?: boolean;
+}
+
+export type GradientPhraseConfig = string | PhraseConfig;
 
 export interface ScrollReadArticleContextValue {
   progress: MotionValue<number>;
@@ -140,6 +156,7 @@ export interface ScrollReadParagraphProps {
   className?: string;
   as?: React.ElementType;
   gradientPhrases?: GradientPhraseConfig[];
+  highlightPhrases?: GradientPhraseConfig[];
   globalStartWord?: number;
   totalArticleWords?: number;
   highlightColor?: string;
@@ -148,11 +165,32 @@ export interface ScrollReadParagraphProps {
 interface TextItem {
   id: string;
   text: string;
+  isAnnotated: boolean;
   isGradient: boolean;
   variant?: string;
+  action?: AnnotationAction;
+  color?: string;
+  strokeWidth?: number;
+  animationDuration?: number;
+  iterations?: number;
+  padding?: number;
+  multiline?: boolean;
   globalIndex: number;
   wordCount: number;
 }
+
+const VARIANT_HIGHLIGHT_MAP: Record<
+  string,
+  { action: AnnotationAction; color: string }
+> = {
+  cyan: { action: "underline", color: "#38bdf8" },
+  rose: { action: "crossed-off", color: "#f43f5e" },
+  violet: { action: "box", color: "#a855f7" },
+  amber: { action: "highlight", color: "rgba(251, 191, 36, 0.35)" },
+  emerald: { action: "highlight", color: "rgba(52, 211, 153, 0.35)" },
+  fuchsia: { action: "circle", color: "#e879f9" },
+  blue: { action: "bracket", color: "#60a5fa" },
+};
 
 const Word = React.memo(function Word({
   item,
@@ -173,6 +211,20 @@ const Word = React.memo(function Word({
   const start = item.globalIndex * step;
   const end = (item.globalIndex + item.wordCount) * step;
 
+  const [isActive, setIsActive] = useState(() => {
+    try {
+      return (progress?.get() || 0) >= Math.max(0, start - 0.005);
+    } catch {
+      return false;
+    }
+  });
+
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (!isActive && latest >= Math.max(0, start - 0.005)) {
+      setIsActive(true);
+    }
+  });
+
   // Opacity: starts at 0.2 (20%) and transitions to 1.0 (100%)
   const dynamicOpacity = useTransform(
     progress,
@@ -191,16 +243,37 @@ const Word = React.memo(function Word({
     ["inherit", highlightColor, "inherit"]
   );
 
+  const shouldAnnotate = isAtEnd || isActive || reducedMotion;
+
+  const innerContent = item.isGradient ? (
+    <GradientText variant={item.variant as any} loop={false}>
+      {item.text}
+    </GradientText>
+  ) : (
+    item.text
+  );
+
+  const content = item.isAnnotated ? (
+    <Highlighter
+      action={item.action || "highlight"}
+      color={item.color || "#ffd1dc"}
+      strokeWidth={item.strokeWidth ?? 1.8}
+      animationDuration={item.animationDuration ?? 600}
+      iterations={item.iterations ?? 2}
+      padding={item.padding ?? 3}
+      multiline={item.multiline ?? true}
+      active={shouldAnnotate}
+    >
+      {innerContent}
+    </Highlighter>
+  ) : (
+    innerContent
+  );
+
   if (reducedMotion) {
     return (
-      <span className="inline-block mr-[0.28em] opacity-100">
-        {item.isGradient ? (
-          <GradientText variant={item.variant as any} loop={false}>
-            {item.text}
-          </GradientText>
-        ) : (
-          item.text
-        )}
+      <span className="inline-block mr-[0.28em] opacity-100 select-text">
+        {content}
       </span>
     );
   }
@@ -213,13 +286,7 @@ const Word = React.memo(function Word({
       }}
       className="inline-block mr-[0.28em] select-text"
     >
-      {item.isGradient ? (
-        <GradientText variant={item.variant as any} loop={false}>
-          {item.text}
-        </GradientText>
-      ) : (
-        item.text
-      )}
+      {content}
     </motion.span>
   );
 });
@@ -229,6 +296,7 @@ export function ScrollReadParagraph({
   className = "",
   as: Component = "p",
   gradientPhrases = [],
+  highlightPhrases,
   globalStartWord = 0,
   totalArticleWords: propTotalWords,
   highlightColor: propHighlightColor,
@@ -247,30 +315,61 @@ export function ScrollReadParagraph({
   const highlightColor =
     propHighlightColor || articleContext?.highlightColor || "#3b82f6";
 
+  const activePhrasesConfig = highlightPhrases || gradientPhrases;
+
   // Parse text into exact phrase segments and normal words
   const items = useMemo<TextItem[]>(() => {
     if (!text) return [];
 
-    // Sort phrases by character length descending to prevent substring collisions
-    const sortedPhrases = gradientPhrases
+    // Normalise phrases configuration
+    const sortedPhrases = activePhrasesConfig
       .map((item) => {
-        const phrase = typeof item === "string" ? item : item.phrase;
-        const variant: string =
-          typeof item === "string" ? "rainbow" : item.variant || "rainbow";
-        return { phrase, variant };
+        if (typeof item === "string") {
+          return {
+            phrase: item,
+            variant: "rainbow",
+            action: undefined as AnnotationAction | undefined,
+            color: undefined as string | undefined,
+            strokeWidth: undefined as number | undefined,
+            animationDuration: undefined as number | undefined,
+            iterations: undefined as number | undefined,
+            padding: undefined as number | undefined,
+            multiline: true,
+          };
+        }
+        return {
+          phrase: item.phrase,
+          variant: item.variant || "rainbow",
+          action: item.action,
+          color: item.color,
+          strokeWidth: item.strokeWidth,
+          animationDuration: item.animationDuration,
+          iterations: item.iterations,
+          padding: item.padding,
+          multiline: item.multiline ?? true,
+        };
       })
       .sort((a, b) => b.phrase.length - a.phrase.length);
 
-    // Find all exact occurrences of gradient phrases in this paragraph
-    const matches: {
+    // Find all exact occurrences of phrases in this paragraph
+    interface MatchedPhrase {
       start: number;
       end: number;
       text: string;
-      variant: string;
-    }[] = [];
+      variant?: string;
+      action?: AnnotationAction;
+      color?: string;
+      strokeWidth?: number;
+      animationDuration?: number;
+      iterations?: number;
+      padding?: number;
+      multiline?: boolean;
+    }
 
-    for (const { phrase, variant } of sortedPhrases) {
-      const cleanP = phrase.replace(/[.,!?:;]/g, "").trim();
+    const matches: MatchedPhrase[] = [];
+
+    for (const pConfig of sortedPhrases) {
+      const cleanP = pConfig.phrase.replace(/[.,!?:;]/g, "").trim();
       if (!cleanP) continue;
 
       // Regex matching exact phrase boundary
@@ -284,7 +383,19 @@ export function ScrollReadParagraph({
           (prev) => !(end <= prev.start || start >= prev.end)
         );
         if (!overlaps) {
-          matches.push({ start, end, text: m[0], variant });
+          matches.push({
+            start,
+            end,
+            text: m[0],
+            variant: pConfig.variant,
+            action: pConfig.action,
+            color: pConfig.color,
+            strokeWidth: pConfig.strokeWidth,
+            animationDuration: pConfig.animationDuration,
+            iterations: pConfig.iterations,
+            padding: pConfig.padding,
+            multiline: pConfig.multiline,
+          });
         }
       }
     }
@@ -294,31 +405,54 @@ export function ScrollReadParagraph({
     // Segment text into chunks
     interface Chunk {
       text: string;
+      isAnnotated: boolean;
       isGradient: boolean;
-      variant: string;
+      variant?: string;
+      action?: AnnotationAction;
+      color?: string;
+      strokeWidth?: number;
+      animationDuration?: number;
+      iterations?: number;
+      padding?: number;
+      multiline?: boolean;
     }
+
     const chunks: Chunk[] = [];
     let lastIdx = 0;
     for (const m of matches) {
       if (m.start > lastIdx) {
         chunks.push({
           text: text.slice(lastIdx, m.start),
+          isAnnotated: false,
           isGradient: false,
-          variant: "rainbow",
         });
       }
+
+      // Check whether this match qualifies as an annotated highlight or gradient
+      const mappedDefaults = m.variant ? VARIANT_HIGHLIGHT_MAP[m.variant] : null;
+      const effectiveAction = m.action || mappedDefaults?.action || "highlight";
+      const effectiveColor = m.color || mappedDefaults?.color || "#ffd1dc";
+
       chunks.push({
         text: text.slice(m.start, m.end),
-        isGradient: true,
+        isAnnotated: true,
+        isGradient: Boolean(m.variant && !m.action),
         variant: m.variant,
+        action: effectiveAction,
+        color: effectiveColor,
+        strokeWidth: m.strokeWidth,
+        animationDuration: m.animationDuration,
+        iterations: m.iterations,
+        padding: m.padding,
+        multiline: m.multiline,
       });
       lastIdx = m.end;
     }
     if (lastIdx < text.length) {
       chunks.push({
         text: text.slice(lastIdx),
+        isAnnotated: false,
         isGradient: false,
-        variant: "rainbow",
       });
     }
 
@@ -328,13 +462,21 @@ export function ScrollReadParagraph({
 
     for (let cIdx = 0; cIdx < chunks.length; cIdx++) {
       const chunk = chunks[cIdx];
-      if (chunk.isGradient) {
+      if (chunk.isAnnotated) {
         const wCount = chunk.text.trim().split(/\s+/).length;
         result.push({
-          id: `grad-${cIdx}-${runningWordOffset}`,
+          id: `annot-${cIdx}-${runningWordOffset}`,
           text: chunk.text.trim(),
-          isGradient: true,
+          isAnnotated: true,
+          isGradient: chunk.isGradient,
           variant: chunk.variant,
+          action: chunk.action,
+          color: chunk.color,
+          strokeWidth: chunk.strokeWidth,
+          animationDuration: chunk.animationDuration,
+          iterations: chunk.iterations,
+          padding: chunk.padding,
+          multiline: chunk.multiline,
           globalIndex: runningWordOffset,
           wordCount: wCount,
         });
@@ -345,8 +487,8 @@ export function ScrollReadParagraph({
           result.push({
             id: `word-${cIdx}-${wIdx}-${runningWordOffset}`,
             text: words[wIdx],
+            isAnnotated: false,
             isGradient: false,
-            variant: "rainbow",
             globalIndex: runningWordOffset,
             wordCount: 1,
           });
@@ -356,7 +498,7 @@ export function ScrollReadParagraph({
     }
 
     return result;
-  }, [text, gradientPhrases, globalStartWord]);
+  }, [text, activePhrasesConfig, globalStartWord]);
 
   const totalWords = propTotalWords || articleContext?.totalArticleWords || 100;
 

@@ -255,10 +255,10 @@ export default function Different() {
                 globalStartWord={offsets[0].start}
                 totalArticleWords={totalWords}
                 className="font-palast text-lg sm:text-2xl md:text-3xl italic text-zinc-900 dark:text-zinc-100 leading-snug"
-                gradientPhrases={[
-                  { phrase: 'architect', variant: 'cyan' },
-                  { phrase: 'dead', variant: 'rose' },
-                  { phrase: '5 hours of dead debugging', variant: 'violet' },
+                highlightPhrases={[
+                  { phrase: 'architect', action: 'underline', color: '#38bdf8', strokeWidth: 2 },
+                  { phrase: 'dead', action: 'crossed-off', color: '#f43f5e', strokeWidth: 2 },
+                  { phrase: '5 hours of dead debugging', action: 'box', color: '#a855f7', padding: 4, strokeWidth: 1.5 },
                 ]}
               />
             </div>
@@ -271,7 +271,9 @@ export default function Different() {
               text={PARAGRAPHS[1]}
               globalStartWord={offsets[1].start}
               totalArticleWords={totalWords}
-              gradientPhrases={[{ phrase: 'false hope', variant: 'amber' }]}
+              highlightPhrases={[
+                { phrase: 'false hope', action: 'strike-through', color: '#fbbf24', strokeWidth: 2 },
+              ]}
             />
 
             {/* Paragraph 2 */}
@@ -279,9 +281,9 @@ export default function Different() {
               text={PARAGRAPHS[2]}
               globalStartWord={offsets[2].start}
               totalArticleWords={totalWords}
-              gradientPhrases={[
-                { phrase: 'only one feature or bug', variant: 'emerald' },
-                { phrase: 'normal human intervention', variant: 'cyan' },
+              highlightPhrases={[
+                { phrase: 'only one feature or bug', action: 'highlight', color: 'rgba(52, 211, 153, 0.35)', padding: 3 },
+                { phrase: 'normal human intervention', action: 'underline', color: '#38bdf8', strokeWidth: 2 },
               ]}
             />
 
@@ -290,7 +292,9 @@ export default function Different() {
               text={PARAGRAPHS[3]}
               globalStartWord={offsets[3].start}
               totalArticleWords={totalWords}
-              gradientPhrases={[{ phrase: 'exentential prompt', variant: 'fuchsia' }]}
+              highlightPhrases={[
+                { phrase: 'exentential prompt', action: 'bracket', color: '#e879f9', strokeWidth: 2, padding: 4 },
+              ]}
             />
           </section>
 
@@ -303,14 +307,18 @@ export default function Different() {
                 globalStartWord={offsets[4].start}
                 totalArticleWords={totalWords}
                 className="text-zinc-600 dark:text-zinc-400"
-                gradientPhrases={[{ phrase: 'backtracking', variant: 'rose' }]}
+                highlightPhrases={[
+                  { phrase: 'backtracking', action: 'crossed-off', color: '#f43f5e', strokeWidth: 2 },
+                ]}
               />
               <ScrollReadParagraph
                 text={PARAGRAPHS[5]}
                 globalStartWord={offsets[5].start}
                 totalArticleWords={totalWords}
                 className="font-harmond text-2xl sm:text-3xl font-black italic text-zinc-950 dark:text-zinc-100"
-                gradientPhrases={[{ phrase: 'think differently!', variant: 'amber' }]}
+                highlightPhrases={[
+                  { phrase: 'think differently!', action: 'highlight', color: 'rgba(250, 204, 21, 0.45)', padding: 4, iterations: 2 },
+                ]}
               />
             </div>
           </section>
@@ -322,8 +330,8 @@ export default function Different() {
               text={PARAGRAPHS[6]}
               globalStartWord={offsets[6].start}
               totalArticleWords={totalWords}
-              gradientPhrases={[
-                { phrase: 'taking time to read the documentation', variant: 'violet' },
+              highlightPhrases={[
+                { phrase: 'taking time to read the documentation', action: 'box', color: '#a78bfa', padding: 4, strokeWidth: 1.5 },
               ]}
             />
 
@@ -334,9 +342,9 @@ export default function Different() {
                 globalStartWord={offsets[7].start}
                 totalArticleWords={totalWords}
                 className="text-zinc-900 dark:text-zinc-100 font-medium text-base sm:text-lg leading-relaxed"
-                gradientPhrases={[
-                  { phrase: 'power to solve/track every problem', variant: 'emerald' },
-                  { phrase: 'crashing in production!', variant: 'rose' },
+                highlightPhrases={[
+                  { phrase: 'power to solve/track every problem', action: 'underline', color: '#34d399', strokeWidth: 2 },
+                  { phrase: 'crashing in production!', action: 'crossed-off', color: '#f43f5e', strokeWidth: 2 },
                 ]}
               />
             </div>
@@ -350,7 +358,9 @@ export default function Different() {
               globalStartWord={offsets[8].start}
               totalArticleWords={totalWords}
               className="font-palast text-lg sm:text-2xl italic text-zinc-900 dark:text-zinc-100"
-              gradientPhrases={[{ phrase: 'real developers back', variant: 'cyan' }]}
+              highlightPhrases={[
+                { phrase: 'real developers back', action: 'circle', color: '#38bdf8', padding: 6, strokeWidth: 1.8 },
+              ]}
             />
 
             {/* Paragraph 9 */}
@@ -358,9 +368,9 @@ export default function Different() {
               text={PARAGRAPHS[9]}
               globalStartWord={offsets[9].start}
               totalArticleWords={totalWords}
-              gradientPhrases={[
-                { phrase: 'speed of AI', variant: 'amber' },
-                { phrase: 'real developer', variant: 'emerald' },
+              highlightPhrases={[
+                { phrase: 'speed of AI', action: 'underline', color: '#fbbf24', strokeWidth: 2 },
+                { phrase: 'real developer', action: 'highlight', color: 'rgba(52, 211, 153, 0.35)', padding: 3 },
               ]}
             />
 
@@ -371,7 +381,9 @@ export default function Different() {
                 globalStartWord={offsets[10].start}
                 totalArticleWords={totalWords}
                 className="font-mono text-xs sm:text-base font-semibold text-zinc-900 dark:text-zinc-100"
-                gradientPhrases={[{ phrase: 'AGI will be ready soon', variant: 'fuchsia' }]}
+                highlightPhrases={[
+                  { phrase: 'AGI will be ready soon', action: 'circle', color: '#e879f9', padding: 6, strokeWidth: 1.8 },
+                ]}
               />
             </div>
           </section>
